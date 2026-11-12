@@ -157,8 +157,9 @@ A release publishes a container image to GitHub Container Registry.
    ```
 
    This updates `package.json` and `package-lock.json`, creates a local
-   commit and creates an annotated `v` tag. Review the commit and tag
-   before publishing.
+   commit and creates an annotated tag named for the version, such as
+   `0.2.0`, with no `v` prefix (set in `.npmrc`). Review the commit and
+   tag before publishing.
 
 4. Push `main` and the specific new tag together. The version tag starts
    the publishing workflow.

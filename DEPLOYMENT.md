@@ -8,13 +8,14 @@ build and run the image.
 
 The [publishing workflow](.github/workflows/publish.yml) runs all checks
 and builds the production image. It publishes to
-`ghcr.io/cmu-web/cmu-web-qrnegie` for `v*` tags and manual workflow runs.
-Ordinary branch pushes and pull requests build without publishing.
+`ghcr.io/cmu-web/cmu-web-qrnegie` for version tags, such as `0.2.0`, and
+manual workflow runs. Ordinary branch pushes and pull requests build
+without publishing.
 
 | Image Tag      | Meaning                                   |
 | -------------- | ----------------------------------------- |
 | `latest`       | Most recently published version-tag build |
-| `X.Y.Z`        | Build of release tag `vX.Y.Z`             |
+| `X.Y.Z`        | Build of release tag `X.Y.Z`              |
 | `sha-<commit>` | Build identified by its short commit hash |
 
 A manual run publishes the commit image without moving `latest`. The
