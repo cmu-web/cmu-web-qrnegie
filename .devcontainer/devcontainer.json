@@ -1,0 +1,37 @@
+{
+  "name": "QRnegie",
+  "build": {
+    "dockerfile": "../Dockerfile",
+    "context": "..",
+    "target": "development"
+  },
+  "workspaceFolder": "/app",
+  "workspaceMount": "source=${localWorkspaceFolder},target=/app,type=bind",
+  "mounts": ["source=qrnegie-node-modules-${devcontainerId},target=/app/node_modules,type=volume"],
+  "containerUser": "node",
+  "remoteUser": "node",
+  "updateRemoteUserUID": true,
+  "containerEnv": {
+    "NODE_ENV": "development"
+  },
+  "forwardPorts": [3000],
+  "portsAttributes": {
+    "3000": {
+      "label": "QRnegie",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "npm ci",
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
+      "settings": {
+        "js/ts.tsdk.path": "node_modules/typescript/lib",
+        "[typescript][javascript][json][jsonc][html][markdown]": {
+          "editor.defaultFormatter": "esbenp.prettier-vscode",
+          "editor.formatOnSave": true
+        }
+      }
+    }
+  }
+}

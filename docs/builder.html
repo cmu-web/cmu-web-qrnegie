@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- The address holds the text being encoded; other sites get only the origin -->
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <title>Builder - QRnegie - Carnegie Mellon University</title>
+    <!-- Link previews: written by scripts/opengraph.mjs -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="QRnegie" />
+    <meta property="og:title" content="Builder - QRnegie" />
+    <meta
+      property="og:description"
+      content="Build a QR code with Scotty, a campus landmark or the CMU heart, then download it or copy its address."
+    />
+    <meta property="og:url" content="https://qrnegie.andrew.cmu.edu/builder.html" />
+    <meta property="og:image" content="https://qrnegie.andrew.cmu.edu/images/preview.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="QRnegie's home page: QR Codes With a Little More Bite, beside a Scotty Mosaic QR code."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- End of link previews -->
+    <meta
+      name="description"
+      content="Build a QR code with Scotty, a campus landmark or the CMU heart, then download it or copy its address."
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,700,700italic"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://www.cmu.edu/common/standard-v6/css/main.6.7.min.css"
+      media="screen"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/css/cmu-cms.css"
+      integrity="sha384-jLB4PsCj8eJZzLvX09Rp//BaeUnjZFFNVOS3iVyZhktnIw9EkiZPVseQWE+Yjz/q"
+      crossorigin="anonymous"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/css/cmu-app.css"
+      integrity="sha384-Ub3GBNWi/z0dsz5FsFYyzQvV3V1dKmfib7wuDPWOMO8DsVAA5Jr8N1a5IuGIN0aC"
+      crossorigin="anonymous"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="//www.cmu.edu/favicon.ico" rel="icon" />
+    <link href="//www.cmu.edu/favicon-152.png" rel="apple-touch-icon-precomposed" />
+    <meta content="#9f0000" name="msapplication-TileColor" />
+    <meta content="//www.cmu.edu/favicon-144.png" name="msapplication-TileImage" />
+  </head>
+  <body class="no-js cmu-app">
+    <div id="container">
+      <header>
+        <div class="roof red invert">
+          <div>
+            <a class="wordmark" href="https://www.cmu.edu/">Carnegie Mellon University</a>
+            <button aria-label="toggle menu" aria-pressed="false" class="menu-btn" href="#nav"
+              ><b>&#8212;</b><b>&#8212;</b><b>&#8212;</b></button
+            >
+          </div>
+        </div>
+        <div id="sitename">
+          <span class="sitetitle"><a href="./">QRnegie</a></span>
+          <h2>Scotty, Beam Me There</h2>
+        </div>
+      </header>
+      <main id="content">
+        <div class="breadcrumbs"> <a href="./">QRnegie</a>&nbsp;&rsaquo;&nbsp;Builder </div>
+        <div class="content wide"
+          ><div>
+            <h1>Build Your QR Code</h1>
+            <p class="cmu-lead">Choose a style and a size, and copy the address or the HTML.</p>
+            <div id="qr-status" role="status" aria-live="polite"></div>
+            <div class="cmu-split"
+              ><div>
+                <form id="qr-qr-form" method="get" action="builder.html">
+                  <label for="qr-qr-text">URL or Text</label>
+                  <textarea
+                    id="qr-qr-text"
+                    name="text"
+                    rows="3"
+                    maxlength="1024"
+                    placeholder="https://www.cmu.edu/"
+                    aria-describedby="qr-qr-hint"
+                  ></textarea>
+                  <p class="cmu-hint" id="qr-qr-hint"
+                    >Encoded exactly as entered. Shorter addresses make less dense codes.</p
+                  >
+                  <div class="cmu-field-row">
+                    <div
+                      ><label for="qr-qr-style">Style</label
+                      ><select id="qr-qr-style" name="style"
+                        ><option value="mosaic" selected data-text="https://www.cmu.edu/"
+                          >Scotty (Mosaic)</option
+                        ><option
+                          value="scotty"
+                          data-text="BEGIN:VCARD&#10;VERSION:3.0&#10;N:;;;;&#10;FN:Posner Center for Special Collections&#10;ORG:Carnegie Mellon University Libraries;Posner Center for Special Collections&#10;TEL;TYPE=WORK,VOICE:+1-412-268-7680&#10;EMAIL;TYPE=WORK:posnercenter@cmu.edu&#10;ADR;TYPE=WORK:;;4964 Margaret Morrison Street;Pittsburgh;PA;15213;USA&#10;URL:https://library.cmu.edu/visit/posner-center&#10;END:VCARD"
+                          >Scotty (Simple)</option
+                        ><option value="kraus-campo" data-text="https://www.cmu.edu/public-art"
+                          >Kraus Campo</option
+                        ><option value="wean" data-text="Our Turtle Eating a Cheeto"
+                          >Wean Hall</option
+                        ><option
+                          value="binary-heart"
+                          data-text="https://www.cmu.edu/leadership/senior-admin/casalegno-bio"
+                          >Binary Heart</option
+                        ><option value="tilted-square" data-text="https://www.cmu.edu/"
+                          >Tilted Square</option
+                        ><option value="plain" data-text="https://www.cmu.edu/"
+                          >Basic Black</option
+                        ></select
+                      ></div
+                    >
+                    <div
+                      ><label for="qr-qr-size">Size</label
+                      ><select id="qr-qr-size" name="size" aria-describedby="qr-size-hint"
+                        ><option value="256">256 Pixels</option
+                        ><option value="512">512 Pixels</option
+                        ><option value="1024" selected>1024 Pixels</option
+                        ><option value="2048">2048 Pixels</option></select
+                      ><p class="cmu-hint" id="qr-size-hint"
+                        >Start with 1024 pixels so the artwork has room. More text can require a
+                        larger export.</p
+                      ></div
+                    >
+                  </div>
+                </form></div
+              ><div>
+                <div id="qr-qr-encodes" hidden>
+                  <p class="cmu-label">Encoded Text</p>
+                  <p><code id="qr-qr-destination"></code></p>
+                </div>
+                <p class="cmu-label" id="qr-qr-preview-label" hidden>Preview</p>
+                <figure class="cmu-shot">
+                  <img id="qr-qr-preview" alt="QR code preview" width="480" height="480" hidden />
+                </figure>
+                <div id="qr-qr-actions" hidden>
+                  <p
+                    ><button type="button" class="btn" id="qr-qr-svg">Download SVG</button>
+                    <button type="button" class="btn ghost" id="qr-qr-png">Download PNG</button></p
+                  >
+                  <p class="cmu-label">Address</p>
+                  <div class="cmu-copyable">
+                    <pre class="cmu-snippet cmu-snippet--wrap"><code id="qr-qr-url"></code></pre>
+                    <button
+                      type="button"
+                      class="cmu-copy"
+                      data-cmu-copy="#qr-qr-url"
+                      aria-label="Copy Address"
+                      title="Copy Address"
+                    ></button>
+                  </div>
+                  <p class="cmu-label">HTML</p>
+                  <div class="cmu-copyable">
+                    <pre class="cmu-snippet cmu-snippet--wrap"><code id="qr-qr-html"></code></pre>
+                    <button
+                      type="button"
+                      class="cmu-copy"
+                      data-cmu-copy="#qr-qr-html"
+                      aria-label="Copy HTML"
+                      title="Copy HTML"
+                    ></button
+                  ></div> </div></div
+            ></div> </div
+        ></div>
+      </main>
+      <footer class="grid column3 invert">
+        <div>
+          <p
+            >QRnegie<br />Carnegie Mellon University<br />5000 Forbes Avenue<br />Pittsburgh, PA
+            15213</p
+          >
+          <ul
+            ><li><a href="https://www.cmu.edu/legal/">Legal Info</a></li
+            ><li><a href="https://www.cmu.edu/">www.cmu.edu</a></li></ul
+          >
+          <ul
+            ><li>&copy; 2026 Carnegie Mellon University</li></ul
+          >
+        </div>
+        <div></div>
+        <div>
+          <nav id="nav">
+            <ul>
+              <li class="active"><a href="builder.html">Builder</a></li>
+              <li><a href="options.html">Options</a></li>
+              <li><a href="about.html">About</a></li>
+            </ul>
+          </nav>
+        </div>
+      </footer>
+    </div>
+    <script src="https://www.cmu.edu/common/standard-v6/js/list.min.js"></script>
+    <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
+    <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/js/cmu-app.js"
+      integrity="sha384-Etmkex3xbkUyRJUcASnyzfeR4g6yNwaWbaK+Z3sJvOxk76pCKgcYHAtNZppbmH8Z"
+      crossorigin="anonymous"
+    ></script>
+    <script src="js/qr.js"></script>
+  </body>
+</html>
