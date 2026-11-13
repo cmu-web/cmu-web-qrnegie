@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Google tag (Google Analytics): docs pages only, never in the image or MCP responses -->
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5RW6JKPW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    </script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reference - QRnegie - Carnegie Mellon University</title>
+    <!-- Link previews: written by scripts/opengraph.mjs -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="QRnegie" />
+    <meta property="og:title" content="Reference - QRnegie" />
+    <meta
+      property="og:description"
+      content="QRnegie image endpoints, parameters, payload encoding, response formats and MCP tools."
+    />
+    <meta property="og:url" content="https://qrnegie.andrew.cmu.edu/reference.html" />
+    <meta property="og:image" content="https://qrnegie.andrew.cmu.edu/images/preview.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="QRnegie's home page: QR Codes With a Little More Bite, beside a Mosaic Scotty QR code."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <!-- End of link previews -->
+    <meta
+      name="description"
+      content="QRnegie image endpoints, parameters, payload encoding, response formats and MCP tools."
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,700,700italic"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://www.cmu.edu/common/standard-v6/css/main.6.7.min.css"
+      media="screen"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/css/cmu-cms.css"
+      integrity="sha384-+u4UJJGawMpfkXYetQDuUBs4iJZaH0GIVRw5uidyWjaUBPGQPtSqV4/O66AgMACJ"
+      crossorigin="anonymous"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <link href="//www.cmu.edu/favicon.ico" rel="icon" />
+    <link href="//www.cmu.edu/favicon-152.png" rel="apple-touch-icon-precomposed" />
+    <meta content="#9f0000" name="msapplication-TileColor" />
+    <meta content="//www.cmu.edu/favicon-144.png" name="msapplication-TileImage" />
+  </head>
+  <body class="no-js">
+    <div id="container">
+      <header>
+        <div class="roof red invert">
+          <div>
+            <a class="wordmark" href="https://www.cmu.edu/">Carnegie Mellon University</a>
+            <button aria-label="toggle menu" aria-pressed="false" class="menu-btn" href="#nav"
+              ><b>&#8212;</b><b>&#8212;</b><b>&#8212;</b></button
+            >
+          </div>
+        </div>
+        <div id="sitename">
+          <span class="sitetitle"><a href="./">QRnegie</a></span>
+          <h2>Scotty, Beam Me There</h2>
+        </div>
+      </header>
+      <main id="content">
+        <div class="breadcrumbs"> <a href="./">QRnegie</a>&nbsp;&rsaquo;&nbsp;Reference </div>
+        <div class="content wide"
+          ><div>
+            <h1>QRnegie Reference</h1>
+            <p class="cmu-lead"
+              >Make QR codes with an image URL or an MCP tool call. Both use the same renderer and
+              take the same content and design choices.</p
+            >
+          </div></div
+        >
+        <div class="grid column3 nav cmu-on-this-page">
+          <p class="cmu-label">On This Page</p>
+          <div
+            ><div class="nav-list"
+              ><ul>
+                <li><a href="#image-addresses">Image URLs</a></li>
+                <li><a href="#parameters">Parameters</a></li>
+                <li><a href="#styles">Style Values</a></li>
+              </ul></div
+            ></div
+          >
+          <div
+            ><div class="nav-list"
+              ><ul>
+                <li><a href="#content-types">Content Payloads</a></li>
+                <li><a href="#embedding">Embedding and Downloads</a></li>
+              </ul></div
+            ></div
+          >
+          <div
+            ><div class="nav-list"
+              ><ul>
+                <li><a href="#errors">Errors</a></li>
+                <li><a href="#mcp">MCP Tools</a></li>
+              </ul></div
+            ></div
+          >
+        </div>
+        <div class="content wide"
+          ><div>
+            <h2 id="image-addresses" class="rule-top">Image URLs</h2>
+            <table class="alternate cmu-full">
+              <thead
+                ><tr><th scope="col">Request</th><th scope="col">Response</th></tr></thead
+              >
+              <tbody>
+                <tr
+                  ><th scope="row"><code>GET /qr.svg</code></th
+                  ><td>SVG image (<code>image/svg+xml</code>)</td></tr
+                >
+                <tr
+                  ><th scope="row"><code>GET /qr.png</code></th
+                  ><td>PNG image (<code>image/png</code>)</td></tr
+                >
+              </tbody></table
+            >
+            <p
+              >Add query parameters to either address. This example encodes www.cmu.edu in Mosaic
+              Scotty at 1024 pixels:</p
+            >
+            <pre
+              class="cmu-snippet cmu-snippet--wrap"
+            ><code>https://qrnegie.andrew.cmu.edu/qr.svg?text=https%3A%2F%2Fwww.cmu.edu%2F&amp;style=mosaic&amp;width=1024</code></pre>
+            <h2 id="parameters" class="rule-top">Parameters</h2>
+            <table class="alternate cmu-full">
+              <thead
+                ><tr
+                  ><th scope="col">Parameter</th><th scope="col">Accepted Value</th
+                  ><th scope="col">Default</th></tr
+                ></thead
+              >
+              <tbody>
+                <tr
+                  ><th scope="row"><code>text</code></th
+                  ><td>Text or a link, up to 1024 UTF-8 bytes. URL-encode the complete value.</td
+                  ><td>Required</td></tr
+                >
+                <tr
+                  ><th scope="row"><code>style</code></th
+                  ><td>A value from the <a href="#styles">style table</a>.</td
+                  ><td><code>scotty</code></td></tr
+                >
+                <tr
+                  ><th scope="row"><code>width</code></th
+                  ><td
+                    >The width of the whole image in pixels, including the QR code's margin and
+                    design: a whole number up to 2048. The minimum depends on the style and
+                    content.</td
+                  ><td>512</td></tr
+                >
+                <tr
+                  ><th scope="row"><code>above</code>, <code>below</code></th
+                  ><td
+                    >One line above or below the code, up to 40 characters each. Letters, numbers,
+                    spaces and common punctuation; other characters return an error. Leave it blank
+                    for no line.</td
+                  ><td>None</td></tr
+                >
+                <tr
+                  ><th scope="row"><code>icon</code></th
+                  ><td
+                    >A
+                    <a class="external" href="https://icons.getbootstrap.com/">Bootstrap Icons</a>
+                    name, like <code>wifi</code> or <code>calendar-event</code>. Used only with
+                    <code>style=icon</code>. <a href="icons.json"><code>/icons.json</code></a> lists
+                    the available names. The Builder picks an icon for the content type unless you
+                    choose one.</td
+                  ><td><code>link-45deg</code></td></tr
+                >
+              </tbody></table
+            >
+            <p>Supply each parameter once. Unknown parameter names are rejected.</p>
+            <h2 id="styles" class="rule-top">Style Values</h2>
+            <!-- reference:start -->
+            <table class="alternate cmu-full"
+              ><thead
+                ><tr
+                  ><th scope="col">Style</th><th scope="col">Value</th
+                  ><th scope="col">Error Correction</th
+                  ><th scope="col">Minimum Pixels per Module</th></tr
+                ></thead
+              ><tbody>
+                <tr
+                  ><th scope="row"><a href="styles.html#style-mosaic">Mosaic Scotty</a></th
+                  ><td><code>mosaic</code></td
+                  ><td>High</td><td>6</td></tr
+                >
+                <tr
+                  ><th scope="row"><a href="styles.html#style-scotty">Basic Scotty</a></th
+                  ><td><code>scotty</code></td
+                  ><td>High</td><td>3</td></tr
+                >
+                <tr
+                  ><th scope="row"><a href="styles.html#style-kraus-campo">Kraus Campo</a></th
+                  ><td><code>kraus-campo</code></td
+                  ><td>High</td><td>6</td></tr
+                >
+                <tr
+                  ><th scope="row"><a href="styles.html#style-wean">Wean Hall</a></th
+                  ><td><code>wean</code></td
+                  ><td>High</td><td>5</td></tr
+                >
+                <tr
+                  ><th scope="row"><a href="styles.html#style-binary-heart">Binary Heart</a></th
+                  ><td><code>binary-heart</code></td
+                  ><td>High</td><td>6</td></tr
+                >
+                <tr
+                  ><th scope="row"><a href="styles.html#style-block-monogram">Block Monogram</a></th
+                  ><td><code>block-monogram</code></td
+                  ><td>Medium</td><td>3</td></tr
+                >
+                <tr
+                  ><th scope="row"><a href="styles.html#style-tilted-square">Tilted Square</a></th
+                  ><td><code>tilted-square</code></td
+                  ><td>Medium</td><td>3</td></tr
+                >
+                <tr
+                  ><th scope="row"><a href="styles.html#style-plain">Basic Black</a></th
+                  ><td><code>plain</code></td
+                  ><td>Medium</td><td>3</td></tr
+                >
+                <tr
+                  ><th scope="row"><a href="styles.html#style-icon">Center Icon</a></th
+                  ><td><code>icon</code></td
+                  ><td>High</td><td>3</td></tr
+                >
+              </tbody></table
+            >
+            <!-- reference:end -->
+            <p
+              >The module limit is the minimum number of pixels for one cell in the QR code's grid.
+              It's a rendering limit, not a recommended print size. The required image width also
+              depends on the content, border and artwork; a width error reports the minimum for that
+              request. Each style sets its own error correction.</p
+            >
+            <h2 id="content-types" class="rule-top">Content Payloads</h2>
+            <p
+              >An image URL encodes the <code>text</code> value as supplied. A contact card, event
+              or network is a formatted text payload, not a separate image parameter. The Builder's
+              content fields assemble those payloads for you.</p
+            >
+            <table class="alternate cmu-full">
+              <thead
+                ><tr><th scope="col">Content Type</th><th scope="col">Payload Form</th></tr></thead
+              >
+              <tbody>
+                <tr
+                  ><th scope="row">Link or Text</th
+                  ><td>A complete destination URL or the text to display</td></tr
+                >
+                <tr
+                  ><th scope="row">Contact Card</th
+                  ><td>A vCard, beginning with <code>BEGIN:VCARD</code></td></tr
+                >
+                <tr
+                  ><th scope="row">Event</th
+                  ><td>An event, beginning with <code>BEGIN:VEVENT</code></td></tr
+                >
+                <tr
+                  ><th scope="row">Email</th
+                  ><td
+                    >A <code>mailto:</code> address, optionally with a subject and message</td
+                  ></tr
+                >
+                <tr
+                  ><th scope="row">Phone Call</th><td>A <code>tel:</code> address</td></tr
+                >
+                <tr
+                  ><th scope="row">Map Location</th
+                  ><td
+                    >A map link for the chosen map app (Google Maps, Apple Maps or
+                    OpenStreetMap)</td
+                  ></tr
+                >
+                <tr
+                  ><th scope="row">Wi-Fi Network</th
+                  ><td
+                    >A <code>WIFI:</code> payload or a connection-instructions URL, depending on the
+                    network</td
+                  ></tr
+                >
+              </tbody></table
+            >
+            <p
+              >URL-encode the whole payload, including its own ampersands, question marks and line
+              breaks. The 1024-byte limit applies to the decoded UTF-8 payload, not the longer
+              percent-encoded query string. An image URL contains that payload, just as the QR code
+              does.</p
+            >
+            <p>In JavaScript, use <code>URLSearchParams</code> to encode the values:</p>
+            <pre class="cmu-snippet cmu-snippet--wrap"><code>const query = new URLSearchParams({
+  text: "https://www.cmu.edu/",
+  style: "icon",
+  icon: "calendar-event",
+  width: "1024",
+  above: "Visit CMU",
+});
+const imageUrl = `https://qrnegie.andrew.cmu.edu/qr.svg?${query}`;</code></pre>
+            <h2 id="embedding" class="rule-top">Embedding and Downloads</h2>
+            <p
+              >Use an image URL directly in HTML. Escape its query separators as
+              <code>&amp;amp;</code>:</p
+            >
+            <pre
+              class="cmu-snippet cmu-snippet--wrap"
+            ><code>&lt;img src="https://qrnegie.andrew.cmu.edu/qr.svg?text=https%3A%2F%2Fwww.cmu.edu%2F&amp;amp;style=plain&amp;amp;width=512"
+  alt="QR code for the Carnegie Mellon website" width="512"&gt;</code></pre>
+            <p
+              >The example leaves the height unset so the image keeps its natural proportions. If
+              your layout requires both dimensions, use the exported image's actual width and
+              height. Include a normal link beside a QR code on a web page so someone can open the
+              destination without scanning.</p
+            >
+            <p
+              >To keep a file with your project, download the response. This command URL-encodes the
+              text values and stops on an HTTP error:</p
+            >
+            <pre
+              class="cmu-snippet cmu-snippet--wrap"
+            ><code>curl --fail --show-error --get 'https://qrnegie.andrew.cmu.edu/qr.png' \
+  --data-urlencode 'text=https://www.cmu.edu/' \
+  --data 'style=icon' \
+  --data 'icon=calendar-event' \
+  --data 'width=1024' \
+  --data-urlencode 'above=Visit CMU' \
+  --output qrnegie.png</code></pre>
+            <p
+              >A downloaded file stays exactly as it was. An image URL always uses QRnegie's current
+              designs, so its look can change when a design does, though never what it encodes.
+              Browsers and other caches can keep a copy for up to a day.</p
+            >
+            <h2 id="errors" class="rule-top">Errors</h2>
+            <table class="alternate cmu-full">
+              <thead
+                ><tr
+                  ><th scope="col">Status</th><th scope="col">Meaning</th
+                  ><th scope="col">What to Check</th></tr
+                ></thead
+              >
+              <tbody>
+                <tr
+                  ><th scope="row">400</th><td>QRnegie can't make that image.</td
+                  ><td
+                    >Read the plain-text response. Check parameter names, repeated values, content
+                    length, style, width, text characters and icon name. A width error gives the
+                    required minimum; artwork may also require shorter content or a different
+                    style.</td
+                  ></tr
+                >
+                <tr
+                  ><th scope="row">500</th><td>Something went wrong making the image.</td
+                  ><td
+                    >Check the response before saving it as an image. Try again; if it keeps
+                    happening,
+                    <a class="external" href="https://github.com/cmu-web/cmu-web-qrnegie/issues"
+                      >report it on GitHub</a
+                    >
+                    with a made-up example.</td
+                  ></tr
+                >
+              </tbody></table
+            >
+            <p
+              >Successful image requests return image data. Error responses are plain text, so
+              integrations should check the HTTP status and content type before using the body. A
+              successful image doesn't replace the
+              <a href="styles.html#scanning">checks on the finished layout</a>.</p
+            >
+            <h2 id="mcp" class="rule-top">MCP Tools</h2>
+            <table class="alternate cmu-full">
+              <thead
+                ><tr><th scope="col">Connection</th><th scope="col">Value</th></tr></thead
+              >
+              <tbody>
+                <tr
+                  ><th scope="row">Server Name</th><td><code>qrnegie</code></td></tr
+                >
+                <tr
+                  ><th scope="row">Endpoint</th
+                  ><td><code>https://qrnegie.andrew.cmu.edu/mcp</code></td></tr
+                >
+                <tr><th scope="row">Transport</th><td>Streamable HTTP, without sign-in</td></tr>
+              </tbody></table
+            >
+            <table class="alternate cmu-full">
+              <thead
+                ><tr
+                  ><th scope="col">Tool</th><th scope="col">Input</th
+                  ><th scope="col">Result</th></tr
+                ></thead
+              >
+              <tbody>
+                <tr
+                  ><th scope="row"><code>get_guide</code></th
+                  ><td>No arguments</td><td>Image parameters and integration guidance</td></tr
+                >
+                <tr
+                  ><th scope="row"><code>generate_qr</code></th
+                  ><td
+                    ><code>text</code>; optional <code>style</code>, <code>width</code>,
+                    <code>above</code>, <code>below</code> and <code>icon</code></td
+                  ><td>A PNG image, SVG and PNG URLs, and HTML with the image's dimensions</td></tr
+                >
+              </tbody></table
+            >
+            <p
+              >For <code>generate_qr</code>, use the same parameter meanings and defaults as image
+              URLs. Pass <code>width</code> as an integer from 96 to 2048; a style or payload may
+              require a higher minimum. These are tool arguments, not a query string:</p
+            >
+            <pre class="cmu-snippet cmu-snippet--wrap"><code>{
+  "text": "https://www.cmu.edu/",
+  "style": "icon",
+  "icon": "calendar-event",
+  "width": 1024,
+  "above": "Visit CMU"
+}</code></pre>
+            <p
+              >A generation failure returns a tool result marked <code>isError</code> with an
+              explanatory message. MCP protocol errors are separate from image errors; check the
+              tool result as well as the connection.</p
+            >
+            <p
+              >To set up an agent, start with the <a href="./#agent">prompt on the home page</a>.</p
+            >
+          </div></div
+        >
+      </main>
+      <footer class="grid column3 invert">
+        <div>
+          <p
+            >QRnegie<br />Carnegie Mellon University<br />5000 Forbes Avenue<br />Pittsburgh, PA
+            15213</p
+          >
+          <ul
+            ><li><a href="https://www.cmu.edu/legal/">Legal Info</a></li
+            ><li><a href="https://www.cmu.edu/">www.cmu.edu</a></li></ul
+          >
+          <ul
+            ><li>&copy; 2026 Carnegie Mellon University</li></ul
+          >
+        </div>
+        <div></div>
+        <div>
+          <nav id="nav"
+            ><ul
+              ><li><a href="builder.html">Builder</a></li
+              ><li><a href="styles.html">Styles</a></li
+              ><li class="active"><a href="reference.html" aria-current="page">Reference</a></li
+              ><li><a href="about.html">About</a></li></ul
+            ></nav
+          >
+        </div>
+      </footer>
+    </div>
+    <script src="https://www.cmu.edu/common/standard-v6/js/list.min.js"></script>
+    <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
+    <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
+    <script
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/js/cmu-app.js"
+      integrity="sha384-10393F76wEQPHaJEEoM9M1QEQsl9mTezDdEM45kArp0j26SWs3gxiGsXKrmwJHio"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

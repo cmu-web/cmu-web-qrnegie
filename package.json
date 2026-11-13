@@ -16,8 +16,10 @@
     "check:node": "node scripts/check-node-version.mjs",
     "check:opengraph": "node scripts/opengraph.mjs --check",
     "opengraph": "node scripts/opengraph.mjs",
-    "check": "npm run check:node && npm run lint && npm run format:check && npm run check:opengraph && npm run typecheck && npm test && npm run build",
-    "examples": "npm run build && node scripts/render-examples.mjs"
+    "check": "npm run check:node && npm run lint && npm run format:check && npm run check:opengraph && npm run typecheck && npm test && npm run check:docs",
+    "examples": "npm run build && node scripts/render-examples.mjs",
+    "docs": "npm run build && node scripts/documentation.mjs",
+    "check:docs": "npm run build && node scripts/documentation.mjs --check"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",

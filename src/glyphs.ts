@@ -1,4 +1,4 @@
-// Header and footer lettering: Open Sans Bold outlines (SIL Open Font
+// Lettering above and below the code: Open Sans Bold outlines (SIL Open Font
 // License 1.1, Copyright 2020 The Open Sans Project Authors), so the text
 // looks the same in any SVG viewer and in PNGs, with no font installed. One
 // em tall, baseline at 0; each glyph is its advance width and its outline.

@@ -1,6 +1,6 @@
 // The builder: the preview follows the form as it changes, and the page's own
 // address keeps the form's options (its content type and fields, style
-// and size), so a builder link opens with the same code.
+// and width), so a builder link opens with the same code.
 (function () {
   "use strict";
   var byId = function (id) {
@@ -11,10 +11,10 @@
     kind = byId("qr-kind"),
     text = byId("qr-qr-text"),
     style = byId("qr-qr-style"),
-    size = byId("qr-qr-size"),
+    width = byId("qr-qr-width"),
     wifi = byId("qr-wifi-network"),
-    header = byId("qr-header"),
-    footer = byId("qr-footer"),
+    above = byId("qr-above"),
+    below = byId("qr-below"),
     icon = byId("qr-icon"),
     preview = byId("qr-qr-preview"),
     qrUrls,
@@ -88,12 +88,141 @@
     byId("qr-icon-names").replaceChildren.apply(
       byId("qr-icon-names"),
       matches.slice(0, 8).map(function (name) {
-        var option = document.createElement("li");
-        option.textContent = name;
+        // The icon, then its name with the typed part in bold (the kit
+        // bolds plain options only)
+        var option = document.createElement("li"),
+          at = name.indexOf(typed),
+          strong = document.createElement("strong");
+        strong.textContent = name.slice(at, at + typed.length);
+        option.dataset.value = name;
+        option.append(glyph(name), " " + name.slice(0, at), strong, name.slice(at + typed.length));
         return option;
       }),
     );
   }
+  // A Bootstrap Icons glyph from the font, for the suggestions and the picker
+  function glyph(name) {
+    var i = document.createElement("i");
+    i.className = "bi bi-" + name;
+    i.setAttribute("aria-hidden", "true");
+    return i;
+  }
+  // The names that match the search, those that start with it first
+  function iconMatches(typed) {
+    var matches = typed
+      ? iconNames.filter(function (name) {
+          return name.includes(typed);
+        })
+      : iconNames.slice();
+    if (typed)
+      matches.sort(function (a, b) {
+        return (b.startsWith(typed) ? 1 : 0) - (a.startsWith(typed) ? 1 : 0);
+      });
+    return matches;
+  }
+
+  // Browse Icons: a dialog with a search field and a grid of icons (the
+  // kit's choice grid). It opens on a starter set; a search covers them all,
+  // showing the first 120 matches.
+  var STARTER_ICONS = [
+    "link-45deg",
+    "globe2",
+    "person-vcard",
+    "calendar-event",
+    "envelope",
+    "telephone",
+    "geo-alt",
+    "wifi",
+    "building",
+    "mortarboard",
+    "book",
+    "journal-text",
+    "megaphone",
+    "music-note-beamed",
+    "palette",
+    "trophy",
+    "heart",
+    "star",
+    "camera",
+    "film",
+    "mic",
+    "cup-hot",
+    "bicycle",
+    "bus-front",
+    "info-circle",
+    "question-circle",
+    "clipboard-check",
+    "ticket-perforated",
+  ];
+  var iconDialog = byId("qr-icon-dialog"),
+    iconSearch = byId("qr-icon-search"),
+    iconGrid = byId("qr-icon-grid"),
+    iconPicked = "",
+    ICON_LIMIT = 120;
+  function showIcons() {
+    var typed = iconSearch.value.trim().toLowerCase(),
+      matches = typed ? iconMatches(typed) : STARTER_ICONS,
+      shown = matches.slice(0, ICON_LIMIT);
+    // The current icon stays in view: first in the starter set, or in place
+    // of the last match
+    if (iconNames.includes(iconPicked) && !shown.includes(iconPicked)) {
+      if (!typed) shown = [iconPicked].concat(shown);
+      else if (matches.includes(iconPicked)) shown[shown.length - 1] = iconPicked;
+    }
+    iconGrid.replaceChildren.apply(
+      iconGrid,
+      shown.map(function (name) {
+        var li = document.createElement("li"),
+          label = document.createElement("label"),
+          input = document.createElement("input");
+        input.type = "radio";
+        input.name = "qr-icon-choice";
+        input.value = name;
+        input.checked = name === iconPicked;
+        label.append(input, glyph(name), name);
+        li.append(label);
+        return li;
+      }),
+    );
+    var count = matches.length.toLocaleString("en-US");
+    byId("qr-icon-count").textContent = !typed
+      ? "A few to start. Search all " + iconNames.length.toLocaleString("en-US") + " icons."
+      : !matches.length
+        ? "No icons match \u201c" + typed + ".\u201d"
+        : matches.length > ICON_LIMIT
+          ? "The first " + ICON_LIMIT + " of " + count + " icons. Search to narrow them."
+          : matches.length === 1
+            ? "1 icon"
+            : count + " icons";
+  }
+  iconGrid.addEventListener("change", function (e) {
+    iconPicked = e.target.value;
+  });
+  // Double-click a tile to use it right away
+  iconGrid.addEventListener("dblclick", function (e) {
+    if (e.target.closest("label")) byId("qr-icon-form").requestSubmit();
+  });
+  iconSearch.addEventListener("input", showIcons);
+  byId("qr-icon-browse").addEventListener("click", function () {
+    iconPicked = icon.value.trim() || icon.placeholder;
+    iconSearch.value = "";
+    (loadingIcons || Promise.resolve()).then(function () {
+      showIcons();
+      iconDialog.showModal();
+      var picked = iconGrid.querySelector(":checked");
+      if (picked) picked.closest("li").scrollIntoView({ block: "nearest" });
+      iconSearch.focus();
+    });
+  });
+  byId("qr-icon-form").addEventListener("submit", function (e) {
+    var use = !e.submitter || e.submitter.value !== "cancel";
+    if (use && iconPicked && iconPicked !== (icon.value.trim() || icon.placeholder)) {
+      icon.value = iconPicked;
+      icon.dispatchEvent(new Event("input", { bubbles: true }));
+      icon.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+    byId("qr-icon-names").hidden = true;
+  });
 
   // Contact cards and events escape \ , ; and line breaks
   var card = function (s) {
@@ -279,6 +408,8 @@
     form.querySelectorAll("[data-kind]").forEach(function (group) {
       group.hidden = group.dataset.kind !== kind.value;
     });
+    // What a phone does with this kind, under Content Type
+    byId("qr-kind-hint").textContent = kind.selectedOptions[0].dataset.hint;
     var network = networks[wifi.value],
       callout = byId("qr-wifi-callout");
     // A blue note, or a gold warning (cmu-callout colors)
@@ -300,7 +431,7 @@
   // Options from the address, where they name an option the form has; with
   // no text there, the style's own
   var start = new URLSearchParams(location.search);
-  [kind, style, size, wifi, form.elements["map-app"]].forEach(function (select) {
+  [kind, style, width, wifi, form.elements["map-app"]].forEach(function (select) {
     var wanted = start.get(select.name);
     if (
       Array.from(select.options).some(function (option) {
@@ -312,9 +443,9 @@
   allFields.forEach(function (field) {
     if (field.tagName !== "SELECT" && start.has(field.name)) field.value = start.get(field.name);
   });
-  header.value = start.get("header") || "";
+  above.value = start.get("above") || "";
   icon.value = start.get("icon") || "";
-  footer.value = start.get("footer") || "";
+  below.value = start.get("below") || "";
   // Blank text means the style's own, shown as the placeholder
   text.value = start.get("text") || "";
   text.placeholder = startingText();
@@ -323,11 +454,11 @@
     var artistic = ["mosaic", "kraus-campo", "wean", "binary-heart", "tilted-square"].includes(
       style.value,
     );
-    byId("qr-size-hint").textContent = artistic
+    byId("qr-width-hint").textContent = artistic
       ? "Start with 1024 pixels so the artwork has room. More text can require a larger export."
-      : "Choose the size for your layout. More text can require a larger export.";
-    size.querySelector('option[value="256"]').disabled = artistic;
-    if (artistic && size.value === "256") size.value = "1024";
+      : "Choose the width for your layout. More text can require a larger export.";
+    width.querySelector('option[value="256"]').disabled = artistic;
+    if (artistic && width.value === "256") width.value = "1024";
   }
   // Errors, and a notice when the builder changes a choice; a working
   // preview needs no message
@@ -376,10 +507,10 @@
   async function update() {
     var request = ++latest,
       content = encoded(),
-      params = new URLSearchParams({ text: content, style: style.value, size: size.value }),
+      params = new URLSearchParams({ text: content, style: style.value, width: width.value }),
       // The page's address keeps what was typed or chosen; blank stays the
       // example
-      state = new URLSearchParams({ style: style.value, size: size.value });
+      state = new URLSearchParams({ style: style.value, width: width.value });
     if (kind.value === "text") {
       if (text.value.trim()) state.set("text", text.value);
     } else {
@@ -394,8 +525,8 @@
       params.set("icon", icon.value.trim() || icon.placeholder);
       if (icon.value.trim()) state.set("icon", icon.value.trim());
     }
-    // Header and footer, when there's more than space
-    [header, footer].forEach(function (field) {
+    // Text above and below, when there's more than space
+    [above, below].forEach(function (field) {
       if (field.value.trim()) {
         params.set(field.name, field.value.trim());
         state.set(field.name, field.value);
@@ -411,9 +542,9 @@
       var response = await fetch(urls.svg);
       if (!response.ok) throw new Error(await response.text());
       var image = await response.blob();
-      // A header or footer makes the image taller than it is wide
+      // Text above or below makes the image taller than it is wide
       var drawn = /^<svg[^>]*?height="(\d+)"/.exec(await image.text()),
-        height = drawn ? drawn[1] : size.value;
+        height = drawn ? drawn[1] : width.value;
       // A slow response for options that have since changed is dropped
       if (request !== latest) return;
       qrUrls = urls;
@@ -429,7 +560,7 @@
         '" alt="QR code for ' +
         escape(describe(content)) +
         '" width="' +
-        size.value +
+        width.value +
         '" height="' +
         height +
         '" />';
@@ -438,17 +569,19 @@
       notice = "";
     } catch (error) {
       if (request !== latest) return;
-      // Too small for this text: the smallest size here that fits, if any
-      var needed = /Choose a size from (\d+)/.exec(error.message),
+      // Too small for this text: the smallest width here that fits, if any
+      var needed = /Choose a width from (\d+)/.exec(error.message),
         fits =
           needed &&
-          Array.from(size.options).find(function (option) {
+          Array.from(width.options).find(function (option) {
             return !option.disabled && +option.value >= +needed[1];
           });
-      if (fits && fits.value !== size.value) {
-        size.value = fits.value;
+      if (fits && fits.value !== width.value) {
+        width.value = fits.value;
         notice =
-          "Size changed to " + fits.text.toLowerCase() + ", the smallest here that fits this text.";
+          "Width changed to " +
+          fits.text.toLowerCase() +
+          ", the smallest here that fits this text.";
         update();
         return;
       }
@@ -457,13 +590,13 @@
     }
   }
 
-  // CMU-GUEST asks for an access code after joining: the footer starts one,
+  // CMU-GUEST asks for an access code after joining: the text below starts one,
   // and an untouched start goes when the network or content type changes
   var accessCode = "Access Code: ";
   function startAccessCode() {
     var guest = kind.value === "wifi" && wifi.value === "CMU-GUEST";
-    if (guest && !footer.value.trim()) footer.value = accessCode;
-    else if (!guest && footer.value === accessCode) footer.value = "";
+    if (guest && !below.value.trim()) below.value = accessCode;
+    else if (!guest && below.value === accessCode) below.value = "";
   }
   // The kind before a change, to tell typed content from an example
   var shownKind = kind.value;
@@ -490,7 +623,7 @@
     describeIcon();
     update();
   });
-  size.addEventListener("change", update);
+  width.addEventListener("change", update);
   form.elements["map-app"].addEventListener("change", update);
   wifi.addEventListener("change", function () {
     startAccessCode();
@@ -498,7 +631,7 @@
     update();
   });
   // Typing waits for a pause
-  [text, header, footer, icon].concat(allFields).forEach(function (field) {
+  [text, above, below, icon].concat(allFields).forEach(function (field) {
     if (field.tagName === "SELECT") return;
     field.addEventListener("input", function () {
       clearTimeout(typing);

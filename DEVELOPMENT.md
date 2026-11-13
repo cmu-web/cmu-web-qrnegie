@@ -47,6 +47,23 @@ or devcontainer configuration, select **Dev Containers: Rebuild Container**.
 | The runtime image or development environment | `Dockerfile` and `.devcontainer/` |
 | Example images, tooling checks or previews   | `scripts/`                        |
 
+## Update the Style Reference
+
+`src/style-info.ts` supplies style IDs, names, grouping, descriptions,
+minimum module sizes and error-correction levels. The renderer uses these
+facts, and the documentation generator uses them for the Builder's style
+menu, the Styles gallery and the Reference style table.
+
+```bash
+npm run docs
+```
+
+Edit descriptions in that source and regenerate the marked sections rather
+than editing the generated HTML. `npm run check` checks that the output
+matches the source. After adding a style or changing its appearance, also
+regenerate the example images below. Keep user guidance in Styles,
+integration details in Reference and sources and credits in About.
+
 ## Update the Example Images
 
 The style examples in `docs/images/` and the home page's hero come from the
@@ -146,7 +163,7 @@ A release publishes a container image to GitHub Container Registry.
 
 1. Start from an up-to-date `main` with passing CI and a clean working tree.
 2. Choose a major version for incompatible URL or option changes, a minor
-   version for new features, such as a style, or runtime changes, or a
+   version for new features (a new style, for example) or runtime changes, or a
    patch for fixes and dependency updates.
 3. Run `npm version major`, `npm version minor` or `npm version patch` with
    a Conventional Commits release message. For example:
@@ -156,7 +173,7 @@ A release publishes a container image to GitHub Container Registry.
    ```
 
    This updates `package.json` and `package-lock.json`, creates a local
-   commit and creates an annotated tag named for the version, such as
+   commit and creates an annotated tag named for the version, like
    `0.2.0`, with no `v` prefix (set in `.npmrc`). Review the commit and
    tag before publishing.
 
@@ -176,11 +193,10 @@ error correction; the other styles use high, so their artwork can stand in for p
 version, so their artwork has enough modules to show; Mosaic Scotty's
 minimum is higher at larger sizes, for a more detailed portrait.
 
-The renderer draws the code as SVG. Function patterns, such as the corner
-squares, are always plain squares; each style draws only the data modules.
+The renderer draws the code as SVG. Function patterns, like the corner squares, are always plain squares; each style draws only the data modules.
 Every module gets the same whole number of pixels, and each style has its
-own minimum, so a size too small for the text returns an error with the
-smallest size that works. Basic Scotty, Wean Hall and Binary Heart place
+own minimum, so a width too small for the text returns an error with the
+smallest width that works. Basic Scotty, Wean Hall and Binary Heart place
 their marks where they cover no function patterns, shrinking them when a
 dense code leaves no room. Mosaic Scotty samples the Scotty artwork once
 per QR version to choose each module's color. Tilted Square is laid out on
@@ -195,7 +211,7 @@ a runtime dependency of plain SVG files. Each icon's file is read the first
 time a code uses it, then kept in memory. `/icons.json` lists the names for
 the builder.
 
-Headers and footers are drawn from Open Sans Bold outlines in
+Text above and below the code is drawn from Open Sans Bold outlines in
 `src/glyphs.ts`, so the server and anyone viewing an image need no fonts
 installed. `scripts/glyphs.py` writes that file from the font; it takes
 Python with fontTools, and only matters when the lettering changes:
@@ -205,7 +221,8 @@ Python with fontTools, and only matters when the lettering changes:
 Get `OpenSans-Bold.ttf` from the Open Sans project
 (github.com/googlefonts/opensans, `fonts/ttf/`). It covers printable ASCII,
 Latin-1 letters, curly quotes, dashes, the bullet, the ellipsis and the
-copyright sign; anything else in a header or footer is an error.
+copyright sign; anything else in text above or below the code is an
+error.
 In production, responses allow browser and proxy caching for one day; in
 development they aren't cached, so style changes show on reload. Nothing
 is written to disk.

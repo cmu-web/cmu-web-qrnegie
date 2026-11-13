@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (Google Analytics): docs pages only, never in the image or MCP responses -->
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5RW6JKPW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- The address holds the text being encoded; other sites get only the origin -->
@@ -40,19 +49,20 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-cms.css"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/css/cmu-cms.css"
       integrity="sha384-+u4UJJGawMpfkXYetQDuUBs4iJZaH0GIVRw5uidyWjaUBPGQPtSqV4/O66AgMACJ"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-app.css"
-      integrity="sha384-FBcdRJw+jT8b/j0u8EmdccAm6sFf7nXv9edqYYW/z9zOlh+jmlPqLrwr/LgGXoaI"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/css/cmu-app.css"
+      integrity="sha384-Tj5sbg6foKwNHx77Xj9uSKHv4N7jiYnj97prQWE3B2+6v3K8tsqz/xmsjxeJKvjA"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
     />
+    <link href="bootstrap-icons/bootstrap-icons.min.css" rel="stylesheet" type="text/css" />
     <link href="//www.cmu.edu/favicon.ico" rel="icon" />
     <link href="//www.cmu.edu/favicon-152.png" rel="apple-touch-icon-precomposed" />
     <meta content="#9f0000" name="msapplication-TileColor" />
@@ -79,26 +89,29 @@
         <div class="content wide"
           ><div>
             <h1>Build Your QR Code</h1>
-            <p class="cmu-lead">Choose a style and a size, and copy the address or the HTML.</p>
+            <p class="cmu-lead">Choose a style and a width, and copy the address or the HTML.</p>
             <div id="qr-status" role="status" aria-live="polite"></div>
             <div class="cmu-split"
               ><div>
                 <form id="qr-qr-form" method="get" action="builder.html">
                   <label for="qr-qr-style">Style</label
-                  ><select id="qr-qr-style" name="style"
-                    ><optgroup label="Scotty Portraits"
+                  ><select id="qr-qr-style" name="style">
+                    <!-- builder-styles:start -->
+                    <optgroup label="Scotty Portraits"
                       ><option value="mosaic" selected data-text="https://www.cmu.edu/"
                         >Mosaic Scotty</option
                       ><option value="scotty" data-text="https://www.cmu.edu/"
                         >Basic Scotty</option
                       ></optgroup
-                    ><optgroup label="Campus Landmarks"
+                    >
+                    <optgroup label="Campus Landmarks"
                       ><option value="kraus-campo" data-text="https://www.cmu.edu/public-art"
                         >Kraus Campo</option
                       ><option value="wean" data-text="Our Turtle Eating a Cheeto"
                         >Wean Hall</option
                       ></optgroup
-                    ><optgroup label="Carnegie Mellon Marks"
+                    >
+                    <optgroup label="Carnegie Mellon Marks"
                       ><option
                         value="binary-heart"
                         data-text="https://www.cmu.edu/leadership/senior-admin/casalegno-bio"
@@ -108,24 +121,42 @@
                       ><option value="tilted-square" data-text="https://www.cmu.edu/"
                         >Tilted Square</option
                       ></optgroup
-                    ><optgroup label="Simple and Classic"
+                    >
+                    <optgroup label="Simple and Classic"
                       ><option value="plain" data-text="https://www.cmu.edu/">Basic Black</option
                       ><option value="icon" data-text="https://www.cmu.edu/"
                         >Center Icon</option
                       ></optgroup
-                    ></select
-                  >
+                    >
+                    <!-- builder-styles:end -->
+                  </select>
                   <hr />
                   <label for="qr-kind">Content Type</label>
-                  <select id="qr-kind" name="kind"
-                    ><option value="text" selected>Link or Text</option
-                    ><option value="contact">Contact Card</option
-                    ><option value="event">Event</option
-                    ><option value="email">Email</option
-                    ><option value="phone">Phone Call</option
-                    ><option value="map">Map Location</option
-                    ><option value="wifi">Wi-Fi Network</option></select
+                  <select id="qr-kind" name="kind" aria-describedby="qr-kind-hint"
+                    ><option
+                      value="text"
+                      data-hint="Phones open the link, or show the text."
+                      selected
+                      >Link or Text</option
+                    ><option
+                      value="contact"
+                      data-hint="Phones offer to save it as a contact. Leave out anything you don't want shared."
+                      >Contact Card</option
+                    ><option
+                      value="event"
+                      data-hint="Phones offer to add it to a calendar, at the times shown in the phone's own time zone."
+                      >Event</option
+                    ><option value="email" data-hint="Phones open a new email, ready to send."
+                      >Email</option
+                    ><option value="phone" data-hint="Phones offer to call the number."
+                      >Phone Call</option
+                    ><option value="map" data-hint="Phones open the place in the chosen map app."
+                      >Map Location</option
+                    ><option value="wifi" data-hint="Phones offer to join the network."
+                      >Wi-Fi Network</option
+                    ></select
                   >
+                  <p class="cmu-hint" id="qr-kind-hint">Phones open the link, or show the text.</p>
                   <div data-kind="text">
                     <label for="qr-qr-text">URL or Text</label>
                     <textarea
@@ -289,10 +320,6 @@
                       data-form-type="other"
                       autocomplete="off"
                     />
-                    <p class="cmu-hint"
-                      >Phones offer to save it as a contact. Leave out anything you don't want
-                      shared.</p
-                    >
                   </div>
                   <div data-kind="event" hidden>
                     <label for="qr-event-title">Event</label>
@@ -356,10 +383,6 @@
                       data-form-type="other"
                       autocomplete="off"
                     ></textarea>
-                    <p class="cmu-hint"
-                      >Phones offer to add it to a calendar, at the times shown in the phone's own
-                      time zone.</p
-                    >
                   </div>
                   <div data-kind="email" hidden>
                     <label for="qr-email-to">To</label>
@@ -397,7 +420,6 @@
                       data-form-type="other"
                       autocomplete="off"
                     ></textarea>
-                    <p class="cmu-hint">Phones open a new email, ready to send.</p>
                   </div>
                   <div data-kind="phone" hidden>
                     <label for="qr-phone-number">Phone Number</label>
@@ -413,7 +435,6 @@
                       data-form-type="other"
                       autocomplete="off"
                     />
-                    <p class="cmu-hint">Phones offer to call the number.</p>
                   </div>
                   <div data-kind="map" hidden>
                     <label for="qr-map-place">Place or Address</label>
@@ -499,65 +520,70 @@
                   <hr />
                   <div id="qr-icon-field" hidden>
                     <label for="qr-icon">Icon</label>
-                    <div class="cmu-suggest"
-                      ><input
-                        type="text"
-                        id="qr-icon"
-                        role="combobox"
-                        aria-autocomplete="list"
-                        aria-expanded="false"
-                        aria-controls="qr-icon-names"
-                        name="icon"
-                        autocomplete="off"
-                        spellcheck="false"
-                        aria-describedby="qr-icon-hint"
-                        data-lpignore="true"
-                        data-1p-ignore
-                        data-bwignore
-                        data-form-type="other" /><ul
-                        class="cmu-suggest-list"
-                        id="qr-icon-names"
-                        role="listbox"
-                        aria-label="Icons"
-                        hidden
-                      ></ul
-                    ></div>
+                    <div class="cmu-field-button">
+                      <div class="cmu-suggest"
+                        ><input
+                          type="text"
+                          id="qr-icon"
+                          role="combobox"
+                          aria-autocomplete="list"
+                          aria-expanded="false"
+                          aria-controls="qr-icon-names"
+                          name="icon"
+                          autocomplete="off"
+                          spellcheck="false"
+                          aria-describedby="qr-icon-hint"
+                          data-lpignore="true"
+                          data-1p-ignore
+                          data-bwignore
+                          data-form-type="other" /><ul
+                          class="cmu-suggest-list"
+                          id="qr-icon-names"
+                          role="listbox"
+                          aria-label="Icons"
+                          hidden
+                        ></ul
+                      ></div>
+                      <button type="button" class="btn ghost" id="qr-icon-browse"
+                        >Browse Icons</button
+                      >
+                    </div>
                     <p class="cmu-hint" id="qr-icon-hint"
                       >A name from
                       <a class="external" href="https://icons.getbootstrap.com/">Bootstrap Icons</a
-                      >, such as wifi or calendar-event. Leave blank to match the content type.</p
+                      >, like wifi or calendar-event. Leave blank to match the content type.</p
                     >
                   </div>
-                  <label for="qr-header">Header</label>
+                  <label for="qr-above">Text Above</label>
                   <input
                     type="text"
-                    id="qr-header"
-                    name="header"
+                    id="qr-above"
+                    name="above"
                     maxlength="40"
-                    aria-describedby="qr-header-hint"
+                    aria-describedby="qr-above-hint"
                     data-lpignore="true"
                     data-1p-ignore
                     data-bwignore
                     data-form-type="other"
                     autocomplete="off"
                   />
-                  <p class="cmu-hint" id="qr-header-hint"
+                  <p class="cmu-hint" id="qr-above-hint"
                     >Optional. A line of text above the QR code, up to 40 characters.</p
                   >
-                  <label for="qr-footer">Footer</label>
+                  <label for="qr-below">Text Below</label>
                   <input
                     type="text"
-                    id="qr-footer"
-                    name="footer"
+                    id="qr-below"
+                    name="below"
                     maxlength="40"
-                    aria-describedby="qr-footer-hint"
+                    aria-describedby="qr-below-hint"
                     data-lpignore="true"
                     data-1p-ignore
                     data-bwignore
                     data-form-type="other"
                     autocomplete="off"
                   />
-                  <p class="cmu-hint" id="qr-footer-hint"
+                  <p class="cmu-hint" id="qr-below-hint"
                     >Optional. A line of text below the QR code, up to 40 characters.</p
                   >
                 </form></div
@@ -570,17 +596,17 @@
                 <figure class="cmu-shot">
                   <img id="qr-qr-preview" alt="QR code preview" width="480" height="480" hidden />
                 </figure>
-                <label for="qr-qr-size">Size</label
+                <label for="qr-qr-width">Width</label
                 ><select
                   form="qr-qr-form"
-                  id="qr-qr-size"
-                  name="size"
-                  aria-describedby="qr-size-hint"
+                  id="qr-qr-width"
+                  name="width"
+                  aria-describedby="qr-width-hint"
                   ><option value="256">256 Pixels</option
                   ><option value="512">512 Pixels</option
                   ><option value="1024" selected>1024 Pixels</option
                   ><option value="2048">2048 Pixels</option></select
-                ><p class="cmu-hint" id="qr-size-hint"
+                ><p class="cmu-hint" id="qr-width-hint"
                   >Start with 1024 pixels so the artwork has room. More text can require a larger
                   export.</p
                 >
@@ -629,6 +655,32 @@
             </div>
           </form>
         </dialog>
+        <dialog class="cmu-dialog" id="qr-icon-dialog" aria-labelledby="qr-icon-title">
+          <form method="dialog" id="qr-icon-form">
+            <h2 id="qr-icon-title">Choose an Icon</h2>
+            <label for="qr-icon-search">Search Icons</label>
+            <input
+              type="text"
+              id="qr-icon-search"
+              autocomplete="off"
+              spellcheck="false"
+              aria-describedby="qr-icon-count"
+              data-lpignore="true"
+              data-1p-ignore
+              data-bwignore
+              data-form-type="other"
+            />
+            <p class="cmu-hint" id="qr-icon-count" aria-live="polite"></p>
+            <fieldset class="cmu-choices cmu-choices--grid">
+              <legend class="sr-only">Icons</legend>
+              <ul id="qr-icon-grid"></ul>
+            </fieldset>
+            <div class="cmu-dialog-buttons">
+              <button class="btn" type="submit" value="use">Use This Icon</button>
+              <button class="btn ghost" type="submit" value="cancel" formnovalidate>Cancel</button>
+            </div>
+          </form>
+        </dialog>
       </main>
       <footer class="grid column3 invert">
         <div>
@@ -646,13 +698,14 @@
         </div>
         <div></div>
         <div>
-          <nav id="nav">
-            <ul>
-              <li class="active"><a href="builder.html">Builder</a></li>
-              <li><a href="options.html">Options</a></li>
-              <li><a href="about.html">About</a></li>
-            </ul>
-          </nav>
+          <nav id="nav"
+            ><ul
+              ><li class="active"><a href="builder.html" aria-current="page">Builder</a></li
+              ><li><a href="styles.html">Styles</a></li
+              ><li><a href="reference.html">Reference</a></li
+              ><li><a href="about.html">About</a></li></ul
+            ></nav
+          >
         </div>
       </footer>
     </div>
@@ -660,7 +713,7 @@
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/js/cmu-app.js"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/js/cmu-app.js"
       integrity="sha384-10393F76wEQPHaJEEoM9M1QEQsl9mTezDdEM45kArp0j26SWs3gxiGsXKrmwJHio"
       crossorigin="anonymous"
     ></script>

@@ -1,4 +1,5 @@
 import QRCode from "qrcode";
+import { ERROR_CORRECTION } from "./style-info";
 import sharp from "sharp";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -23,20 +24,20 @@ export const xml = (s: string) =>
 // look: its own dark color, in Kraus Campo's orange band, turned with Tilted
 // Square
 export interface Labels {
-  header?: string;
-  footer?: string;
+  above?: string;
+  below?: string;
   // Center Icon's icon: a Bootstrap Icons name
   icon?: string;
 }
 export const LABEL_LIMIT = 40;
 export function checkLabels(labels: Labels) {
-  for (const label of [labels.header, labels.footer])
+  for (const label of [labels.above, labels.below])
     if (
       label !== undefined &&
       ([...label].length > LABEL_LIMIT || [...label].some((c) => !(c in GLYPHS)))
     )
       throw new GenerateError(
-        `Keep a header or footer to ${LABEL_LIMIT} characters: letters, numbers, spaces and common punctuation.`,
+        `Keep text above or below the code to ${LABEL_LIMIT} characters: letters, numbers, spaces and common punctuation.`,
       );
 }
 const INK: Record<QrStyle, string> = {
@@ -47,7 +48,7 @@ const INK: Record<QrStyle, string> = {
   wean: "#2b2724",
   "binary-heart": "#c41230",
   "tilted-square": "#c41230",
-  "block-monogram": "#c41230",
+  "block-monogram": "#941120",
   icon: "black",
 };
 // Open Sans's capital height, in ems
@@ -70,24 +71,24 @@ function lettering(label: string, em: number, x: number, y: number) {
 const emFor = (labels: Labels, width: number, most: number) =>
   Math.min(
     most,
-    (width * 0.88) / Math.max(...[labels.header, labels.footer].map((l) => (l ? ems(l) : 0))),
+    (width * 0.88) / Math.max(...[labels.above, labels.below].map((l) => (l ? ems(l) : 0))),
   );
 // The image grows taller, with a band for each line outside the code's own
 // margin
 function withLabels(svg: string, size: number, style: QrStyle, labels: Labels) {
-  if (!labels.header && !labels.footer) return svg;
+  if (!labels.above && !labels.below) return svg;
   const em = emFor(labels, size, size * 0.065),
     margin = Math.round(size * 0.03),
     // Block Monogram's red runs almost to the image's edge, with no white
     // margin of its own, so its lines sit a little farther out
     band = Math.round(em * (style === "block-monogram" ? 1.8 : 1.3)),
-    top = labels.header ? margin + band : 0,
-    height = size + top + (labels.footer ? band + margin : 0),
+    top = labels.above ? margin + band : 0,
+    height = size + top + (labels.below ? band + margin : 0),
     body = svg.replace(/^<svg[^>]*>/, "").replace(/<\/svg>$/, "");
   let text = "";
-  if (labels.header) text += lettering(labels.header, em, size / 2, margin + (band + CAP * em) / 2);
-  if (labels.footer)
-    text += lettering(labels.footer, em, size / 2, top + size + (band + CAP * em) / 2);
+  if (labels.above) text += lettering(labels.above, em, size / 2, margin + (band + CAP * em) / 2);
+  if (labels.below)
+    text += lettering(labels.below, em, size / 2, top + size + (band + CAP * em) / 2);
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${height}" viewBox="0 0 ${size} ${height}"><rect width="100%" height="100%" fill="white"/><g transform="translate(0 ${top})">${body}</g><g fill="${INK[style]}">${text}</g></svg>`;
 }
 
@@ -107,7 +108,7 @@ function icon(name: string) {
     const file = join(iconFolder, `${name}.svg`);
     if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(name) || !existsSync(file))
       throw new GenerateError(
-        "Choose an icon by its Bootstrap Icons name, such as wifi or calendar-event.",
+        "Choose an icon by its Bootstrap Icons name, like wifi or calendar-event.",
       );
     drawing = readFileSync(file, "utf8").replace(/^<svg[^>]*>|<\/svg>\s*$/g, "");
     icons.set(name, drawing);
@@ -231,12 +232,12 @@ async function tiltedSquare(modules: QRCode.BitMatrix, size: number, labels: Lab
   // The turned square's width and height, with its outline and a little room
   const extent =
       (side + stroke) * (Math.abs(Math.cos(radians)) + Math.abs(Math.sin(radians))) * 1.04,
-    labelled = !!(labels.header || labels.footer),
+    labelled = !!(labels.above || labels.below),
     // Lines of text sit just above and below the square, turned with it
     em = labelled ? emFor(labels, side, side * 0.065) : 0,
     band = em * 1.3,
-    above = labels.header ? band + stroke : 0,
-    below = labels.footer ? band + stroke : 0,
+    above = labels.above ? band + stroke : 0,
+    below = labels.below ? band + stroke : 0,
     // The turned box of square and text: its size and its center
     corners = [
       [0, -above],
@@ -253,15 +254,15 @@ async function tiltedSquare(modules: QRCode.BitMatrix, size: number, labels: Lab
     tall = labelled ? (Math.max(...ys) - Math.min(...ys) + stroke * 1.3) * 1.04 : extent,
     minimum = Math.ceil(wide * MIN_MODULE["tilted-square"]);
   if (!Number.isInteger(size) || size < minimum || size > 2048)
-    throw new GenerateError(`Choose a size from ${minimum} to 2048 pixels for this code.`);
+    throw new GenerateError(`Choose a width from ${minimum} to 2048 pixels for this code.`);
   const k = size / wide,
     height = labelled ? Math.round(tall * k) : size,
     shiftX = labelled ? wide / 2 - (Math.max(...xs) + Math.min(...xs)) / 2 : (extent - side) / 2,
     shiftY = labelled ? tall / 2 - (Math.max(...ys) + Math.min(...ys)) / 2 : (extent - side) / 2;
   let text = "";
-  if (labels.header) text += lettering(labels.header, em, center, -stroke - (band - CAP * em) / 2);
-  if (labels.footer)
-    text += lettering(labels.footer, em, center, side + stroke + (band + CAP * em) / 2);
+  if (labels.above) text += lettering(labels.above, em, center, -stroke - (band - CAP * em) / 2);
+  if (labels.below)
+    text += lettering(labels.below, em, center, side + stroke + (band + CAP * em) / 2);
   // Every dark module in one shape: turned, separate squares would show
   // stair-steps (crisp edges) or hairline seams (antialiased edges)
   let dark = "";
@@ -270,7 +271,8 @@ async function tiltedSquare(modules: QRCode.BitMatrix, size: number, labels: Lab
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${height}" viewBox="0 0 ${size} ${height}"><rect width="100%" height="100%" fill="white"/><g transform="scale(${k}) translate(${shiftX} ${shiftY}) rotate(${angle} ${center} ${center})"><rect width="${side}" height="${side}" fill="none" stroke="#c41230" stroke-width="${stroke}"/><path transform="translate(${inset + 4} ${inset + 4})" d="${dark}"/>${text ? `<g fill="#c41230">${text}</g>` : ""}</g></svg>`;
 }
 
-// Block Monogram: the Carnegie-Mellon block monogram in CMU red, with the code
+// Block Monogram: the Carnegie-Mellon block monogram in Skibo Red (darker
+// than CMU red, like the vintage shirts; the only inverted code), with the code
 // in place of the M. A C block with its slot sits above the code and a thick
 // U wraps both, in the monogram's proportions. The M's block is square here,
 // to fit the code, and holds the code's white margin, which also keeps the
@@ -278,7 +280,7 @@ async function tiltedSquare(modules: QRCode.BitMatrix, size: number, labels: Lab
 function blockMonogram(modules: QRCode.BitMatrix, size: number) {
   const n = modules.size,
     quiet = n + 8,
-    red = "#c41230",
+    red = "#941120",
     // The U's thickness, the white gap between shapes and the C's height
     thick = quiet * 0.27,
     gap = quiet * 0.035,
@@ -296,7 +298,7 @@ function blockMonogram(modules: QRCode.BitMatrix, size: number) {
     span = Math.max(width, height) * 1.04,
     minimum = Math.ceil(span * MIN_MODULE["block-monogram"]);
   if (!Number.isInteger(size) || size < minimum || size > 2048)
-    throw new GenerateError(`Choose a size from ${minimum} to 2048 pixels for this code.`);
+    throw new GenerateError(`Choose a width from ${minimum} to 2048 pixels for this code.`);
   // Whole pixels per module, the monogram centered in the image
   const k = Math.floor(size / span),
     left = Math.round((size - width * k) / 2),
@@ -348,14 +350,14 @@ export async function qrSvg(
   checkLabels(labels);
   // Blank lines are left out
   labels = {
-    ...(labels.header?.trim() && { header: labels.header.trim() }),
-    ...(labels.footer?.trim() && { footer: labels.footer.trim() }),
+    ...(labels.above?.trim() && { above: labels.above.trim() }),
+    ...(labels.below?.trim() && { below: labels.below.trim() }),
     ...(labels.icon?.trim() && { icon: labels.icon.trim() }),
   };
   // No artwork covers Basic Black's, Tilted Square's or Block Monogram's
   // modules: medium error correction keeps their codes less dense
-  const plainModules = style === "plain" || style === "tilted-square" || style === "block-monogram";
-  const options = { errorCorrectionLevel: plainModules ? ("M" as const) : ("H" as const) };
+  const plainModules = ERROR_CORRECTION[style] === "M";
+  const options = { errorCorrectionLevel: ERROR_CORRECTION[style] };
   let code = QRCode.create(text, options);
   // Larger exports have enough room for a more detailed portrait. Keep compact
   // mosaic addresses working with the smaller matrix used by earlier exports.
@@ -372,7 +374,7 @@ export async function qrSvg(
     total = n + 8 + border * 2,
     minimum = total * MIN_MODULE[style];
   if (!Number.isInteger(size) || size < minimum || size > 2048)
-    throw new GenerateError(`Choose a size from ${minimum} to 2048 pixels for this code.`);
+    throw new GenerateError(`Choose a width from ${minimum} to 2048 pixels for this code.`);
   // Integer pixels per module, with the remainder outside the quiet zone
   const scale = Math.floor(size / total),
     offset = Math.floor((size - total * scale) / 2) + (4 + border) * scale;
@@ -457,15 +459,15 @@ export async function qrSvg(
   // Kraus Campo's lines sit in its orange band, in white, and the image
   // keeps its size
   let bandText = "";
-  if (border && (labels.header || labels.footer)) {
+  if (border && (labels.above || labels.below)) {
     const edge = Math.floor((size - total * scale) / 2),
       band = border * scale,
       em = emFor(labels, total * scale - 2 * band, (band * 0.5) / CAP);
-    if (labels.header)
-      bandText += lettering(labels.header, em, size / 2, edge + (band + CAP * em) / 2);
-    if (labels.footer)
+    if (labels.above)
+      bandText += lettering(labels.above, em, size / 2, edge + (band + CAP * em) / 2);
+    if (labels.below)
       bandText += lettering(
-        labels.footer,
+        labels.below,
         em,
         size / 2,
         edge + total * scale - band + (band + CAP * em) / 2,

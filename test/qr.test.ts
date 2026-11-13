@@ -83,9 +83,9 @@ describe("QRnegie", () => {
     );
   });
   for (const style of STYLES)
-    it(`decodes the ${style} image with a header and a footer`, async () => {
+    it(`decodes the ${style} image with text above and below`, async () => {
       const text = "WIFI:T:nopass;S:CMU-GUEST;;",
-        labels = { header: "Join CMU-GUEST", footer: "Access Code: 7F3K-92QA" };
+        labels = { above: "Join CMU-GUEST", below: "Access Code: 7F3K-92QA" };
       for (const size of [512, 2048]) {
         const { data, info } = await sharp(await qrImage(text, style, size, "png", labels))
           .ensureAlpha()
@@ -98,36 +98,46 @@ describe("QRnegie", () => {
         expect(jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data).toBe(text);
       }
     });
-  it("draws no header or footer for blank lines and rejects ones it can't letter", async () => {
+  it("draws no text above or below for blank lines and rejects ones it can't letter", async () => {
     const plain = await qrImage("https://www.cmu.edu/", "plain", 512, "svg");
     expect(
-      await qrImage("https://www.cmu.edu/", "plain", 512, "svg", { header: " ", footer: "" }),
+      await qrImage("https://www.cmu.edu/", "plain", 512, "svg", { above: " ", below: "" }),
     ).toEqual(plain);
     await expect(
-      qrImage("https://www.cmu.edu/", "plain", 512, "svg", { footer: "x".repeat(41) }),
+      qrImage("https://www.cmu.edu/", "plain", 512, "svg", { below: "x".repeat(41) }),
     ).rejects.toThrow("40 characters");
     await expect(
-      qrImage("https://www.cmu.edu/", "plain", 512, "svg", { header: "Snow \u2603" }),
+      qrImage("https://www.cmu.edu/", "plain", 512, "svg", { above: "Snow \u2603" }),
     ).rejects.toThrow("common punctuation");
   });
   it("rejects excessive payloads and undersized exports", async () => {
     await expect(qrImage("x".repeat(1025), "scotty", 512, "png")).rejects.toThrow("1024");
     await expect(qrImage("https://www.cmu.edu/", "scotty", 20, "png")).rejects.toThrow(
-      "Choose a size",
+      "Choose a width",
     );
   });
   it("serves the builder, images and stateless MCP", async () => {
     const app = createApp();
     const labelled = await request(app)
       .get("/qr.svg")
-      .query({ text: "https://www.cmu.edu/", style: "plain", size: "512", footer: "Hello" });
+      .query({ text: "https://www.cmu.edu/", style: "plain", width: "768", below: "Hello" });
     expect(labelled.status).toBe(200);
-    expect(String(labelled.body)).toMatch(/^<svg[^>]*width="512" height="5[0-9]{2}"/);
+    expect(String(labelled.body)).toMatch(/^<svg[^>]*width="768"/);
+    const labelledHeight = /height="(\d+)"/.exec(String(labelled.body));
+    expect(Number(labelledHeight?.[1])).toBeGreaterThan(768);
+    await request(app)
+      .get("/qr.svg")
+      .query({ text: "https://www.cmu.edu/", size: "768" })
+      .expect(400);
+    await request(app)
+      .get("/qr.svg")
+      .query({ text: "https://www.cmu.edu/", width: ["512", "768"] })
+      .expect(400);
     expect(
       (
         await request(app)
           .get("/qr.svg")
-          .query({ text: "https://www.cmu.edu/", footer: ["a", "b"] })
+          .query({ text: "https://www.cmu.edu/", below: ["a", "b"] })
       ).status,
     ).toBe(400);
     await request(app)
@@ -144,12 +154,12 @@ describe("QRnegie", () => {
       .query({ text: "https://www.cmu.edu/" })
       .expect(200)
       .expect("Content-Type", /png/);
-    for (const page of ["/builder.html", "/options.html", "/about.html"])
+    for (const page of ["/builder.html", "/styles.html", "/reference.html", "/about.html"])
       await request(app).get(page).expect(200);
     for (const style of STYLES)
       await request(app)
         .get("/qr.svg")
-        .query({ text: "https://www.cmu.edu/", style, size: "1024" })
+        .query({ text: "https://www.cmu.edu/", style, width: "1024" })
         .expect(200);
     await request(app).get("/qr.svg").query({ text: "hi", style: "bad" }).expect(400);
     await request(app).get("/mcp").expect(405);
@@ -175,15 +185,25 @@ describe("QRnegie", () => {
     await server.connect(a);
     await client.connect(b);
     try {
-      expect((await client.listTools()).tools.map((t) => t.name)).toEqual([
-        "get_guide",
-        "generate_qr",
-      ]);
+      const tools = (await client.listTools()).tools;
+      const schema = tools.find((tool) => tool.name === "generate_qr")?.inputSchema;
+      expect(schema?.properties).toHaveProperty("width");
+      expect(schema?.properties).not.toHaveProperty("size");
+      expect(tools.map((t) => t.name)).toEqual(["get_guide", "generate_qr"]);
       const result = await client.callTool({
         name: "generate_qr",
-        arguments: { text: "https://www.cmu.edu/" },
+        arguments: { text: "https://www.cmu.edu/", style: "plain", width: 768, below: "Visit CMU" },
       });
       expect(result.isError).not.toBe(true);
+      const content = result.content as { type: string; data?: string; text?: string }[];
+      const png = content.find((item) => item.type === "image")?.data;
+      const metadata = await sharp(Buffer.from(png!, "base64")).metadata();
+      expect(metadata.width).toBe(768);
+      expect(metadata.height).toBeGreaterThan(768);
+      const output = JSON.parse(content.find((item) => item.type === "text")!.text!);
+      expect(new URL(output.svg).searchParams.get("width")).toBe("768");
+      expect(new URL(output.svg).searchParams.has("size")).toBe(false);
+      expect(output.html).toContain('width="768"');
       expect(result.content).toEqual(
         expect.arrayContaining([expect.objectContaining({ type: "image", mimeType: "image/png" })]),
       );

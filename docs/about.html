@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (Google Analytics): docs pages only, never in the image or MCP responses -->
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5RW6JKPW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>About - QRnegie - Carnegie Mellon University</title>
@@ -10,7 +19,7 @@
     <meta property="og:title" content="About - QRnegie" />
     <meta
       property="og:description"
-      content="Where QRnegie's styles come from, how it keeps codes scannable and the other CMU Web projects."
+      content="How QRnegie behaves, where its Carnegie Mellon designs come from and how to get help."
     />
     <meta property="og:url" content="https://qrnegie.andrew.cmu.edu/about.html" />
     <meta property="og:image" content="https://qrnegie.andrew.cmu.edu/images/preview.jpg" />
@@ -24,7 +33,7 @@
     <!-- End of link previews -->
     <meta
       name="description"
-      content="Where QRnegie's styles come from, how it keeps codes scannable and the other CMU Web projects."
+      content="How QRnegie behaves, where its Carnegie Mellon designs come from and how to get help."
     />
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,700,700italic"
@@ -38,7 +47,7 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-cms.css"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/css/cmu-cms.css"
       integrity="sha384-+u4UJJGawMpfkXYetQDuUBs4iJZaH0GIVRw5uidyWjaUBPGQPtSqV4/O66AgMACJ"
       crossorigin="anonymous"
       rel="stylesheet"
@@ -67,91 +76,165 @@
       </header>
       <main id="content">
         <div class="breadcrumbs"> <a href="./">QRnegie</a>&nbsp;&rsaquo;&nbsp;About </div>
+
         <div class="content wide"
           ><div>
             <h1>About QRnegie</h1>
-            <p class="cmu-lead">
-              QRnegie makes QR codes with a little Carnegie Mellon in them, for a course page, a
-              campus event, a club poster or anywhere a printed image should take someone to a link.
-            </p>
-            <h2 class="rule-top" id="styles">Where the Styles Come From</h2>
-            <p
-              >Both Scotty styles use the portrait of Scotty in his red scarf from University
-              Communications &amp; Marketing's Scotty illustrations: Mosaic Scotty forms it from the
-              QR code's own dots, and Basic Scotty sets it in the middle of the code.</p
+            <p class="cmu-lead"
+              >QRnegie puts a little Carnegie Mellon in your QR codes. Add one to a course page, a
+              campus event, a club poster or anywhere a printed image should take someone to a
+              link.</p
             >
+            <h2 id="how" class="rule-top">How It Works</h2>
             <p
-              >Kraus Campo is named for the garden on the roof of the Posner Center, by artist Mel
-              Bochner and landscape architect Michael Van Valkenburgh. Its numbered tiles and orange
-              paths suggested a code made of numbers, set in the garden's orange.
-              <a class="external" href="https://www.cmu.edu/public-art">Explore CMU public art</a
-              >.</p
-            >
-            <p
-              >Campus lore says Wean Hall looks like a turtle eating a Cheeto. The turtle is the
-              building itself, with its concrete &ldquo;head&rdquo; over the entrance. The Cheeto is
-              <em>The Love of Two Oranges</em>, Clark Winter's orange steel sculpture, which stood
-              outside Wean Hall for decades.
-              <a
-                class="external"
-                href="https://www.cmu.edu/piper/news/archives/2021/june/the-love-of-two-oranges.html"
-                >Read the sculpture's story</a
-              >.</p
-            >
-            <p
-              >Binary Heart puts the CMU heart, traced from the university's own image, among ones
-              and zeros. Tilted Square turns the code inside a red square outline, after the tilted
-              square that appears with Carnegie Mellon's wordmark. Block Monogram puts the code in
-              place of the M in the old Carnegie-Mellon block monogram. Basic Black is a plain code,
-              black on white.</p
-            >
-            <h2 class="rule-top" id="how">How It Works</h2>
-            <p
-              >QRnegie draws the QR code's data modules in the style you pick and leaves the
-              patterns a scanner looks for, such as the three corner squares, plain and intact.</p
+              >QRnegie draws the QR code's dots in the style you pick and leaves the patterns a
+              scanner looks for, like the three corner squares, plain and intact.</p
             >
             <ul class="cmu-checks">
               <li
-                ><strong>It encodes your text and nothing else.</strong> It never visits the
-                destination or adds a redirect or tracking.</li
+                ><strong>Your content goes directly in the QR code.</strong> QRnegie does not add a
+                redirect or tracking link. To change where a code goes, make a new one.</li
               >
               <li
-                ><strong>Nothing is saved.</strong> Each image is drawn when it's requested, and a
-                downloaded code doesn't depend on QRnegie.</li
+                ><strong>An exported image works on its own.</strong> Save the SVG or PNG to keep it
+                with your project. QRnegie doesn't store your QR codes. Once you've saved or printed
+                a code, it works without QRnegie.</li
               >
               <li
-                ><strong>The same address always gives the same image,</strong> so a code on a page
-                doesn't change.</li
+                ><strong>An image address always encodes the same text.</strong> Its look can change
+                when a design improves.</li
               >
             </ul>
-            <h2 class="rule-top" id="technical">Technical Details</h2>
+          </div></div
+        >
+        <div class="grid column3">
+          <h2 id="styles" class="cmu-grid-full rule-top">The Stories Behind the Designs</h2>
+          <p class="cmu-grid-full"
+            >Each design has a story, and most of them start on campus. They come from the
+            university's own Scotty artwork, from places you can still visit and from CMU's marks
+            and its past. There are many more stories here, and room for more designs.</p
+          >
+          <div
+            ><img
+              src="images/mosaic.png"
+              alt="Scotty and his red scarf in a Mosaic Scotty QR code."
+              width="1024"
+              height="1024"
+              loading="lazy"
+            /><h3>Scotty Portraits</h3
+            ><p
+              >Mosaic Scotty and Basic Scotty use the red-scarf portrait from University
+              Communications &amp; Marketing's
+              <a class="external" href="https://brand.cmu.edu/resources/downloads">Scotty artwork</a
+              >. Mosaic Scotty combines the portrait with the code's dots; Basic Scotty places it in
+              the center.</p
+            ></div
+          >
+          <div
+            ><img
+              src="images/kraus-campo.png"
+              alt="Numbered tiles and an orange frame in the Kraus Campo design."
+              width="1024"
+              height="1024"
+              loading="lazy"
+            /><h3>Kraus Campo</h3
+            ><p
+              >Part of
+              <a class="external" href="https://www.cmu.edu/public-art"
+                >CMU's public art collection</a
+              >, the rooftop garden by artist Mel Bochner and landscape architect Michael Van
+              Valkenburgh inspired the numbered tiles and orange frame.</p
+            ></div
+          >
+          <div
+            ><img
+              src="images/wean.png"
+              alt="Wean Hall's facade and orange sculpture in a QR code."
+              width="1024"
+              height="1024"
+              loading="lazy"
+            /><h3>Wean Hall</h3
+            ><p
+              >Wean Hall is said to look like a turtle eating a Cheeto. This design pairs its
+              concrete facade with Clark Winter's orange sculpture,
+              <a
+                class="external"
+                href="https://www.cmu.edu/piper/news/archives/2021/june/the-love-of-two-oranges.html"
+                ><em>For the Love of Two Oranges</em></a
+              >, which stood outside the entrance for 40 years.</p
+            ></div
+          >
+          <div
+            ><img
+              src="images/binary-heart.png"
+              alt="A red CMU heart surrounded by ones and zeros."
+              width="1024"
+              height="1024"
+              loading="lazy"
+            /><h3>Binary Heart</h3
+            ><p
+              >Binary Heart puts the CMU heart among ones and zeros, giving a computing twist to
+              <a class="external" href="https://www.cmu.edu/about/history/"
+                >&ldquo;My heart is in the work.&rdquo;</a
+              >
+              Andrew Carnegie used those words in 1900 when he offered to establish a technical
+              school in Pittsburgh; they became the university's motto.</p
+            ></div
+          >
+          <div
+            ><img
+              src="images/tilted-square.png"
+              alt="A QR code turned inside a red square outline."
+              width="1024"
+              height="1024"
+              loading="lazy"
+            /><h3>Tilted Square</h3
+            ><p
+              >Tilted Square recalls the university's tilted-square logo of the 1980s and 1990s. The
+              design celebrates
+              <a class="external" href="https://bookstore.web.cmu.edu/MerchDetail?MerchID=1815896"
+                >The University Store</a
+              >'s partnership with University Archives to bring vintage CMU designs back to
+              campus.</p
+            ></div
+          >
+          <div
+            ><img
+              src="images/block-monogram.png"
+              alt="The Carnegie-Mellon block monogram with a QR code replacing the M."
+              width="1024"
+              height="1024"
+              loading="lazy"
+            /><h3>Block Monogram</h3
+            ><p
+              >Block Monogram uses the Carnegie-Mellon block monogram as a frame, with the code
+              taking the place of the M. The design celebrates
+              <a class="external" href="https://bookstore.web.cmu.edu/MerchDetail?MerchID=1815847"
+                >The University Store</a
+              >'s partnership with University Archives to bring vintage CMU designs back to
+              campus.</p
+            ></div
+          >
+        </div>
+        <div class="content wide"
+          ><div>
+            <h2 id="contributing" class="rule-top">Contributing to QRnegie</h2>
             <p
-              >QRnegie encodes text with
-              <a class="external" href="https://github.com/soldair/node-qrcode">node-qrcode</a>
-              and draws each style as SVG;
-              <a class="external" href="https://sharp.pixelplumbing.com/">sharp</a>
-              turns it into a PNG. In every style but Tilted Square, each module gets a whole number
-              of pixels, so edges stay crisp. Kraus Campo's numerals are outlines from
-              <a class="external" href="https://fonts.google.com/specimen/Open+Sans">Open Sans</a>
-              ExtraBold, and the header and footer are Open Sans Bold outlines, both under the SIL
-              Open Font License. As outlines, they look the same everywhere, with no font to
-              install. Its tests decode the finished image of every style with
+              >QRnegie is a TypeScript app built with Express. It encodes text with
+              <a class="external" href="https://github.com/soldair/node-qrcode">node-qrcode</a> and
+              draws each style as SVG;
+              <a class="external" href="https://sharp.pixelplumbing.com/">sharp</a> turns it into a
+              PNG. Tests decode the finished image of every style with
               <a class="external" href="https://github.com/cozmo/jsQR">jsQR</a>, a separate
               reader.</p
             >
-            <p>
-              In the Builder, place suggestions come from
-              <a class="external" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>,
-              under the Open Database License, through komoot's
-              <a class="external" href="https://photon.komoot.io/">Photon</a>, and the map picker is
-              <a class="external" href="https://leafletjs.com/">Leaflet</a> over OpenStreetMap's map
-              tiles. Center Icon draws
-              <a class="external" href="https://icons.getbootstrap.com/">Bootstrap Icons</a>, under
-              the MIT License.
-            </p>
             <p
-              >QRnegie is a small TypeScript app built with Express and sharp, with an MCP server
-              for AI agents.</p
+              >The
+              <a class="external" href="https://github.com/cmu-web/cmu-web-qrnegie"
+                >GitHub repository</a
+              >
+              has the code, its tests and documentation. To report a problem or suggest a change,
+              open an issue or send a pull request.</p
             >
           </div></div
         >
@@ -171,9 +254,12 @@
                   height="656"
               /></a>
             </figure>
-            <h2>Carnegie Mellon Web Kilt</h2>
+            <h2
+              ><a class="external" href="https://webkilt.andrew.cmu.edu/"
+                >Carnegie Mellon Web Kilt</a
+              ></h2
+            >
             <p>Components for websites and web apps on CMU's template.</p>
-            <p><a class="external" href="https://webkilt.andrew.cmu.edu/">Visit the Web Kilt</a></p>
           </div>
           <div>
             <figure class="cmu-shot cmu-shot--browser">
@@ -185,13 +271,12 @@
                   height="656"
               /></a>
             </figure>
-            <h2>Jekyll &amp; Plaid</h2>
-            <p>A GitHub Pages theme that turns plain Markdown into pages in CMU style.</p>
-            <p
+            <h2
               ><a class="external" href="https://jekyllandplaid.andrew.cmu.edu/"
-                >Visit Jekyll &amp; Plaid</a
-              ></p
+                >Jekyll &amp; Plaid</a
+              ></h2
             >
+            <p>A GitHub Pages theme that turns plain Markdown into pages in CMU style.</p>
           </div>
           <div>
             <figure class="cmu-shot cmu-shot--browser">
@@ -203,28 +288,46 @@
                   height="656"
               /></a>
             </figure>
-            <h2>PlaceMellon</h2>
+            <h2><a class="external" href="https://placemellon.andrew.cmu.edu/">PlaceMellon</a></h2>
             <p>Placeholder photos of Carnegie Mellon at any size, for mockups and prototypes.</p>
-            <p
-              ><a class="external" href="https://placemellon.andrew.cmu.edu/"
-                >Visit PlaceMellon</a
-              ></p
-            >
           </div>
         </div>
-        <div class="content wide">
-          <div>
-            <h2 id="contributing">Contributing to QRnegie</h2>
+        <div class="content wide"
+          ><div>
+            <h2 id="credits">Licenses and Credits</h2>
             <p
-              >The
-              <a class="external" href="https://github.com/cmu-web/cmu-web-qrnegie"
-                >GitHub repository</a
+              >QRnegie's code is available under the
+              <a
+                class="external"
+                href="https://github.com/cmu-web/cmu-web-qrnegie/blob/main/LICENSE"
+                >BSD 3-Clause License</a
+              >. CMU's names, marks and artwork retain their own usage requirements and are not
+              covered by that license.</p
+            >
+            <ul>
+              <li
+                ><strong>Lettering:</strong> Kraus Campo's numerals use
+                <a class="external" href="https://fonts.google.com/specimen/Open+Sans">Open Sans</a>
+                ExtraBold outlines, and the text above and below QR codes uses Open Sans Bold
+                outlines, both under the SIL Open Font License.</li
               >
-              has the code, its tests and documentation. To report a problem or suggest a change,
-              open an issue or send a pull request.</p
-            >
-          </div>
-        </div>
+              <li
+                ><strong>Icons:</strong> Center Icon uses
+                <a class="external" href="https://icons.getbootstrap.com/">Bootstrap Icons</a>,
+                under the MIT License.</li
+              >
+              <li
+                ><strong>Maps:</strong> Place suggestions use
+                <a class="external" href="https://photon.komoot.io/">Photon</a> and
+                <a class="external" href="https://www.openstreetmap.org/copyright"
+                  >OpenStreetMap data</a
+                >, under the Open Database License. The map picker uses
+                <a class="external" href="https://leafletjs.com/">Leaflet</a> and OpenStreetMap
+                tiles.</li
+              >
+            </ul>
+          </div></div
+        >
       </main>
       <footer class="grid column3 invert">
         <div>
@@ -242,13 +345,14 @@
         </div>
         <div></div>
         <div>
-          <nav id="nav">
-            <ul>
-              <li><a href="builder.html">Builder</a></li>
-              <li><a href="options.html">Options</a></li>
-              <li class="active"><a href="about.html">About</a></li>
-            </ul>
-          </nav>
+          <nav id="nav"
+            ><ul
+              ><li><a href="builder.html">Builder</a></li
+              ><li><a href="styles.html">Styles</a></li
+              ><li><a href="reference.html">Reference</a></li
+              ><li class="active"><a href="about.html" aria-current="page">About</a></li></ul
+            ></nav
+          >
         </div>
       </footer>
     </div>
@@ -256,7 +360,7 @@
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/js/cmu-app.js"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/js/cmu-app.js"
       integrity="sha384-10393F76wEQPHaJEEoM9M1QEQsl9mTezDdEM45kArp0j26SWs3gxiGsXKrmwJHio"
       crossorigin="anonymous"
     ></script>

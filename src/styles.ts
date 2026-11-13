@@ -4,40 +4,10 @@ import { join } from "node:path";
 import type { BitMatrix } from "qrcode";
 import { DIGITS } from "./digits";
 
-export const STYLES = [
-  "plain",
-  "scotty",
-  "mosaic",
-  "kraus-campo",
-  "wean",
-  "binary-heart",
-  "tilted-square",
-  "block-monogram",
-  "icon",
-] as const;
-export type QrStyle = (typeof STYLES)[number];
-export const STYLE_NAMES: Record<QrStyle, string> = {
-  plain: "Basic Black",
-  scotty: "Basic Scotty",
-  mosaic: "Mosaic Scotty",
-  "kraus-campo": "Kraus Campo",
-  wean: "Wean Hall",
-  "binary-heart": "Binary Heart",
-  "tilted-square": "Tilted Square",
-  "block-monogram": "Block Monogram",
-  icon: "Center Icon",
-};
-export const MIN_MODULE: Record<QrStyle, number> = {
-  plain: 3,
-  scotty: 3,
-  mosaic: 6,
-  "kraus-campo": 6,
-  wean: 5,
-  "binary-heart": 6,
-  "tilted-square": 3,
-  "block-monogram": 3,
-  icon: 3,
-};
+import type { QrStyle } from "./style-info";
+export { STYLES, STYLE_NAMES, MIN_MODULE } from "./style-info";
+export type { QrStyle } from "./style-info";
+
 // Mosaic Scotty's portrait: UCM's Scotty in his red scarf, as in Basic Scotty
 const bust = readFileSync(join(__dirname, "..", "assets", "scotty-head.svg"), "utf8").replace(
   /^<svg[^>]*>|<\/svg>\s*$/g,

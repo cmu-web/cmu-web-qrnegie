@@ -1,6 +1,15 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Google tag (Google Analytics): docs pages only, never in the image or MCP responses -->
+    <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5RW6JKPW"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+    </script>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>QRnegie - Carnegie Mellon University</title>
@@ -38,15 +47,15 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-cms.css"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/css/cmu-cms.css"
       integrity="sha384-+u4UJJGawMpfkXYetQDuUBs4iJZaH0GIVRw5uidyWjaUBPGQPtSqV4/O66AgMACJ"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-app.css"
-      integrity="sha384-FBcdRJw+jT8b/j0u8EmdccAm6sFf7nXv9edqYYW/z9zOlh+jmlPqLrwr/LgGXoaI"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/css/cmu-app.css"
+      integrity="sha384-Tj5sbg6foKwNHx77Xj9uSKHv4N7jiYnj97prQWE3B2+6v3K8tsqz/xmsjxeJKvjA"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
@@ -117,16 +126,18 @@
             <ul class="cmu-checks">
               <li
                 ><strong>QRnegie encodes your text exactly as you type it.</strong> Nothing is added
-                in between, such as a redirect or tracking, so a code you print keeps working on its
+                in between, like a redirect or tracking, so a QR code you print keeps working on its
                 own.</li
               >
               <li
-                ><strong>Each image includes a white border around the code.</strong> Scanners use
-                it to find where the code begins, so keep it when you place or crop the image.</li
+                ><strong>Each image includes a white border around the QR code.</strong> Scanners
+                use it to find where the code begins, so keep it when you place or crop the
+                image.</li
               >
               <li
-                ><strong>Each style is checked by scanning finished codes,</strong> but it's still
-                worth scanning yours with a phone, at the size you'll use, before it goes out.</li
+                ><strong>Each style is checked by scanning finished QR codes,</strong> but it's
+                still worth scanning yours with a phone, at the size you'll use, before it goes
+                out.</li
               >
             </ul>
             <p><a class="cta" href="builder.html">Build Your QR Code</a></p>
@@ -140,7 +151,7 @@
               <p>Copy the prompt into an AI coding agent in your editor or terminal, and it sets up QRnegie for your project. <button type="button" class="cmu-copy" data-cmu-copy="#qr-agent-prompt" aria-label="Copy the Prompt" title="Copy the Prompt"></button></p>
               <details class="cmu-more">
                 <summary><span class="cmu-more-closed">Want to read it first?</span> <span class="cmu-more-link"><span class="cmu-more-closed">See the Prompt</span><span class="cmu-more-open">Hide the Prompt</span></span></summary>
-                <pre class="cmu-snippet"><code id="qr-agent-prompt">Use QRnegie for QR codes in this project. Read https://qrnegie.andrew.cmu.edu/options.html first. If you can connect MCP servers, add https://qrnegie.andrew.cmu.edu/mcp and use its get_guide and generate_qr tools. Choose Mosaic Scotty, Basic Scotty, Kraus Campo, Wean Hall, Binary Heart, Tilted Square, Block Monogram or Basic Black to suit the page, at 1024 pixels for the artistic styles. Save the SVG or PNG with the project, or use its image address. Keep the code square with its white margin, and write alt text that says where the code goes.</code></pre>
+                <pre class="cmu-snippet"><code id="qr-agent-prompt">Use QRnegie for QR codes in this project. Read https://qrnegie.andrew.cmu.edu/reference.html first. If you can connect MCP servers, add https://qrnegie.andrew.cmu.edu/mcp and use its get_guide and generate_qr tools. Choose a style from the guide's current list to suit the page, starting detailed artwork at 1024 pixels. Save the SVG or PNG with the project, or use its image address. Preserve the exported proportions and the space around the code, and write alt text that says where the code goes.</code></pre>
               </details>
             </div>
           </div></div
@@ -162,13 +173,14 @@
         </div>
         <div></div>
         <div>
-          <nav id="nav">
-            <ul>
-              <li><a href="builder.html">Builder</a></li>
-              <li><a href="options.html">Options</a></li>
-              <li><a href="about.html">About</a></li>
-            </ul>
-          </nav>
+          <nav id="nav"
+            ><ul
+              ><li><a href="builder.html">Builder</a></li
+              ><li><a href="styles.html">Styles</a></li
+              ><li><a href="reference.html">Reference</a></li
+              ><li><a href="about.html">About</a></li></ul
+            ></nav
+          >
         </div>
       </footer>
     </div>
@@ -176,7 +188,7 @@
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/js/cmu-app.js"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.4/js/cmu-app.js"
       integrity="sha384-10393F76wEQPHaJEEoM9M1QEQsl9mTezDdEM45kArp0j26SWs3gxiGsXKrmwJHio"
       crossorigin="anonymous"
     ></script>
