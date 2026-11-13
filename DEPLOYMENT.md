@@ -73,8 +73,7 @@ curl --fail --show-error http://127.0.0.1:3000/healthz
 curl --fail --show-error 'http://127.0.0.1:3000/qr.png?text=https%3A%2F%2Fwww.cmu.edu%2F' -o /tmp/qrnegie-check.png
 ```
 
-`/healthz` returns `ok` once the server is listening. It doesn't draw a
-code, so check an image response too.
+`/healthz` returns `ok` once the server is listening. It doesn't draw a QR code, so check an image response too.
 
 The Dockerfile's health check requests `/healthz` every 30 seconds, with
 a five-second timeout and a 60-second startup grace period. It follows

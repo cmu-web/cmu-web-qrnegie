@@ -12,7 +12,7 @@ eating a Cheeto, as an SVG or PNG.
 [Build a QR Code](https://qrnegie.andrew.cmu.edu/builder.html) ·
 [Explore the Options](https://qrnegie.andrew.cmu.edu/options.html)
 
-[![QRnegie's home page: QR Codes With a Little More Bite, beside a Scotty Mosaic QR code.](docs/images/preview.jpg)](https://qrnegie.andrew.cmu.edu/)
+[![QRnegie's home page: QR Codes With a Little More Bite, beside a Mosaic Scotty QR code.](docs/images/preview.jpg)](https://qrnegie.andrew.cmu.edu/)
 
 Put the text to encode, a style and a size in the URL, such as
 `https://qrnegie.andrew.cmu.edu/qr.svg?text=https%3A%2F%2Fwww.cmu.edu%2F&style=mosaic&size=1024`,
@@ -25,11 +25,12 @@ is tested by decoding the finished image.
 
 ## Start With What You're Building
 
-- **A poster or slide:** [Build a code and download it](https://qrnegie.andrew.cmu.edu/builder.html).
+- **A poster or slide:** [Build a QR code and download it](https://qrnegie.andrew.cmu.edu/builder.html).
 - **A web page:** [Use an image address](https://qrnegie.andrew.cmu.edu/options.html).
+- **A contact card, event or Wi-Fi network:** [Choose a content type in the Builder](https://qrnegie.andrew.cmu.edu/builder.html).
 - **A project with an AI agent:** [Connect the MCP server](https://qrnegie.andrew.cmu.edu/options.html#mcp).
 
-The docs cover the seven styles, sizes and file types, plus
+The docs cover the eight styles, sizes and file types, plus
 [where the styles come from](https://qrnegie.andrew.cmu.edu/about.html).
 
 ## Help Improve QRnegie
@@ -44,4 +45,5 @@ or read the [contributing guide](CONTRIBUTING.md) to work on the service.
 Copyright Carnegie Mellon University. The code uses the
 [BSD 3-Clause License](LICENSE). CMU's names, marks and artwork, including
 Scotty and the CMU heart, are not covered by that license. Kraus Campo's
-numerals are outlines from Open Sans, under the SIL Open Font License.
+numerals and the header and footer lettering are outlines from Open Sans,
+under the SIL Open Font License.

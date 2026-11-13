@@ -18,7 +18,7 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="QRnegie's home page: QR Codes With a Little More Bite, beside a Scotty Mosaic QR code."
+      content="QRnegie's home page: QR Codes With a Little More Bite, beside a Mosaic Scotty QR code."
     />
     <meta name="twitter:card" content="summary_large_image" />
     <!-- End of link previews -->
@@ -38,15 +38,15 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/css/cmu-cms.css"
-      integrity="sha384-jLB4PsCj8eJZzLvX09Rp//BaeUnjZFFNVOS3iVyZhktnIw9EkiZPVseQWE+Yjz/q"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-cms.css"
+      integrity="sha384-+u4UJJGawMpfkXYetQDuUBs4iJZaH0GIVRw5uidyWjaUBPGQPtSqV4/O66AgMACJ"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/css/cmu-app.css"
-      integrity="sha384-Ub3GBNWi/z0dsz5FsFYyzQvV3V1dKmfib7wuDPWOMO8DsVAA5Jr8N1a5IuGIN0aC"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-app.css"
+      integrity="sha384-FBcdRJw+jT8b/j0u8EmdccAm6sFf7nXv9edqYYW/z9zOlh+jmlPqLrwr/LgGXoaI"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
@@ -79,9 +79,8 @@
               <div>
                 <h1>QR Codes With a Little More Bite</h1>
                 <p class="cmu-lead"
-                  >Make a QR code with Carnegie Mellon character, from a Scotty portrait to Wean
-                  Hall's turtle eating a Cheeto. Download it for a poster or slide, or put its
-                  address in an image tag.</p
+                  >Make a QR code with Carnegie Mellon character. Choose a design inspired by
+                  campus, then download it for a poster or slide, or embed it on your site.</p
                 >
                 <div class="cmu-cta-row">
                   <a class="btn" href="builder.html">Build Your QR Code</a>
@@ -91,7 +90,7 @@
               <div class="aligncenter">
                 <img
                   src="images/hero.svg"
-                  alt="A Scotty Mosaic QR code: Scotty and his red scarf formed by the code's dots. It opens the QRnegie home page."
+                  alt="A Mosaic Scotty QR code: Scotty and his red scarf formed by the code's dots. It opens the QRnegie home page."
                   width="480"
                   height="480"
                 />
@@ -101,20 +100,20 @@
         <div class="content wide"
           ><div>
             <h1 id="get-started">Get Started</h1>
-            <p
-              >Each QR code comes two ways: as an image to download, or as an address to use in a
-              page. Download an SVG for print, since it stays sharp at any size, or a PNG for
-              slides, email and documents. To show the code on a web page, put its address in an
-              image tag:</p
-            >
-            <pre
-              class="cmu-snippet"
-            ><code>&lt;img src="https://qrnegie.andrew.cmu.edu/qr.svg?text=https%3A%2F%2Fwww.cmu.edu%2F&amp;style=mosaic&amp;size=1024" alt="QR code for www.cmu.edu"&gt;</code></pre>
-            <p
-              >The address holds the text to encode, the style and the size in pixels, so changing
-              any of them gives you a new code. For a PNG, use <code>/qr.png</code> in place of
-              <code>/qr.svg</code>.</p
-            >
+            <ol class="cmu-flow">
+              <li
+                ><strong>Choose a Style</strong>Choose from Scotty portraits, familiar campus
+                landmarks and simple, classic designs.</li
+              >
+              <li
+                ><strong>Add Your Content</strong>Share a link, event, contact card or Wi-Fi
+                network, then fill in a few details.</li
+              >
+              <li
+                ><strong>Download Your QR Code</strong>Choose a size and download an SVG for print
+                or a PNG for slides, email and documents.</li
+              >
+            </ol>
             <ul class="cmu-checks">
               <li
                 ><strong>QRnegie encodes your text exactly as you type it.</strong> Nothing is added
@@ -141,7 +140,7 @@
               <p>Copy the prompt into an AI coding agent in your editor or terminal, and it sets up QRnegie for your project. <button type="button" class="cmu-copy" data-cmu-copy="#qr-agent-prompt" aria-label="Copy the Prompt" title="Copy the Prompt"></button></p>
               <details class="cmu-more">
                 <summary><span class="cmu-more-closed">Want to read it first?</span> <span class="cmu-more-link"><span class="cmu-more-closed">See the Prompt</span><span class="cmu-more-open">Hide the Prompt</span></span></summary>
-                <pre class="cmu-snippet"><code id="qr-agent-prompt">Use QRnegie for QR codes in this project. Read https://qrnegie.andrew.cmu.edu/options.html first. If you can connect MCP servers, add https://qrnegie.andrew.cmu.edu/mcp and use its get_guide and generate_qr tools. Choose Scotty (Mosaic), Scotty (Simple), Kraus Campo, Wean Hall, Binary Heart, Tilted Square or Basic Black to suit the page, at 1024 pixels for the artistic styles. Save the SVG or PNG with the project, or use its image address. Keep the code square with its white margin, and write alt text that says where the code goes.</code></pre>
+                <pre class="cmu-snippet"><code id="qr-agent-prompt">Use QRnegie for QR codes in this project. Read https://qrnegie.andrew.cmu.edu/options.html first. If you can connect MCP servers, add https://qrnegie.andrew.cmu.edu/mcp and use its get_guide and generate_qr tools. Choose Mosaic Scotty, Basic Scotty, Kraus Campo, Wean Hall, Binary Heart, Tilted Square, Block Monogram or Basic Black to suit the page, at 1024 pixels for the artistic styles. Save the SVG or PNG with the project, or use its image address. Keep the code square with its white margin, and write alt text that says where the code goes.</code></pre>
               </details>
             </div>
           </div></div
@@ -177,8 +176,8 @@
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/js/cmu-app.js"
-      integrity="sha384-Etmkex3xbkUyRJUcASnyzfeR4g6yNwaWbaK+Z3sJvOxk76pCKgcYHAtNZppbmH8Z"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/js/cmu-app.js"
+      integrity="sha384-10393F76wEQPHaJEEoM9M1QEQsl9mTezDdEM45kArp0j26SWs3gxiGsXKrmwJHio"
       crossorigin="anonymous"
     ></script>
   </body>

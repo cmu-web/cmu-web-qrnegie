@@ -12,16 +12,20 @@ export const STYLES = [
   "wean",
   "binary-heart",
   "tilted-square",
+  "block-monogram",
+  "icon",
 ] as const;
 export type QrStyle = (typeof STYLES)[number];
 export const STYLE_NAMES: Record<QrStyle, string> = {
   plain: "Basic Black",
-  scotty: "Scotty (Simple)",
-  mosaic: "Scotty (Mosaic)",
+  scotty: "Basic Scotty",
+  mosaic: "Mosaic Scotty",
   "kraus-campo": "Kraus Campo",
   wean: "Wean Hall",
   "binary-heart": "Binary Heart",
   "tilted-square": "Tilted Square",
+  "block-monogram": "Block Monogram",
+  icon: "Center Icon",
 };
 export const MIN_MODULE: Record<QrStyle, number> = {
   plain: 3,
@@ -31,8 +35,11 @@ export const MIN_MODULE: Record<QrStyle, number> = {
   wean: 5,
   "binary-heart": 6,
   "tilted-square": 3,
+  "block-monogram": 3,
+  icon: 3,
 };
-const bust = readFileSync(join(__dirname, "..", "assets", "scotty-bust.svg"), "utf8").replace(
+// Mosaic Scotty's portrait: UCM's Scotty in his red scarf, as in Basic Scotty
+const bust = readFileSync(join(__dirname, "..", "assets", "scotty-head.svg"), "utf8").replace(
   /^<svg[^>]*>|<\/svg>\s*$/g,
   "",
 );
@@ -52,7 +59,7 @@ const samples = new Map<number, Promise<Buffer>>();
 function mascot(n: number): Promise<Buffer> {
   let result = samples.get(n);
   if (!result) {
-    const image = `<svg xmlns="http://www.w3.org/2000/svg" width="${n}" height="${n}" viewBox="0 0 ${n} ${n}"><rect width="100%" height="100%" fill="white"/><svg x="${n * 0.13}" y="${n * 0.13}" width="${n * 0.74}" height="${n * 0.74}" viewBox="30 40 268 260">${bust}</svg></svg>`;
+    const image = `<svg xmlns="http://www.w3.org/2000/svg" width="${n}" height="${n}" viewBox="0 0 ${n} ${n}"><rect width="100%" height="100%" fill="white"/><svg x="${n * 0.13}" y="${n * 0.13}" width="${n * 0.74}" height="${n * 0.74}" viewBox="0 0 330.17 443.51">${bust}</svg></svg>`;
     result = sharp(Buffer.from(image))
       .flatten({ background: "white" })
       .removeAlpha()

@@ -1,7 +1,6 @@
 # Development
 
-QRnegie is a TypeScript service built with Express and sharp. It draws
-each code when it's requested, with no database, image storage or API
+QRnegie is a TypeScript service built with Express and sharp. It draws each QR code when it's requested, with no database, image storage or API
 keys, and serves an MCP server beside its image addresses. Tests decode
 the finished images with jsQR.
 
@@ -172,28 +171,41 @@ a new version.
 
 ## How the Service Works
 
-`node-qrcode` encodes the text. Basic Black and Tilted Square use medium
-error correction; the other styles use high, so their artwork can stand in
-for part of the code. The high-correction styles also start at a minimum QR
-version, so their artwork has enough modules to show; Scotty (Mosaic)'s
+`node-qrcode` encodes the text. Basic Black, Tilted Square and Block Monogram use medium
+error correction; the other styles use high, so their artwork can stand in for part of the QR code. The high-correction styles also start at a minimum QR
+version, so their artwork has enough modules to show; Mosaic Scotty's
 minimum is higher at larger sizes, for a more detailed portrait.
 
 The renderer draws the code as SVG. Function patterns, such as the corner
 squares, are always plain squares; each style draws only the data modules.
 Every module gets the same whole number of pixels, and each style has its
 own minimum, so a size too small for the text returns an error with the
-smallest size that works. Scotty (Simple), Wean Hall and Binary Heart place
+smallest size that works. Basic Scotty, Wean Hall and Binary Heart place
 their marks where they cover no function patterns, shrinking them when a
-dense code leaves no room. Scotty (Mosaic) samples the Scotty artwork once
+dense code leaves no room. Mosaic Scotty samples the Scotty artwork once
 per QR version to choose each module's color. Tilted Square is laid out on
 its own, turned, with all its dark modules in one shape, and scaled to fit,
 so its modules don't land on whole pixels. Kraus Campo adds a frame outside
 the white margin.
 
-PNGs are the same SVG rendered by sharp. Scotty (Mosaic)'s artwork is
-traced from the [Scotty chatbot's avatar](https://www.cmu.edu/hr/images/scotty.png);
-Scotty (Simple) uses University Communications & Marketing's Scotty
-portrait. Kraus Campo's numerals are Open Sans ExtraBold outlines.
+PNGs are the same SVG rendered by sharp. Both Scotty styles use University Communications & Marketing's Scotty portrait. Kraus Campo's numerals are Open Sans ExtraBold outlines.
+
+Center Icon draws icons from the `bootstrap-icons` package (MIT License),
+a runtime dependency of plain SVG files. Each icon's file is read the first
+time a code uses it, then kept in memory. `/icons.json` lists the names for
+the builder.
+
+Headers and footers are drawn from Open Sans Bold outlines in
+`src/glyphs.ts`, so the server and anyone viewing an image need no fonts
+installed. `scripts/glyphs.py` writes that file from the font; it takes
+Python with fontTools, and only matters when the lettering changes:
+
+    python3 scripts/glyphs.py OpenSans-Bold.ttf src/glyphs.ts
+
+Get `OpenSans-Bold.ttf` from the Open Sans project
+(github.com/googlefonts/opensans, `fonts/ttf/`). It covers printable ASCII,
+Latin-1 letters, curly quotes, dashes, the bullet, the ellipsis and the
+copyright sign; anything else in a header or footer is an error.
 In production, responses allow browser and proxy caching for one day; in
 development they aren't cached, so style changes show on reload. Nothing
 is written to disk.

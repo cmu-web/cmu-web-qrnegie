@@ -5,7 +5,8 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import * as z from "zod";
-import { qrImage, xml } from "./qr";
+import { LABEL_LIMIT, qrImage, xml } from "./qr";
+import sharp from "sharp";
 import { STYLES } from "./styles";
 
 const version = (
@@ -16,7 +17,7 @@ export function createMcp(base = process.env.PUBLIC_URL || "https://qrnegie.andr
     { name: "qrnegie", title: "QRnegie", version },
     {
       instructions:
-        "Scotty, Beam Me There. Create Scotty (Mosaic), Scotty (Simple), Kraus Campo, Wean Hall, Binary Heart, Tilted Square or Basic Black QR codes with generate_qr. Preserve the included white quiet zone. Download SVG for print or PNG for everyday use. Text is encoded exactly without fetching the destination. Scotty artwork and CMU marks are for authorized CMU use.",
+        "Scotty, Beam Me There. Create Mosaic Scotty, Basic Scotty, Kraus Campo, Wean Hall, Binary Heart, Tilted Square, Block Monogram or Basic Black QR codes with generate_qr. Preserve the included white quiet zone. Download SVG for print or PNG for everyday use. Text is encoded exactly without fetching the destination. Scotty artwork and CMU marks are for authorized CMU use.",
     },
   );
   server.registerTool(
@@ -30,7 +31,7 @@ export function createMcp(base = process.env.PUBLIC_URL || "https://qrnegie.andr
       content: [
         {
           type: "text",
-          text: `Use ${base}/qr.svg or /qr.png with text, style=plain|scotty|mosaic|kraus-campo|wean|binary-heart|tilted-square and size (default 512, max 2048). Art styles use H correction, Plain uses M. Artistic styles require larger exports; use 1024 for detailed artwork. The four-module margin is built in. Keep the code square and test printed exports at their final size. Payload limit: 1024 UTF-8 bytes. Maintained by the Office of the Vice Provost for Teaching and Learning Innovation.`,
+          text: `Use ${base}/qr.svg or /qr.png with text, style=plain|scotty|mosaic|kraus-campo|wean|binary-heart|tilted-square|block-monogram|icon (icon=<Bootstrap Icons name>, default link-45deg) and size (default 512, max 2048); optional header and footer, up to 40 characters each, add lines of text (the image grows taller, except Kraus Campo, which letters its orange band). Art styles use H correction, Plain uses M. Artistic styles require larger exports; use 1024 for detailed artwork. The four-module margin is built in. Keep the code square and test printed exports at their final size. Payload limit: 1024 UTF-8 bytes. Maintained by the Office of the Vice Provost for Teaching and Learning Innovation.`,
         },
       ],
     }),
@@ -39,18 +40,26 @@ export function createMcp(base = process.env.PUBLIC_URL || "https://qrnegie.andr
     "generate_qr",
     {
       description:
-        "Create a QR image in Scotty (Mosaic), Scotty (Simple), Kraus Campo, Wean Hall, Binary Heart, Tilted Square or Basic Black style. Returns a PNG, embeddable image addresses and HTML. No destination fetch, storage or tracking.",
+        "Create a QR image in Mosaic Scotty, Basic Scotty, Kraus Campo, Wean Hall, Binary Heart, Tilted Square, Block Monogram, Center Icon (with icon, a Bootstrap Icons name such as wifi) or Basic Black style, with an optional header and footer of up to 40 characters. Returns a PNG, embeddable image addresses and HTML. No destination fetch, storage or tracking.",
       inputSchema: {
         text: z.string().min(1).max(1024),
         style: z.enum(STYLES).default("scotty"),
         size: z.number().int().min(96).max(2048).default(512),
+        header: z.string().max(LABEL_LIMIT).optional(),
+        footer: z.string().max(LABEL_LIMIT).optional(),
+        icon: z.string().max(60).optional(),
       },
       annotations: { readOnlyHint: true, openWorldHint: false },
     },
-    async ({ text, style, size }) => {
+    async ({ text, style, size, header, footer, icon }) => {
       try {
-        const image = await qrImage(text, style, size, "png"),
-          query = new URLSearchParams({ text, style, size: String(size) });
+        const image = await qrImage(text, style, size, "png", { header, footer, icon }),
+          query = new URLSearchParams({ text, style, size: String(size) }),
+          // A header or footer makes the image taller than it is wide
+          { height = size } = await sharp(image).metadata();
+        if (header?.trim()) query.set("header", header.trim());
+        if (footer?.trim()) query.set("footer", footer.trim());
+        if (style === "icon" && icon?.trim()) query.set("icon", icon.trim());
         const svg = `${base}/qr.svg?${query}`,
           png = `${base}/qr.png?${query}`;
         return {
@@ -62,7 +71,7 @@ export function createMcp(base = process.env.PUBLIC_URL || "https://qrnegie.andr
                 {
                   svg,
                   png,
-                  html: `<img src="${xml(svg)}" alt="QR code for ${xml(text)}" width="${size}" height="${size}" />`,
+                  html: `<img src="${xml(svg)}" alt="QR code for ${xml(text)}" width="${size}" height="${height}" />`,
                 },
                 null,
                 2,

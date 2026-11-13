@@ -51,9 +51,13 @@ describe("QRnegie", () => {
         };
         for (const [x, y] of [outside(tl, bl), outside(tr, br), outside(tl, tr), outside(bl, br)]) {
           const pixel = (Math.floor(y) * info.width + Math.floor(x)) * 4;
-          // Light, not necessarily white: Kraus Campo's margin has faint tiles
-          for (const channel of data.subarray(pixel, pixel + 3))
-            expect(channel).toBeGreaterThanOrEqual(230);
+          const [r, g, b] = data.subarray(pixel, pixel + 3);
+          // Block Monogram's code is inverted: its margin is the dark red of
+          // its block. Everywhere else it's light, not necessarily white:
+          // Kraus Campo's margin has faint tiles.
+          if (style === "block-monogram")
+            expect(0.299 * r + 0.587 * g + 0.114 * b).toBeLessThan(120);
+          else for (const channel of [r, g, b]) expect(channel).toBeGreaterThanOrEqual(230);
         }
       });
     }
@@ -78,6 +82,34 @@ describe("QRnegie", () => {
       "https://qrnegie.andrew.cmu.edu/",
     );
   });
+  for (const style of STYLES)
+    it(`decodes the ${style} image with a header and a footer`, async () => {
+      const text = "WIFI:T:nopass;S:CMU-GUEST;;",
+        labels = { header: "Join CMU-GUEST", footer: "Access Code: 7F3K-92QA" };
+      for (const size of [512, 2048]) {
+        const { data, info } = await sharp(await qrImage(text, style, size, "png", labels))
+          .ensureAlpha()
+          .raw()
+          .toBuffer({ resolveWithObject: true });
+        expect(info.width).toBe(size);
+        // Kraus Campo's lines go in its band; the others make the image taller
+        if (style === "kraus-campo") expect(info.height).toBe(size);
+        else expect(info.height).toBeGreaterThan(size);
+        expect(jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data).toBe(text);
+      }
+    });
+  it("draws no header or footer for blank lines and rejects ones it can't letter", async () => {
+    const plain = await qrImage("https://www.cmu.edu/", "plain", 512, "svg");
+    expect(
+      await qrImage("https://www.cmu.edu/", "plain", 512, "svg", { header: " ", footer: "" }),
+    ).toEqual(plain);
+    await expect(
+      qrImage("https://www.cmu.edu/", "plain", 512, "svg", { footer: "x".repeat(41) }),
+    ).rejects.toThrow("40 characters");
+    await expect(
+      qrImage("https://www.cmu.edu/", "plain", 512, "svg", { header: "Snow \u2603" }),
+    ).rejects.toThrow("common punctuation");
+  });
   it("rejects excessive payloads and undersized exports", async () => {
     await expect(qrImage("x".repeat(1025), "scotty", 512, "png")).rejects.toThrow("1024");
     await expect(qrImage("https://www.cmu.edu/", "scotty", 20, "png")).rejects.toThrow(
@@ -86,6 +118,18 @@ describe("QRnegie", () => {
   });
   it("serves the builder, images and stateless MCP", async () => {
     const app = createApp();
+    const labelled = await request(app)
+      .get("/qr.svg")
+      .query({ text: "https://www.cmu.edu/", style: "plain", size: "512", footer: "Hello" });
+    expect(labelled.status).toBe(200);
+    expect(String(labelled.body)).toMatch(/^<svg[^>]*width="512" height="5[0-9]{2}"/);
+    expect(
+      (
+        await request(app)
+          .get("/qr.svg")
+          .query({ text: "https://www.cmu.edu/", footer: ["a", "b"] })
+      ).status,
+    ).toBe(400);
     await request(app)
       .get("/")
       .expect(200)

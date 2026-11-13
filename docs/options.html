@@ -10,7 +10,7 @@
     <meta property="og:title" content="Options - QRnegie" />
     <meta
       property="og:description"
-      content="QRnegie's image addresses: the text to encode, seven styles, sizes up to 2048 pixels, SVG or PNG, and its MCP server."
+      content="QRnegie's image addresses: the text to encode, eight styles, sizes up to 2048 pixels, SVG or PNG, and its MCP server."
     />
     <meta property="og:url" content="https://qrnegie.andrew.cmu.edu/options.html" />
     <meta property="og:image" content="https://qrnegie.andrew.cmu.edu/images/preview.jpg" />
@@ -18,13 +18,13 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="QRnegie's home page: QR Codes With a Little More Bite, beside a Scotty Mosaic QR code."
+      content="QRnegie's home page: QR Codes With a Little More Bite, beside a Mosaic Scotty QR code."
     />
     <meta name="twitter:card" content="summary_large_image" />
     <!-- End of link previews -->
     <meta
       name="description"
-      content="QRnegie's image addresses: the text to encode, seven styles, sizes up to 2048 pixels, SVG or PNG, and its MCP server."
+      content="QRnegie's image addresses: the text to encode, eight styles, sizes up to 2048 pixels, SVG or PNG, and its MCP server."
     />
     <link
       href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,300italic,300,600,700,700italic"
@@ -38,8 +38,8 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/css/cmu-cms.css"
-      integrity="sha384-jLB4PsCj8eJZzLvX09Rp//BaeUnjZFFNVOS3iVyZhktnIw9EkiZPVseQWE+Yjz/q"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-cms.css"
+      integrity="sha384-+u4UJJGawMpfkXYetQDuUBs4iJZaH0GIVRw5uidyWjaUBPGQPtSqV4/O66AgMACJ"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
@@ -102,16 +102,85 @@
                 <tr>
                   <td class="cmu-fit"><code>size</code></td>
                   <td
-                    >The image's width and height in pixels, up to 2048. How small it can be depends
-                    on the style and how much text it holds.</td
+                    >The image's width in pixels, up to 2048, and its height unless it has a header
+                    or footer. How small it can be depends on the style and how much text it
+                    holds.</td
                   >
                   <td class="cmu-fit">512</td>
+                </tr>
+                <tr>
+                  <td class="cmu-fit"><code>header</code>, <code>footer</code></td>
+                  <td
+                    >A line of text above or below the QR code, up to 40 characters: letters,
+                    numbers, spaces and common punctuation. The image grows taller to hold it,
+                    except in Kraus Campo, where it goes in the orange band.</td
+                  >
+                  <td class="cmu-fit">None</td>
                 </tr>
               </tbody>
             </table>
             <p
               >Join options with <code>&amp;</code>, in any order. If an option is misspelled or
               missing, the error message says what to change.</p
+            >
+            <h2 id="content-types">Beyond Links</h2>
+            <p
+              >A QR code can hold more than a link. The <a href="builder.html">Builder</a>'s Content
+              Type menu writes these for you; in an address, URL-encode the result as the
+              <code>text</code>.</p
+            >
+            <table class="alternate cmu-full">
+              <thead
+                ><tr
+                  ><th scope="col">Content Type</th><th scope="col">What Phones Do</th
+                  ><th scope="col">Starts With</th></tr
+                ></thead
+              >
+              <tbody>
+                <tr>
+                  <td>Contact Card</td>
+                  <td>Offer to save the contact.</td>
+                  <td class="cmu-fit"><code>BEGIN:VCARD</code></td>
+                </tr>
+                <tr>
+                  <td>Event</td>
+                  <td>Offer to add it to a calendar.</td>
+                  <td class="cmu-fit"><code>BEGIN:VEVENT</code></td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>Open a new email, with the address, subject and message filled in.</td>
+                  <td class="cmu-fit"><code>mailto:</code></td>
+                </tr>
+                <tr>
+                  <td>Phone Call</td>
+                  <td>Offer to call the number.</td>
+                  <td class="cmu-fit"><code>tel:</code></td>
+                </tr>
+                <tr>
+                  <td>Map Location</td>
+                  <td>Open the place in Google Maps.</td>
+                  <td class="cmu-fit"><code>https://www.google.com/maps/</code></td>
+                </tr>
+                <tr>
+                  <td>Wi-Fi Network</td>
+                  <td>Offer to join the network.</td>
+                  <td class="cmu-fit"><code>WIFI:</code></td>
+                </tr>
+              </tbody>
+            </table>
+            <p
+              >The Builder's Wi-Fi codes are for
+              <a
+                class="external"
+                href="https://www.cmu.edu/computing/services/endpoint/network-access/wireless/"
+                >CMU's wireless networks</a
+              >. Phones can't count on joining CMU-SECURE or eduroam from a code (iPhones can't join
+              that kind of network from any QR code, and Android support varies), so codes for those
+              two open Computing Services' steps for connecting instead. CMU-DEVICE is for
+              registered devices without a browser, and CMU-GUEST asks guests to sign in with an
+              access code from faculty or staff. Contact cards and events hold more text, so they
+              make denser codes that read best at larger sizes.</p
             >
             <h2 id="styles">Styles</h2>
             <table class="alternate cmu-full">
@@ -123,15 +192,27 @@
               >
               <tbody>
                 <tr>
-                  <td><a href="#style-mosaic">Scotty (Mosaic)</a></td>
+                  <td><a href="#style-mosaic">Mosaic Scotty</a></td>
                   <td class="cmu-fit"><code>mosaic</code></td>
                   <td class="cmu-fit">High</td>
                   <td class="cmu-fit">6</td>
                 </tr>
                 <tr>
-                  <td><a href="#style-scotty">Scotty (Simple)</a></td>
-                  <td class="cmu-fit"><code>scotty</code></td>
+                  <td><a href="#style-plain">Basic Black</a></td>
+                  <td class="cmu-fit"><code>plain</code></td>
+                  <td class="cmu-fit">Medium</td>
+                  <td class="cmu-fit">3</td>
+                </tr>
+                <tr>
+                  <td><a href="#style-binary-heart">Binary Heart</a></td>
+                  <td class="cmu-fit"><code>binary-heart</code></td>
                   <td class="cmu-fit">High</td>
+                  <td class="cmu-fit">6</td>
+                </tr>
+                <tr>
+                  <td><a href="#style-block-monogram">Block Monogram</a></td>
+                  <td class="cmu-fit"><code>block-monogram</code></td>
+                  <td class="cmu-fit">Medium</td>
                   <td class="cmu-fit">3</td>
                 </tr>
                 <tr>
@@ -141,16 +222,10 @@
                   <td class="cmu-fit">6</td>
                 </tr>
                 <tr>
-                  <td><a href="#style-wean">Wean Hall</a></td>
-                  <td class="cmu-fit"><code>wean</code></td>
+                  <td><a href="#style-scotty">Basic Scotty</a></td>
+                  <td class="cmu-fit"><code>scotty</code></td>
                   <td class="cmu-fit">High</td>
-                  <td class="cmu-fit">5</td>
-                </tr>
-                <tr>
-                  <td><a href="#style-binary-heart">Binary Heart</a></td>
-                  <td class="cmu-fit"><code>binary-heart</code></td>
-                  <td class="cmu-fit">High</td>
-                  <td class="cmu-fit">6</td>
+                  <td class="cmu-fit">3</td>
                 </tr>
                 <tr>
                   <td><a href="#style-tilted-square">Tilted Square</a></td>
@@ -159,25 +234,29 @@
                   <td class="cmu-fit">3</td>
                 </tr>
                 <tr>
-                  <td><a href="#style-plain">Basic Black</a></td>
-                  <td class="cmu-fit"><code>plain</code></td>
-                  <td class="cmu-fit">Medium</td>
-                  <td class="cmu-fit">3</td>
+                  <td><a href="#style-wean">Wean Hall</a></td>
+                  <td class="cmu-fit"><code>wean</code></td>
+                  <td class="cmu-fit">High</td>
+                  <td class="cmu-fit">5</td>
                 </tr>
               </tbody>
             </table>
             <p
-              >Error correction lets a scanner read a code even when part of it is covered or
+              >Error correction lets a scanner read a QR code even when part of it is covered or
               smudged. The artistic styles use high error correction, so their artwork and marks can
-              stand in for part of the code; Tilted Square and Basic Black use medium, which keeps
-              their codes less dense. The smallest module is in pixels.</p
+              stand in for part of the code; Tilted Square, Block Monogram and Basic Black use
+              medium, which keeps their codes less dense. The smallest module is in pixels.</p
+            ><p
+              >Block Monogram's code is inverted, white on red, like the solid M of the monogram.
+              Current phone cameras read inverted codes, but some older or simpler scanners don't;
+              for a code that has to work everywhere, choose another style.</p
             >
             <h2 id="sizes">Sizes</h2>
             <p
-              >A code is a grid of squares called modules, and each one gets the same whole number
-              of pixels, at least the number in the table above. More text makes a bigger grid, so a
-              long URL or a contact card needs a bigger image. If a size is too small, the error
-              message gives the smallest one that works; the Builder picks it for you.</p
+              >A QR code is a grid of squares called modules, and each one gets the same whole
+              number of pixels, at least the number in the table above. More text makes a bigger
+              grid, so a long URL or a contact card needs a bigger image. If a size is too small,
+              the error message gives the smallest one that works; the Builder picks it for you.</p
             >
             <p
               >The size includes the white border around the code, and for Kraus Campo, its orange
@@ -193,7 +272,7 @@
             <ul class="cmu-checks">
               <li>Keep the white border clear on all sides.</li>
               <li>Keep the image square, without stretching or cropping it.</li>
-              <li>Use a shorter URL when a code gets too dense.</li>
+              <li>Use a shorter URL when a QR code gets too dense.</li>
               <li
                 >Scan the finished sign, slide or label with a phone, at its real size and
                 distance.</li
@@ -204,8 +283,9 @@
               >AI agents can connect to QRnegie's MCP server at
               <code>https://qrnegie.andrew.cmu.edu/mcp</code> (Streamable HTTP, no sign-in).
               <code>get_guide</code> describes these options, and <code>generate_qr</code> takes
-              <code>text</code>, <code>style</code> and <code>size</code> and returns a PNG with its
-              address and HTML. The <a href="./#agent">setup prompt</a> is on the home page.</p
+              <code>text</code>, <code>style</code>, <code>size</code> and an optional
+              <code>header</code> and <code>footer</code>, and returns a PNG with its address and
+              HTML. The <a href="./#agent">setup prompt</a> is on the home page.</p
             >
           </div></div
         >
@@ -214,26 +294,44 @@
           <div id="style-mosaic"
             ><img
               src="images/mosaic.png"
-              alt="A Scotty (Mosaic) QR code."
+              alt="A Mosaic Scotty QR code."
               width="1024"
               height="1024"
-            /><h2>Scotty (Mosaic)</h2
+            /><h2>Mosaic Scotty</h2
             ><p>Scotty's silhouette and red scarf, formed by the code's own dots.</p
             ><p
-              ><a class="cta" href="builder.html?style=mosaic">Build With Scotty (Mosaic)</a></p
+              ><a class="cta" href="builder.html?style=mosaic">Build With Mosaic Scotty</a></p
             ></div
-          ><div id="style-scotty"
+          ><div id="style-plain"
             ><img
-              src="images/scotty.png"
-              alt="A Scotty (Simple) QR code."
+              src="images/plain.png"
+              alt="A Basic Black QR code."
               width="1024"
               height="1024"
-            /><h2>Scotty (Simple)</h2
+            /><h2>Basic Black</h2><p>Black squares on white, the most compact QR code.</p
+            ><p><a class="cta" href="builder.html?style=plain">Build With Basic Black</a></p></div
+          ><div id="style-binary-heart"
+            ><img
+              src="images/binary-heart.png"
+              alt="A Binary Heart QR code."
+              width="1024"
+              height="1024"
+            /><h2>Binary Heart</h2><p>Ones and zeros, with the CMU heart in the middle.</p
             ><p
-              >Square modules with Scotty's portrait, from University Communications &amp;
-              Marketing, in the middle.</p
+              ><a class="cta" href="builder.html?style=binary-heart">Build With Binary Heart</a></p
+            ></div
+          ><div id="style-block-monogram"
+            ><img
+              src="images/block-monogram.png"
+              alt="A Block Monogram QR code."
+              width="1024"
+              height="1024"
+            /><h2>Block Monogram</h2
+            ><p>The Carnegie-Mellon block monogram, with the code in place of the M.</p
             ><p
-              ><a class="cta" href="builder.html?style=scotty">Build With Scotty (Simple)</a></p
+              ><a class="cta" href="builder.html?style=block-monogram"
+                >Build With Block Monogram</a
+              ></p
             ></div
           ><div id="style-kraus-campo"
             ><img
@@ -248,6 +346,30 @@
             ><p
               ><a class="cta" href="builder.html?style=kraus-campo">Build With Kraus Campo</a></p
             ></div
+          ><div id="style-scotty"
+            ><img
+              src="images/scotty.png"
+              alt="A Basic Scotty QR code."
+              width="1024"
+              height="1024"
+            /><h2>Basic Scotty</h2
+            ><p
+              >Square modules with Scotty's portrait, from University Communications &amp;
+              Marketing, in the middle.</p
+            ><p><a class="cta" href="builder.html?style=scotty">Build With Basic Scotty</a></p></div
+          ><div id="style-tilted-square"
+            ><img
+              src="images/tilted-square.png"
+              alt="A Tilted Square QR code."
+              width="1024"
+              height="1024"
+            /><h2>Tilted Square</h2
+            ><p>The QR code in a red square outline, both turned 15 degrees.</p
+            ><p
+              ><a class="cta" href="builder.html?style=tilted-square"
+                >Build With Tilted Square</a
+              ></p
+            ></div
           ><div id="style-wean"
             ><img src="images/wean.png" alt="A Wean Hall QR code." width="1024" height="1024" /><h2
               >Wean Hall</h2
@@ -255,36 +377,6 @@
               >Wean Hall's concrete facade, with the &ldquo;turtle head&rdquo; entrance and the Love
               of Two Oranges in front of it.</p
             ><p><a class="cta" href="builder.html?style=wean">Build With Wean Hall</a></p></div
-          ><div id="style-binary-heart"
-            ><img
-              src="images/binary-heart.png"
-              alt="A Binary Heart QR code."
-              width="1024"
-              height="1024"
-            /><h2>Binary Heart</h2><p>Ones and zeros, with the CMU heart in the middle.</p
-            ><p
-              ><a class="cta" href="builder.html?style=binary-heart">Build With Binary Heart</a></p
-            ></div
-          ><div id="style-tilted-square"
-            ><img
-              src="images/tilted-square.png"
-              alt="A Tilted Square QR code."
-              width="1024"
-              height="1024"
-            /><h2>Tilted Square</h2><p>The code in a red square outline, both turned 15 degrees.</p
-            ><p
-              ><a class="cta" href="builder.html?style=tilted-square"
-                >Build With Tilted Square</a
-              ></p
-            ></div
-          ><div id="style-plain"
-            ><img
-              src="images/plain.png"
-              alt="A Basic Black QR code."
-              width="1024"
-              height="1024"
-            /><h2>Basic Black</h2><p>Black squares on white, the most compact code.</p
-            ><p><a class="cta" href="builder.html?style=plain">Build With Basic Black</a></p></div
           ></div
         >
       </main>
@@ -318,8 +410,8 @@
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/js/cmu-app.js"
-      integrity="sha384-Etmkex3xbkUyRJUcASnyzfeR4g6yNwaWbaK+Z3sJvOxk76pCKgcYHAtNZppbmH8Z"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/js/cmu-app.js"
+      integrity="sha384-10393F76wEQPHaJEEoM9M1QEQsl9mTezDdEM45kArp0j26SWs3gxiGsXKrmwJHio"
       crossorigin="anonymous"
     ></script>
   </body>

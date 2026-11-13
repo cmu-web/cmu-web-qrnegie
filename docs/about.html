@@ -18,7 +18,7 @@
     <meta property="og:image:height" content="630" />
     <meta
       property="og:image:alt"
-      content="QRnegie's home page: QR Codes With a Little More Bite, beside a Scotty Mosaic QR code."
+      content="QRnegie's home page: QR Codes With a Little More Bite, beside a Mosaic Scotty QR code."
     />
     <meta name="twitter:card" content="summary_large_image" />
     <!-- End of link previews -->
@@ -38,8 +38,8 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/css/cmu-cms.css"
-      integrity="sha384-jLB4PsCj8eJZzLvX09Rp//BaeUnjZFFNVOS3iVyZhktnIw9EkiZPVseQWE+Yjz/q"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/css/cmu-cms.css"
+      integrity="sha384-+u4UJJGawMpfkXYetQDuUBs4iJZaH0GIVRw5uidyWjaUBPGQPtSqV4/O66AgMACJ"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
@@ -76,11 +76,9 @@
             </p>
             <h2 class="rule-top" id="styles">Where the Styles Come From</h2>
             <p
-              >The Scotty in Scotty (Mosaic) is traced from the avatar of the
-              <a href="https://www.cmu.edu/hr/news/2024/02-26-employee-experience.html"
-                >Scotty chatbot</a
-              >. Scotty (Simple) uses the portrait of Scotty in his red scarf from University
-              Communications &amp; Marketing's Scotty illustrations.</p
+              >Both Scotty styles use the portrait of Scotty in his red scarf from University
+              Communications &amp; Marketing's Scotty illustrations: Mosaic Scotty forms it from the
+              QR code's own dots, and Basic Scotty sets it in the middle of the code.</p
             >
             <p
               >Kraus Campo is named for the garden on the roof of the Posner Center, by artist Mel
@@ -103,13 +101,14 @@
             <p
               >Binary Heart puts the CMU heart, traced from the university's own image, among ones
               and zeros. Tilted Square turns the code inside a red square outline, after the tilted
-              square that appears with Carnegie Mellon's wordmark. Basic Black is a plain code,
+              square that appears with Carnegie Mellon's wordmark. Block Monogram puts the code in
+              place of the M in the old Carnegie-Mellon block monogram. Basic Black is a plain code,
               black on white.</p
             >
             <h2 class="rule-top" id="how">How It Works</h2>
             <p
-              >QRnegie draws the code's data modules in the style you pick and leaves the patterns a
-              scanner looks for, such as the three corner squares, plain and intact.</p
+              >QRnegie draws the QR code's data modules in the style you pick and leaves the
+              patterns a scanner looks for, such as the three corner squares, plain and intact.</p
             >
             <ul class="cmu-checks">
               <li
@@ -134,11 +133,22 @@
               turns it into a PNG. In every style but Tilted Square, each module gets a whole number
               of pixels, so edges stay crisp. Kraus Campo's numerals are outlines from
               <a class="external" href="https://fonts.google.com/specimen/Open+Sans">Open Sans</a>
-              ExtraBold, under the SIL Open Font License. Its tests decode the finished image of
-              every style with
+              ExtraBold, and the header and footer are Open Sans Bold outlines, both under the SIL
+              Open Font License. As outlines, they look the same everywhere, with no font to
+              install. Its tests decode the finished image of every style with
               <a class="external" href="https://github.com/cozmo/jsQR">jsQR</a>, a separate
               reader.</p
             >
+            <p>
+              In the Builder, place suggestions come from
+              <a class="external" href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>,
+              under the Open Database License, through komoot's
+              <a class="external" href="https://photon.komoot.io/">Photon</a>, and the map picker is
+              <a class="external" href="https://leafletjs.com/">Leaflet</a> over OpenStreetMap's map
+              tiles. Center Icon draws
+              <a class="external" href="https://icons.getbootstrap.com/">Bootstrap Icons</a>, under
+              the MIT License.
+            </p>
             <p
               >QRnegie is a small TypeScript app built with Express and sharp, with an MCP server
               for AI agents.</p
@@ -148,14 +158,14 @@
         <div class="grid column3 grey boxes">
           <h1 id="cmu-web">More CMU Web Tools</h1>
           <p class="cmu-grid-full">
-            QRnegie is one of four CMU Web projects for building Carnegie Mellon websites and web
-            apps.
+            QRnegie is part of CMU Web, a collection of projects for Carnegie Mellon web
+            development. The collection also includes:
           </p>
           <div>
             <figure class="cmu-shot cmu-shot--browser">
               <a href="https://webkilt.andrew.cmu.edu/" tabindex="-1" aria-hidden="true"
                 ><img
-                  src="images/cmu-web-kilt.webp"
+                  src="https://webkilt.andrew.cmu.edu/images/cmu-web-preview.webp"
                   alt="The Carnegie Mellon Web Kilt's home page."
                   width="1040"
                   height="656"
@@ -169,7 +179,7 @@
             <figure class="cmu-shot cmu-shot--browser">
               <a href="https://jekyllandplaid.andrew.cmu.edu/" tabindex="-1" aria-hidden="true"
                 ><img
-                  src="images/cmu-web-jekyll-and-plaid.webp"
+                  src="https://jekyllandplaid.andrew.cmu.edu/images/cmu-web-preview.webp"
                   alt="Jekyll &amp; Plaid's home page."
                   width="1040"
                   height="656"
@@ -187,14 +197,14 @@
             <figure class="cmu-shot cmu-shot--browser">
               <a href="https://placemellon.andrew.cmu.edu/" tabindex="-1" aria-hidden="true"
                 ><img
-                  src="images/cmu-web-placemellon.webp"
+                  src="https://placemellon.andrew.cmu.edu/images/cmu-web-preview.webp"
                   alt="PlaceMellon's home page."
                   width="1040"
                   height="656"
               /></a>
             </figure>
             <h2>PlaceMellon</h2>
-            <p>Placeholder images of Carnegie Mellon for mockups and prototypes.</p>
+            <p>Placeholder photos of Carnegie Mellon at any size, for mockups and prototypes.</p>
             <p
               ><a class="external" href="https://placemellon.andrew.cmu.edu/"
                 >Visit PlaceMellon</a
@@ -246,8 +256,8 @@
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.1/js/cmu-app.js"
-      integrity="sha384-Etmkex3xbkUyRJUcASnyzfeR4g6yNwaWbaK+Z3sJvOxk76pCKgcYHAtNZppbmH8Z"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.6.2/js/cmu-app.js"
+      integrity="sha384-10393F76wEQPHaJEEoM9M1QEQsl9mTezDdEM45kArp0j26SWs3gxiGsXKrmwJHio"
       crossorigin="anonymous"
     ></script>
   </body>

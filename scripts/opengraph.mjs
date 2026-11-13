@@ -13,7 +13,7 @@ const IMAGE = {
   src: "images/preview.jpg",
   width: 1200,
   height: 630,
-  alt: "QRnegie's home page: QR Codes With a Little More Bite, beside a Scotty Mosaic QR code.",
+  alt: "QRnegie's home page: QR Codes With a Little More Bite, beside a Mosaic Scotty QR code.",
 };
 const START = "<!-- Link previews: written by scripts/opengraph.mjs -->";
 const END = "<!-- End of link previews -->";

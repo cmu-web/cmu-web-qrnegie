@@ -6,7 +6,7 @@ options, see the [user documentation](https://qrnegie.andrew.cmu.edu/).
 ## Report a Problem
 
 Check existing issues first. Include the image URL or options you used,
-what happened and what you expected. For a code that doesn't scan, include
+what happened and what you expected. For a QR code that doesn't scan, include
 the phone or scanner app and the size it was printed or shown at.
 
 For a feature request, describe the page or workflow it would help.
