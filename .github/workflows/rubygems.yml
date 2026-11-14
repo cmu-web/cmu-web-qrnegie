@@ -51,5 +51,21 @@ jobs:
       - name: Check the tag matches package.json
         run: test "$(ruby -rjson -e 'puts JSON.parse(File.read("../../package.json"))["version"]')" = "$GITHUB_REF_NAME"
       - run: bundle exec rake build
-      - uses: rubygems/configure-rubygems-credentials@dc5a8d8553e6ee01fc26761a49e99e733d17954a # v2.1.0
+      # Trades GitHub's identity token for a RubyGems.org key that lasts 15
+      # minutes. A new gem's first push has to name the account that will own
+      # it (owner: its RubyGems.org ID), which
+      # rubygems/configure-rubygems-credentials can't pass yet.
+      - name: Get a RubyGems.org key
+        env:
+          RUBYGEMS_OWNER: "8871"
+        run: |
+          jwt=$(curl --fail --silent --show-error \
+            -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" \
+            "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=rubygems.org" | jq -r .value)
+          key=$(jq -n --arg jwt "$jwt" --arg owner "$RUBYGEMS_OWNER" '{jwt: $jwt, owner: $owner}' |
+            curl --fail-with-body --silent --show-error -X POST \
+              -H "Content-Type: application/json" --data @- \
+              https://rubygems.org/api/v1/oidc/trusted_publisher/exchange_token | jq -r .rubygems_api_key)
+          echo "::add-mask::$key"
+          echo "GEM_HOST_API_KEY=$key" >> "$GITHUB_ENV"
       - run: gem push "pkg/cmu-web-qrnegie-$GITHUB_REF_NAME.gem"
