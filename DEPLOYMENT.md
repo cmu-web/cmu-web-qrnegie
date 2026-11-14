@@ -127,3 +127,21 @@ The production image contains compiled TypeScript, production dependencies,
 vector artwork and documentation. It runs as the non-root `node` user.
 The Dockerfile pins the Node base image by digest and pins npm in the
 shared base stage.
+
+## Publish the Ruby Gem
+
+Each version tag also publishes the Ruby gem in `packages/ruby/`,
+`cmu-web-qrnegie`, at the same version, through the
+[Ruby gem workflow](.github/workflows/rubygems.yml). It uses trusted
+publishing, so it needs no API key, but RubyGems.org has to trust it first.
+Do this once, before the first tag that should publish the gem:
+
+1. Sign in to RubyGems.org with an account that has multi-factor
+   authentication on.
+2. Under Trusted Publishers, add a pending trusted publisher for the gem
+   `cmu-web-qrnegie`: GitHub Actions, owner `cmu-web`, repository
+   `cmu-web-qrnegie`, workflow `rubygems.yml` and environment `rubygems`.
+
+The first successful run creates the gem on RubyGems.org, owned by that
+account. Until then, the workflow's publish step fails on each tag; the
+image is published as usual.

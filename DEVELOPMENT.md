@@ -159,7 +159,8 @@ release line; close proposals for odd-numbered lines.
 
 ## Releasing
 
-A release publishes a container image to GitHub Container Registry.
+A release publishes a container image to GitHub Container Registry and the
+Ruby gem in `packages/ruby/` to RubyGems.org, both at the release's version.
 
 1. Start from an up-to-date `main` with passing CI and a clean working tree.
 2. Choose a major version for incompatible URL or option changes, a minor
