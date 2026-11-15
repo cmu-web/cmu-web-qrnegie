@@ -133,7 +133,7 @@ shared base stage.
 Each version tag also publishes the Ruby gem in `packages/ruby/`,
 `cmu-web-qrnegie`, at the same version, through the
 [Ruby gem workflow](.github/workflows/rubygems.yml). It uses trusted
-publishing, so it needs no API key, but RubyGems.org has to trust it first.
+publishing, so there's no API key, but RubyGems.org has to trust it first.
 Do this once, before the first tag that should publish the gem:
 
 1. Sign in to RubyGems.org with an account that has multi-factor
