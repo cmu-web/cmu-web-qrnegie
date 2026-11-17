@@ -286,6 +286,36 @@ describe("unlisted collections", () => {
       expect(await decode(image)).toBe(text);
     });
 
+  it("keeps the punch card the same size whatever the text's length", async () => {
+    // The box around everything that isn't the white background
+    const cardBox = async (image: Buffer) => {
+      const { data, info } = await sharp(image)
+        .greyscale()
+        .raw()
+        .toBuffer({ resolveWithObject: true });
+      let [left, top, right, bottom] = [info.width, info.height, -1, -1];
+      for (let y = 0; y < info.height; y++)
+        for (let x = 0; x < info.width; x++)
+          if (data[y * info.width + x] < 250) {
+            left = Math.min(left, x);
+            right = Math.max(right, x);
+            top = Math.min(top, y);
+            bottom = Math.max(bottom, y);
+          }
+      return [left, top, right, bottom];
+    };
+    for (const lines of [{}, { above: "cd www.cs.cmu.edu", below: "Welcome to SCS" }]) {
+      const boxes = new Set<string>();
+      for (const length of [1, 10, 24, 27, 50, 100, 200, 500])
+        boxes.add(
+          String(
+            await cardBox(await qrImage("a".repeat(length), "punch-card", 1024, "png", lines)),
+          ),
+        );
+      expect([...boxes]).toHaveLength(1);
+    }
+  });
+
   it("renders unlisted styles by name in image URLs but lists only public ones", async () => {
     const app = createApp();
     const image = await request(app)

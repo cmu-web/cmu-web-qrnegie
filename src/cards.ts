@@ -1,12 +1,12 @@
 // Punch Card (the mjs collection) and Scantron (merichar). Both keep the
-// code dark on light, lay out in module units with whole pixels per module
-// and letter their own lines inside their designs, so the image stays
-// square.
+// code dark on light with whole pixels per module and letter their own lines
+// inside their designs, so the image stays square.
 import type { BitMatrix } from "qrcode";
 import { CAP, emFor, ems, lettering, round } from "./lettering";
 import { PIXEL_FONT, PIXEL_HEIGHT, PIXEL_WIDTH } from "./pixelfont";
 import { fit, type Lines } from "./screens";
 import { darkAt, svgOpen, unit } from "./boards";
+import { MIN_MODULE } from "./styles";
 
 // Characters in the pixel font, `pixel` modules per font pixel, the line's
 // left end at x and its top at y; only the rows `from` to `to` of each cell
@@ -79,7 +79,7 @@ const UNDER = "#ddcfa6";
 // each slot leaves `gapX` and `gapY` of card between it and the next. With
 // `solid` set to "reserved", the finder, timing and alignment patterns are
 // punched whole; set to "finders", only the three corner squares.
-// `rows` is the card's length in columns, as a share of its width.
+// `length` is the card's length as a share of its width.
 export const PUNCH: {
   stretch: number;
   gapX: number;
@@ -90,33 +90,57 @@ export const PUNCH: {
 // Whether a module is in one of the three corner squares (with its ring)
 const inFinder = (n: number, x: number, y: number) =>
   (x < 7 && y < 7) || (x >= n - 7 && y < 7) || (x < 7 && y >= n - 7);
+// The card's fixed layout, in hundredths of its width: the side margins, the
+// band for a line of type, the band without one and the clipped corner; and
+// `room`, the fewest rows of data under the code, in modules
+const CARD = { pad: 3.5, typeRow: 6.4, edge: 3.5, clip: 6.4, room: 6 };
+// The card is the same shape and size in the image whatever the text: its
+// width and length are fixed shares of the image, and the code fits inside it
+// with whole pixels per module, so a longer text makes the slots smaller, not
+// the card different. The space under the code is keypunched data.
+function cardBox(size: number) {
+  const { length } = PUNCH,
+    height = Math.floor((size * 105) / 112),
+    width = height / length;
+  return { width, height, u: width / 100 };
+}
+function moduleFor(q: number, u: number, top: number, bottom: number) {
+  const { stretch: s } = PUNCH;
+  return Math.floor(
+    Math.min(((100 - 2 * CARD.pad) * u) / (q * s), ((110 - top - bottom) * u) / (q + CARD.room)),
+  );
+}
 export function punchCard(modules: BitMatrix, size: number, lines: Lines) {
-  const { stretch: s, gapX, gapY, solid, length } = PUNCH,
+  const { stretch: s, gapX, gapY, solid } = PUNCH,
     n = modules.size,
     q = n + 8,
-    pad = 1.4,
-    typeRow = 2.6,
-    top = lines.above ? typeRow : 1.4,
-    cardWidth = round(q * s + 2 * pad),
-    cardHeight = Math.max(
-      Math.round(cardWidth * length),
-      Math.ceil(top + q + 6 + (lines.below ? typeRow : 1.4)),
-    ),
-    span = cardHeight + 1,
-    k = fit("punch-card", span, size),
-    left = round((size - cardWidth * k) / 2),
-    topPx = Math.round((size - cardHeight * k) / 2),
+    top = lines.above ? CARD.typeRow : CARD.edge,
+    bottom = lines.below ? CARD.typeRow : CARD.edge;
+  if (!Number.isInteger(size) || size > 2048) fit("punch-card", 1, size);
+  // The smallest width with at least MIN_MODULE pixels per module
+  let minimum = 64;
+  while (moduleFor(q, cardBox(minimum).u, top, bottom) < MIN_MODULE["punch-card"]) minimum++;
+  if (size < minimum) fit("punch-card", minimum / MIN_MODULE["punch-card"], size);
+  const { width: cardWidth, height: cardHeight, u } = cardBox(size),
+    k = moduleFor(q, u, top, bottom),
+    // A slot's horizontal pitch
+    w = s * k,
+    left = Math.round((size - cardWidth) / 2),
+    topPx = Math.round((size - cardHeight) / 2),
     dark = darkAt(modules),
-    ox = pad + 4 * s,
-    oy = top + 4,
-    clip = 2.6;
+    // The code (with its quiet zone) centered across the card, its rows
+    // starting under the top band
+    ox = Math.round((cardWidth - n * w) / 2),
+    oy = Math.round(top * u) + 4 * k,
+    clip = CARD.clip * u,
+    r = 0.4 * u;
   // The card, its top right corner cut
-  const card = `<path d="M.4 0H${round(cardWidth - clip)}L${cardWidth} ${clip}V${round(cardHeight - 0.4)}q0 .4-.4 .4H.4q-.4 0-.4-.4V.4q0-.4 .4-.4z" fill="${STOCK}" stroke="${STOCK_EDGE}" stroke-width=".08"/>`;
+  const card = `<path d="M${round(r)} 0H${round(cardWidth - clip)}L${round(cardWidth)} ${round(clip)}V${round(cardHeight - r)}q0 ${round(r)}-${round(r)} ${round(r)}H${round(r)}q-${round(r)} 0-${round(r)}-${round(r)}V${round(r)}q0-${round(r)} ${round(r)}-${round(r)}z" fill="${STOCK}" stroke="${STOCK_EDGE}" stroke-width="${round(0.08 * u)}"/>`;
   // A slot over a module's cell, or the cell whole
   const slot = (x: number, y: number, whole = false) => {
-    const gx = whole ? 0 : gapX / 2,
-      gy = whole ? 0 : gapY / 2;
-    return `M${round(x + gx)} ${round(y + gy)}h${round(s - 2 * gx)}v${round(1 - 2 * gy)}h-${round(s - 2 * gx)}z`;
+    const gx = whole ? 0 : (gapX * k) / 2,
+      gy = whole ? 0 : (gapY * k) / 2;
+    return `M${round(x + gx)} ${round(y + gy)}h${round(w - 2 * gx)}v${round(k - 2 * gy)}h-${round(w - 2 * gx)}z`;
   };
   let holes = "",
     whole = "";
@@ -127,8 +151,8 @@ export function punchCard(modules: BitMatrix, size: number, lines: Lines) {
           (solid === "reserved" && modules.isReserved(y, x)) ||
           (solid === "finders" && inFinder(n, x, y))
         )
-          whole += slot(ox + x * s, oy + y, true);
-        else holes += slot(ox + x * s, oy + y);
+          whole += slot(ox + x * w, oy + y * k, true);
+        else holes += slot(ox + x * w, oy + y * k);
       }
   // The data's punches vary with the code, the same for the same text:
   // seeded from the code's modules
@@ -155,18 +179,18 @@ export function punchCard(modules: BitMatrix, size: number, lines: Lines) {
   };
   // The twelve lanes across the card, the 0 to 9 lanes printed with their
   // digits in every column, a code row to a column
-  const laneLeft = pad,
-    lane = (cardWidth - 2 * pad) / 12,
-    firstRow = top,
-    columns = Math.floor(cardHeight - firstRow - (lines.below ? typeRow : 1.4)),
-    dot = Math.min(lane * 0.07, 0.11);
+  const laneLeft = CARD.pad * u,
+    lane = ((100 - 2 * CARD.pad) * u) / 12,
+    firstRow = Math.round(top * u),
+    columns = Math.floor((cardHeight - firstRow - bottom * u) / k),
+    dot = Math.min(lane * 0.07, 0.11 * k);
   let print = "",
     under = "";
   for (let c = 0; c < columns; c++) {
-    const cy = firstRow + c + 0.5,
+    const cy = firstRow + (c + 0.5) * k,
       inCode = c < q;
-    for (let r = 2; r < 12; r++) {
-      const digit = tiny(String(r - 2), laneLeft + (r + 0.5) * lane, cy, dot);
+    for (let lr = 2; lr < 12; lr++) {
+      const digit = tiny(String(lr - 2), laneLeft + (lr + 0.5) * lane, cy, dot);
       if (inCode) under += digit;
       else print += digit;
     }
@@ -175,25 +199,26 @@ export function punchCard(modules: BitMatrix, size: number, lines: Lines) {
     // or 0), now and then a third punch in row 8, and some columns blank.
     // Only the lanes within the code's left and right edges are punched.
     if (!inCode)
-      for (const r of keypunch()) {
-        const x = laneLeft + (r + 0.5) * lane - s / 2;
-        if (x >= ox && x + s <= ox + n * s) holes += slot(x, firstRow + c);
+      for (const lr of keypunch()) {
+        const x = Math.round(laneLeft + (lr + 0.5) * lane - w / 2);
+        if (x >= ox && x + w <= ox + n * w) holes += slot(x, firstRow + c * k);
       }
     // Column numbers down the left edge
-    print += tiny(String(c + 1), pad * 0.5, cy, dot * 0.55);
+    print += tiny(String(c + 1), laneLeft * 0.5, cy, dot * 0.55);
   }
   // The keypunch's printing: characters along the top and bottom edges
   let type = "";
+  const em = u * (CARD.typeRow / 2.6);
   const typeLine = (text: string, y: number) => {
     const pixel = Math.min(
-      1.5 / PIXEL_HEIGHT,
-      (cardWidth - clip - 2) / ([...text].length * PIXEL_WIDTH),
+      (1.5 * em) / PIXEL_HEIGHT,
+      (cardWidth - clip - 2 * em) / ([...text].length * PIXEL_WIDTH),
     );
-    type += pixelText(text, 1, y, pixel, 1, 13);
+    type += pixelText(text, em, y, pixel, 1, 13);
   };
-  if (lines.above) typeLine(lines.above, 0.6);
-  if (lines.below) typeLine(lines.below, cardHeight - typeRow + 0.7);
-  return `${svgOpen(size, "white")}<g transform="translate(${left} ${topPx}) scale(${k})">${card}<path d="${under}" fill="${UNDER}"/><path d="${print}" fill="${PRINT}"/><path d="${holes}" fill="${HOLE}"/>${whole ? `<path d="${whole}" fill="${HOLE}" shape-rendering="crispEdges"/>` : ""}${type ? `<path d="${type}" fill="${TYPE}"/>` : ""}</g></svg>`;
+  if (lines.above) typeLine(lines.above, 0.6 * em);
+  if (lines.below) typeLine(lines.below, cardHeight - CARD.typeRow * u + 0.7 * em);
+  return `${svgOpen(size, "white")}<g transform="translate(${left} ${topPx})">${card}<path d="${under}" fill="${UNDER}"/><path d="${print}" fill="${PRINT}"/><path d="${holes}" fill="${HOLE}"/>${whole ? `<path d="${whole}" fill="${HOLE}" shape-rendering="crispEdges"/>` : ""}${type ? `<path d="${type}" fill="${TYPE}"/>` : ""}</g></svg>`;
 }
 
 // Scantron: a machine-scored quiz strip, white with green printing: a
