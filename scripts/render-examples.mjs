@@ -6,12 +6,20 @@ import { fileURLToPath } from "node:url";
 const require = createRequire(import.meta.url);
 const { qrImage, qrSvg } = require("../dist/qr.js");
 const { STYLES } = require("../dist/styles.js");
+const { COLLECTIONS, STYLE_DETAILS } = require("../dist/style-info.js");
+// Unlisted styles show their own example text; listed ones, www.cmu.edu
+const unlisted = Object.values(COLLECTIONS).flatMap(({ styles }) => styles);
 const images = new URL("../docs/images/", import.meta.url);
 await mkdir(images, { recursive: true });
 for (const style of STYLES) {
   await writeFile(
     new URL(`${style}.png`, images),
-    await qrImage("https://www.cmu.edu/", style, 1024, "png"),
+    await qrImage(
+      unlisted.includes(style) ? STYLE_DETAILS[style].example : "https://www.cmu.edu/",
+      style,
+      1024,
+      "png",
+    ),
   );
 }
 await writeFile(

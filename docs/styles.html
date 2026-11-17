@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Unlisted styles: before the Google tag, so ?collection= never reaches it -->
+    <script src="js/collection-link.js"></script>
     <!-- Google tag (Google Analytics): docs pages only, never in the image or MCP responses -->
     <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5RW6JKPW"></script>
     <script>
@@ -47,8 +49,8 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.7.0/css/cmu-cms.css"
-      integrity="sha384-IY3Y+cmKYy4pjMLJRa/ynoPUYLNOgMbK4qImyQQocVvO6GTqVuKhIT6/olEUDi5e"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.8/css/cmu-cms.css"
+      integrity="sha384-59kyQWbj9iw+pp6iMung5RW4ZbSrrmUSCWEwNc35KV2tBn7aCWDgC36JP81oOd7X"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
@@ -236,6 +238,176 @@
           >
           <!-- styles:end -->
         </div>
+        <!-- unlisted:start -->
+        <template data-collections
+          ><div class="content wide"
+            ><div
+              ><h2 id="unlisted" class="rule-top">Or Choose an Unlisted Style</h2
+              ><p
+                >These styles are made for one group. They're unlisted, not private: anyone with a
+                collection's link can use them.</p
+              ></div
+            ></div
+          ></template
+        >
+        <template data-collection="mjs"
+          ><div class="content wide darkgrey invert cmu-closable" data-qr-collection="mjs"
+            ><div
+              ><div class="cmu-closable-text"
+                ><h3>mjs</h3
+                ><div class="cmu-copy-row">
+                  <pre
+                    class="cmu-snippet"
+                    id="qr-share-mjs"
+                  ><code>https://qrnegie.andrew.cmu.edu/styles.html?collection=mjs#unlisted</code></pre
+                  ><button class="btn ghost" type="button" data-cmu-copy="#qr-share-mjs"
+                    >Copy Link</button
+                  ></div
+                ><p class="cmu-hint">Send this link to share these styles.</p></div
+              ><button type="button" class="cmu-close" aria-label="Close mjs"></button></div
+          ></div>
+          <div class="grid column3"
+            ><div id="style-mosaic-dragon">
+              <img
+                src="images/mosaic-dragon.png"
+                alt="A Mosaic Dragon QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <p class="cmu-label">mjs</p><h3>Mosaic Dragon</h3>
+              <p
+                >The School of Computer Science dragon as a mosaic: red squares form the dragon, and
+                a white center in a square carries the code's light dots.</p
+              >
+              <p
+                ><a class="cta" href="builder.html?style=mosaic-dragon"
+                  >Build With Mosaic Dragon</a
+                ></p
+              ></div
+            >
+            <div id="style-dragon">
+              <img
+                src="images/dragon.png"
+                alt="A Basic Dragon QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <p class="cmu-label">mjs</p><h3>Basic Dragon</h3>
+              <p
+                >The School of Computer Science dragon inside a QR code made of black squares, with
+                room for the artwork in the center.</p
+              >
+              <p
+                ><a class="cta" href="builder.html?style=dragon">Build With Basic Dragon</a></p
+              ></div
+            >
+            <div id="style-terminal">
+              <img
+                src="images/terminal.png"
+                alt="A Terminal QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <p class="cmu-label">mjs</p><h3>Terminal</h3>
+              <p
+                >A video terminal from about 1980, with its keyboard: the code glows in green
+                phosphor on the black screen. Text above and below prints as lines of output.</p
+              >
+              <p><a class="cta" href="builder.html?style=terminal">Build With Terminal</a></p></div
+            >
+            <div id="style-punch-card">
+              <img
+                src="images/punch-card.png"
+                alt="A Punch Card QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <p class="cmu-label">mjs</p><h3>Punch Card</h3>
+              <p
+                >An 80-column punch card stood on end, in cream card stock with a clipped corner and
+                printed digits: the code's dark squares are punched slots.</p
+              >
+              <p
+                ><a class="cta" href="builder.html?style=punch-card">Build With Punch Card</a></p
+              ></div
+            ></div
+          ></template
+        >
+        <template data-collection="merichar"
+          ><div class="content wide darkgrey invert cmu-closable" data-qr-collection="merichar"
+            ><div
+              ><div class="cmu-closable-text"
+                ><h3>merichar</h3
+                ><div class="cmu-copy-row">
+                  <pre
+                    class="cmu-snippet"
+                    id="qr-share-merichar"
+                  ><code>https://qrnegie.andrew.cmu.edu/styles.html?collection=merichar#unlisted</code></pre
+                  ><button class="btn ghost" type="button" data-cmu-copy="#qr-share-merichar"
+                    >Copy Link</button
+                  ></div
+                ><p class="cmu-hint">Send this link to share these styles.</p></div
+              ><button type="button" class="cmu-close" aria-label="Close merichar"></button></div
+          ></div>
+          <div class="grid column3"
+            ><div id="style-engineering-paper">
+              <img
+                src="images/engineering-paper.png"
+                alt="A Engineering Paper QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <p class="cmu-label">merichar</p><h3>Engineering Paper</h3>
+              <p
+                >Cream engineering paper with squares colored in with a fat black marker, a stroke
+                at a time, that happen to make a QR code.</p
+              >
+              <p
+                ><a class="cta" href="builder.html?style=engineering-paper"
+                  >Build With Engineering Paper</a
+                ></p
+              ></div
+            >
+            <div id="style-minefield">
+              <img
+                src="images/minefield.png"
+                alt="A Minefield QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <p class="cmu-label">merichar</p><h3>Minefield</h3>
+              <p
+                >A tile board from the classic desktop game: the code's dark squares are mines on
+                revealed tiles, with numbered tiles, a mine counter and the face button.</p
+              >
+              <p
+                ><a class="cta" href="builder.html?style=minefield">Build With Minefield</a></p
+              ></div
+            >
+            <div id="style-scantron">
+              <img
+                src="images/scantron.png"
+                alt="A Scantron QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <p class="cmu-label">merichar</p><h3>Scantron</h3>
+              <p
+                >A machine-scored quiz strip with green bracketed bubbles and timing marks down the
+                edge: the code is made of answers, each dark square a bubble filled in.</p
+              >
+              <p><a class="cta" href="builder.html?style=scantron">Build With Scantron</a></p></div
+            ></div
+          ></template
+        >
+        <!-- unlisted:end -->
         <div class="content wide"
           ><div>
             <h2 id="content-types" class="rule-top">Choose What It Opens</h2>
@@ -400,12 +572,13 @@
         </div>
       </footer>
     </div>
+    <script src="js/collections.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/list.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.7.0/js/cmu-app.js"
-      integrity="sha384-kPYaRNjRAHnEY27lj3wKX2UTLNzxejzJWxXQ9pxOoRSmE2u7/p+KpJDix8iJedFe"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.8/js/cmu-app.js"
+      integrity="sha384-OUj0Xw1O/00sPRbiU9tY0EIto5q/A7Nn7ZxhbEwk2B/5lcnAbLldNxyL52FO+MSK"
       crossorigin="anonymous"
     ></script>
   </body>

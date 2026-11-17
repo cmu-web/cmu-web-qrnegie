@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Unlisted styles: before the Google tag, so ?collection= never reaches it -->
+    <script src="js/collection-link.js"></script>
     <!-- Google tag (Google Analytics): docs pages only, never in the image or MCP responses -->
     <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5RW6JKPW"></script>
     <script>
@@ -47,8 +49,8 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.7.0/css/cmu-cms.css"
-      integrity="sha384-IY3Y+cmKYy4pjMLJRa/ynoPUYLNOgMbK4qImyQQocVvO6GTqVuKhIT6/olEUDi5e"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.8/css/cmu-cms.css"
+      integrity="sha384-59kyQWbj9iw+pp6iMung5RW4ZbSrrmUSCWEwNc35KV2tBn7aCWDgC36JP81oOd7X"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
@@ -87,31 +89,31 @@
         >
         <div class="grid column3 nav cmu-on-this-page">
           <p class="cmu-label">On This Page</p>
-          <div
-            ><div class="nav-list"
-              ><ul>
+          <div>
+            <div class="nav-list">
+              <ul>
                 <li><a href="#image-addresses">Image URLs</a></li>
                 <li><a href="#parameters">Parameters</a></li>
                 <li><a href="#styles">Style Values</a></li>
-              </ul></div
-            ></div
-          >
-          <div
-            ><div class="nav-list"
-              ><ul>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="nav-list">
+              <ul>
                 <li><a href="#content-types">Content Payloads</a></li>
                 <li><a href="#embedding">Embedding and Downloads</a></li>
-              </ul></div
-            ></div
-          >
-          <div
-            ><div class="nav-list"
-              ><ul>
+              </ul>
+            </div>
+          </div>
+          <div>
+            <div class="nav-list">
+              <ul>
+                <li><a href="#mcp">MCP Server</a></li>
                 <li><a href="#errors">Errors</a></li>
-                <li><a href="#mcp">MCP Tools</a></li>
-              </ul></div
-            ></div
-          >
+              </ul>
+            </div>
+          </div>
         </div>
         <div class="content wide"
           ><div>
@@ -136,7 +138,7 @@
               Scotty at 1024 pixels:</p
             >
             <pre
-              class="cmu-snippet cmu-snippet--wrap"
+              class="cmu-snippet"
             ><code>https://qrnegie.andrew.cmu.edu/qr.svg?text=https%3A%2F%2Fwww.cmu.edu%2F&amp;style=mosaic&amp;width=1024</code></pre>
             <h2 id="parameters" class="rule-top">Parameters</h2>
             <table class="alternate cmu-full">
@@ -242,6 +244,41 @@
                   ><td><code>icon</code></td
                   ><td>High</td><td>3</td></tr
                 >
+                <template data-collection="mjs"
+                  ><tr
+                    ><th scope="row"><a href="styles.html#style-mosaic-dragon">Mosaic Dragon</a></th
+                    ><td><code>mosaic-dragon</code></td
+                    ><td>High</td><td>6</td></tr
+                  ><tr
+                    ><th scope="row"><a href="styles.html#style-dragon">Basic Dragon</a></th
+                    ><td><code>dragon</code></td
+                    ><td>High</td><td>3</td></tr
+                  ><tr
+                    ><th scope="row"><a href="styles.html#style-terminal">Terminal</a></th
+                    ><td><code>terminal</code></td
+                    ><td>Medium</td><td>4</td></tr
+                  ><tr
+                    ><th scope="row"><a href="styles.html#style-punch-card">Punch Card</a></th
+                    ><td><code>punch-card</code></td
+                    ><td>High</td><td>3</td></tr
+                  ></template
+                >
+                <template data-collection="merichar"
+                  ><tr
+                    ><th scope="row"
+                      ><a href="styles.html#style-engineering-paper">Engineering Paper</a></th
+                    ><td><code>engineering-paper</code></td
+                    ><td>High</td><td>4</td></tr
+                  ><tr
+                    ><th scope="row"><a href="styles.html#style-minefield">Minefield</a></th
+                    ><td><code>minefield</code></td
+                    ><td>High</td><td>5</td></tr
+                  ><tr
+                    ><th scope="row"><a href="styles.html#style-scantron">Scantron</a></th
+                    ><td><code>scantron</code></td
+                    ><td>High</td><td>5</td></tr
+                  ></template
+                >
               </tbody></table
             >
             <!-- reference:end -->
@@ -306,7 +343,7 @@
               does.</p
             >
             <p>In JavaScript, use <code>URLSearchParams</code> to encode the values:</p>
-            <pre class="cmu-snippet cmu-snippet--wrap"><code>const query = new URLSearchParams({
+            <pre class="cmu-snippet"><code>const query = new URLSearchParams({
   text: "https://www.cmu.edu/",
   style: "icon",
   icon: "calendar-event",
@@ -320,7 +357,7 @@ const imageUrl = `https://qrnegie.andrew.cmu.edu/qr.svg?${query}`;</code></pre>
               <code>&amp;amp;</code>:</p
             >
             <pre
-              class="cmu-snippet cmu-snippet--wrap"
+              class="cmu-snippet"
             ><code>&lt;img src="https://qrnegie.andrew.cmu.edu/qr.svg?text=https%3A%2F%2Fwww.cmu.edu%2F&amp;amp;style=plain&amp;amp;width=512"
   alt="QR code for the Carnegie Mellon website" width="512"&gt;</code></pre>
             <p
@@ -334,7 +371,7 @@ const imageUrl = `https://qrnegie.andrew.cmu.edu/qr.svg?${query}`;</code></pre>
               text values and stops on an HTTP error:</p
             >
             <pre
-              class="cmu-snippet cmu-snippet--wrap"
+              class="cmu-snippet"
             ><code>curl --fail --show-error --get 'https://qrnegie.andrew.cmu.edu/qr.png' \
   --data-urlencode 'text=https://www.cmu.edu/' \
   --data 'style=icon' \
@@ -346,6 +383,65 @@ const imageUrl = `https://qrnegie.andrew.cmu.edu/qr.svg?${query}`;</code></pre>
               >A downloaded file stays exactly as it was. An image URL always uses QRnegie's current
               designs, so its look can change when a design does, though never what it encodes.
               Browsers and other caches can keep a copy for up to a day.</p
+            >
+            <h2 id="mcp" class="rule-top">MCP Server</h2>
+            <p>Connect an AI agent to QRnegie's MCP server with these settings:</p>
+            <table class="alternate cmu-full">
+              <thead
+                ><tr><th scope="col">Connection</th><th scope="col">Value</th></tr></thead
+              >
+              <tbody>
+                <tr
+                  ><th scope="row">Server Name</th><td><code>qrnegie</code></td></tr
+                >
+                <tr
+                  ><th scope="row">Endpoint</th
+                  ><td><code>https://qrnegie.andrew.cmu.edu/mcp</code></td></tr
+                >
+                <tr><th scope="row">Transport</th><td>Streamable HTTP, without sign-in</td></tr>
+              </tbody></table
+            >
+            <p>It offers these tools:</p>
+            <table class="alternate cmu-full">
+              <thead
+                ><tr
+                  ><th scope="col">Tool</th><th scope="col">Input</th
+                  ><th scope="col">Result</th></tr
+                ></thead
+              >
+              <tbody>
+                <tr
+                  ><th scope="row"><code>get_guide</code></th
+                  ><td>No arguments</td><td>Image parameters and integration guidance</td></tr
+                >
+                <tr
+                  ><th scope="row"><code>generate_qr</code></th
+                  ><td
+                    ><code>text</code>; optional <code>style</code>, <code>width</code>,
+                    <code>above</code>, <code>below</code> and <code>icon</code></td
+                  ><td>A PNG image, SVG and PNG URLs, and HTML with the image's dimensions</td></tr
+                >
+              </tbody></table
+            >
+            <p
+              >For <code>generate_qr</code>, use the same parameter meanings and defaults as image
+              URLs. Pass <code>width</code> as an integer from 96 to 2048; a style or payload may
+              require a higher minimum. These are tool arguments, not a query string:</p
+            >
+            <pre class="cmu-snippet"><code>{
+  "text": "https://www.cmu.edu/",
+  "style": "icon",
+  "icon": "calendar-event",
+  "width": 1024,
+  "above": "Visit CMU"
+}</code></pre>
+            <p
+              >A generation failure returns a tool result marked <code>isError</code> with an
+              explanatory message. MCP protocol errors are separate from image errors; check the
+              tool result as well as the connection.</p
+            >
+            <p
+              >To set up an agent, start with the <a href="./#agent">prompt on the home page</a>.</p
             >
             <h2 id="errors" class="rule-top">Errors</h2>
             <table class="alternate cmu-full">
@@ -384,63 +480,6 @@ const imageUrl = `https://qrnegie.andrew.cmu.edu/qr.svg?${query}`;</code></pre>
               successful image doesn't replace the
               <a href="styles.html#scanning">checks on the finished layout</a>.</p
             >
-            <h2 id="mcp" class="rule-top">MCP Tools</h2>
-            <table class="alternate cmu-full">
-              <thead
-                ><tr><th scope="col">Connection</th><th scope="col">Value</th></tr></thead
-              >
-              <tbody>
-                <tr
-                  ><th scope="row">Server Name</th><td><code>qrnegie</code></td></tr
-                >
-                <tr
-                  ><th scope="row">Endpoint</th
-                  ><td><code>https://qrnegie.andrew.cmu.edu/mcp</code></td></tr
-                >
-                <tr><th scope="row">Transport</th><td>Streamable HTTP, without sign-in</td></tr>
-              </tbody></table
-            >
-            <table class="alternate cmu-full">
-              <thead
-                ><tr
-                  ><th scope="col">Tool</th><th scope="col">Input</th
-                  ><th scope="col">Result</th></tr
-                ></thead
-              >
-              <tbody>
-                <tr
-                  ><th scope="row"><code>get_guide</code></th
-                  ><td>No arguments</td><td>Image parameters and integration guidance</td></tr
-                >
-                <tr
-                  ><th scope="row"><code>generate_qr</code></th
-                  ><td
-                    ><code>text</code>; optional <code>style</code>, <code>width</code>,
-                    <code>above</code>, <code>below</code> and <code>icon</code></td
-                  ><td>A PNG image, SVG and PNG URLs, and HTML with the image's dimensions</td></tr
-                >
-              </tbody></table
-            >
-            <p
-              >For <code>generate_qr</code>, use the same parameter meanings and defaults as image
-              URLs. Pass <code>width</code> as an integer from 96 to 2048; a style or payload may
-              require a higher minimum. These are tool arguments, not a query string:</p
-            >
-            <pre class="cmu-snippet cmu-snippet--wrap"><code>{
-  "text": "https://www.cmu.edu/",
-  "style": "icon",
-  "icon": "calendar-event",
-  "width": 1024,
-  "above": "Visit CMU"
-}</code></pre>
-            <p
-              >A generation failure returns a tool result marked <code>isError</code> with an
-              explanatory message. MCP protocol errors are separate from image errors; check the
-              tool result as well as the connection.</p
-            >
-            <p
-              >To set up an agent, start with the <a href="./#agent">prompt on the home page</a>.</p
-            >
           </div></div
         >
       </main>
@@ -471,12 +510,13 @@ const imageUrl = `https://qrnegie.andrew.cmu.edu/qr.svg?${query}`;</code></pre>
         </div>
       </footer>
     </div>
+    <script src="js/collections.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/list.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.7.0/js/cmu-app.js"
-      integrity="sha384-kPYaRNjRAHnEY27lj3wKX2UTLNzxejzJWxXQ9pxOoRSmE2u7/p+KpJDix8iJedFe"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.8/js/cmu-app.js"
+      integrity="sha384-OUj0Xw1O/00sPRbiU9tY0EIto5q/A7Nn7ZxhbEwk2B/5lcnAbLldNxyL52FO+MSK"
       crossorigin="anonymous"
     ></script>
   </body>

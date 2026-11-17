@@ -4,7 +4,12 @@ import sharp from "sharp";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 import { BORDER, MIN_MODULE, frame, styledCells, type QrStyle } from "./styles";
+import { DRAGON_HEIGHT, DRAGON_WIDTH, dragon, mosaicDragonCells } from "./dragon";
 import { GLYPHS } from "./glyphs";
+import { CAP, emFor, lettering } from "./lettering";
+import { SizeError, terminal } from "./screens";
+import { engineeringPaper, minefield } from "./boards";
+import { punchCard, scantron } from "./cards";
 
 export class GenerateError extends Error {
   constructor(
@@ -50,29 +55,14 @@ const INK: Record<QrStyle, string> = {
   "tilted-square": "#c41230",
   "block-monogram": "#941120",
   icon: "black",
+  "mosaic-dragon": "#221f1f",
+  dragon: "black",
+  terminal: "#33ff66",
+  "punch-card": "#3a3226",
+  "engineering-paper": "#141414",
+  minefield: "#222222",
+  scantron: "#111111",
 };
-// Open Sans's capital height, in ems
-const CAP = 0.714;
-const round = (v: number) => +v.toFixed(2);
-// A line's width in ems, and the line drawn in a given em size, centered on
-// x with its baseline on y
-const ems = (label: string) => [...label].reduce((width, c) => width + GLYPHS[c][0], 0);
-function lettering(label: string, em: number, x: number, y: number) {
-  let at = 0,
-    paths = "";
-  for (const c of label) {
-    const [advance, d] = GLYPHS[c];
-    if (d) paths += `<path transform="translate(${+at.toFixed(4)} 0)" d="${d}"/>`;
-    at += advance;
-  }
-  return `<g transform="translate(${round(x - (at * em) / 2)} ${round(y)}) scale(${+em.toFixed(4)})">${paths}</g>`;
-}
-// One size for both lines: the widest fits across most of the width
-const emFor = (labels: Labels, width: number, most: number) =>
-  Math.min(
-    most,
-    (width * 0.88) / Math.max(...[labels.above, labels.below].map((l) => (l ? ems(l) : 0))),
-  );
 // The image grows taller, with a band for each line outside the code's own
 // margin
 function withLabels(svg: string, size: number, style: QrStyle, labels: Labels) {
@@ -159,7 +149,7 @@ function clearSpot(
 // Wean Hall's "turtle head," straight on: the tall block of concrete form
 // panels (joints staggered row to row) over the dark entrance, with Clark
 // Winter's sculpture, the Love of Two Oranges or "the Cheeto," small at the
-// bottom of the entrance on its blue base. Drawn in a 90 by 100 box.
+// bottom of the entrance on its blue base. Drawn in a 90 × 100 box.
 //
 // The sculpture: four identical orange rectangles standing on their bottom
 // corners, long sides up at 45 degrees. The left pair leans in at the
@@ -362,11 +352,26 @@ export async function qrSvg(
   // Larger exports have enough room for a more detailed portrait. Keep compact
   // mosaic addresses working with the smaller matrix used by earlier exports.
   const mosaicVersion = size >= (17 + 4 * 16 + 8) * MIN_MODULE.mosaic ? 16 : 9;
-  const minimumVersion = style === "mosaic" ? mosaicVersion : plainModules ? 1 : 3;
+  const minimumVersion =
+    style === "mosaic" || style === "mosaic-dragon" ? mosaicVersion : plainModules ? 1 : 3;
   if (code.version < minimumVersion)
     code = QRCode.create(text, { ...options, version: minimumVersion });
   const { modules } = code;
   if (style === "tilted-square") return tiltedSquare(modules, size, labels);
+  // These styles letter their own lines, inside their designs
+  const framed = {
+    terminal,
+    "punch-card": punchCard,
+    "engineering-paper": engineeringPaper,
+    minefield,
+    scantron,
+  } as const;
+  if (style in framed)
+    try {
+      return framed[style as keyof typeof framed](modules, size, labels);
+    } catch (e) {
+      throw e instanceof SizeError ? new GenerateError(e.message) : e;
+    }
   if (style === "block-monogram")
     return withLabels(blockMonogram(modules, size), size, style, labels);
   const n = modules.size,
@@ -378,7 +383,10 @@ export async function qrSvg(
   // Integer pixels per module, with the remainder outside the quiet zone
   const scale = Math.floor(size / total),
     offset = Math.floor((size - total * scale) / 2) + (4 + border) * scale;
-  const cells = await styledCells(modules, style);
+  const cells =
+    style === "mosaic-dragon"
+      ? await mosaicDragonCells(modules)
+      : await styledCells(modules, style);
   let mark = "";
   if (style === "scotty") {
     // The headshot, about a fifth of the code's width, on a white patch with
@@ -397,6 +405,23 @@ export async function qrSvg(
         "This content leaves no room for Scotty. Choose Basic Black or a shorter URL.",
       );
     mark = `<rect x="${spot.x}" y="${spot.y}" width="${width + 2}" height="${height + 2}" fill="white" shape-rendering="crispEdges"/><svg x="${spot.x + 1}" y="${spot.y + 1}" width="${width}" height="${height}" viewBox="0 0 330.17 443.51">${scotty}</svg>`;
+  }
+  if (style === "dragon") {
+    // Basic Dragon, as Basic Scotty: the dragon, about a fifth of the code's
+    // width, on a white patch with a module of space around it; smaller when
+    // a dense code leaves no room
+    let spot: { x: number; y: number } | undefined,
+      width = Math.max(5, Math.floor(n * 0.2)),
+      height = 0;
+    for (; width >= 4; width--) {
+      height = Math.round((width * DRAGON_HEIGHT) / DRAGON_WIDTH);
+      if ((spot = clearSpot(modules, width + 2, height + 2))) break;
+    }
+    if (!spot)
+      throw new GenerateError(
+        "This content leaves no room for the dragon. Choose Basic Black or a shorter URL.",
+      );
+    mark = `<rect x="${spot.x}" y="${spot.y}" width="${width + 2}" height="${height + 2}" fill="white" shape-rendering="crispEdges"/><svg x="${spot.x + 1}" y="${spot.y + 1}" width="${width}" height="${height}" viewBox="0 0 ${DRAGON_WIDTH} ${DRAGON_HEIGHT}">${dragon}</svg>`;
   }
   if (style === "icon") {
     // The icon in CMU red, about a fifth of the code's width, in a white

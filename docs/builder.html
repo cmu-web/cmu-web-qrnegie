@@ -1,6 +1,8 @@
 <!doctype html>
 <html lang="en">
   <head>
+    <!-- Unlisted styles: before the Google tag, so ?collection= never reaches it -->
+    <script src="js/collection-link.js"></script>
     <!-- Google tag (Google Analytics): docs pages only, never in the image or MCP responses -->
     <script async src="https://www.googletagmanager.com/gtm.js?id=GTM-5RW6JKPW"></script>
     <script>
@@ -49,15 +51,15 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.7.0/css/cmu-cms.css"
-      integrity="sha384-IY3Y+cmKYy4pjMLJRa/ynoPUYLNOgMbK4qImyQQocVvO6GTqVuKhIT6/olEUDi5e"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.8/css/cmu-cms.css"
+      integrity="sha384-59kyQWbj9iw+pp6iMung5RW4ZbSrrmUSCWEwNc35KV2tBn7aCWDgC36JP81oOd7X"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.7.0/css/cmu-app.css"
-      integrity="sha384-2jLWqCd2cc1X5lySEjSIsY3mZhiKqacJc1fvAwSLjtSg3E13TJVOnpe9pAb8DMHP"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.8/css/cmu-app.css"
+      integrity="sha384-0k+Fq/HOfWMJfjLdEWk0w9Y9wf2SN+TAxLSCc5FtIYooZOQZOpAnhfe0fHre8ZCf"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
@@ -127,6 +129,32 @@
                       ><option value="icon" data-text="https://www.cmu.edu/"
                         >Center Icon</option
                       ></optgroup
+                    >
+                    <template data-collection="mjs"
+                      ><optgroup label="Unlisted: mjs"
+                        ><option value="mosaic-dragon" data-text="https://www.cs.cmu.edu/"
+                          >Mosaic Dragon</option
+                        ><option value="dragon" data-text="https://www.cs.cmu.edu/"
+                          >Basic Dragon</option
+                        ><option
+                          value="terminal"
+                          data-text="https://www.cs.cmu.edu/~scsfacts/richards.html"
+                          >Terminal</option
+                        ><option value="punch-card" data-text="https://www.cs.cmu.edu/~mjs/"
+                          >Punch Card</option
+                        ></optgroup
+                      ></template
+                    >
+                    <template data-collection="merichar"
+                      ><optgroup label="Unlisted: merichar"
+                        ><option value="engineering-paper" data-text="https://merichar.org/"
+                          >Engineering Paper</option
+                        ><option value="minefield" data-text="https://merichar.org/"
+                          >Minefield</option
+                        ><option value="scantron" data-text="https://merichar.org/"
+                          >Scantron</option
+                        ></optgroup
+                      ></template
                     >
                     <!-- builder-styles:end -->
                   </select>
@@ -613,7 +641,7 @@
                 <div id="qr-qr-actions" hidden>
                   <p class="cmu-label">Address</p>
                   <div class="cmu-copyable">
-                    <pre class="cmu-snippet cmu-snippet--wrap"><code id="qr-qr-url"></code></pre>
+                    <pre class="cmu-snippet"><code id="qr-qr-url"></code></pre>
                     <button
                       type="button"
                       class="cmu-copy"
@@ -624,7 +652,7 @@
                   </div>
                   <p class="cmu-label">HTML</p>
                   <div class="cmu-copyable">
-                    <pre class="cmu-snippet cmu-snippet--wrap"><code id="qr-qr-html"></code></pre>
+                    <pre class="cmu-snippet"><code id="qr-qr-html"></code></pre>
                     <button
                       type="button"
                       class="cmu-copy"
@@ -709,12 +737,13 @@
         </div>
       </footer>
     </div>
+    <script src="js/collections.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/list.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.7.0/js/cmu-app.js"
-      integrity="sha384-kPYaRNjRAHnEY27lj3wKX2UTLNzxejzJWxXQ9pxOoRSmE2u7/p+KpJDix8iJedFe"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.8/js/cmu-app.js"
+      integrity="sha384-OUj0Xw1O/00sPRbiU9tY0EIto5q/A7Nn7ZxhbEwk2B/5lcnAbLldNxyL52FO+MSK"
       crossorigin="anonymous"
     ></script>
     <script src="js/qr.js"></script>

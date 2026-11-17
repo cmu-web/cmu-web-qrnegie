@@ -8,6 +8,7 @@ import { qrImage } from "../src/qr";
 import { createApp } from "../src/app";
 import { createMcp } from "../src/mcp";
 import { STYLES } from "../src/styles";
+import { COLLECTIONS, LISTED_STYLES, STYLE_DETAILS, STYLE_GROUPS } from "../src/style-info";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
@@ -53,10 +54,17 @@ describe("QRnegie", () => {
           const pixel = (Math.floor(y) * info.width + Math.floor(x)) * 4;
           const [r, g, b] = data.subarray(pixel, pixel + 3);
           // Block Monogram's code is inverted: its margin is the dark red of
-          // its block. Everywhere else it's light, not necessarily white:
-          // Kraus Campo's margin has faint tiles.
-          if (style === "block-monogram")
-            expect(0.299 * r + 0.587 * g + 0.114 * b).toBeLessThan(120);
+          // its block. Terminal's margin is lit green phosphor, Punch Card's
+          // cream card, Engineering Paper's pale green paper, Minefield's
+          // revealed tiles and Scantron's sheet: light but not
+          // pale. Everywhere else it's light, not necessarily white: Kraus
+          // Campo's margin has faint tiles.
+          const light = 0.299 * r + 0.587 * g + 0.114 * b;
+          if (style === "block-monogram") expect(light).toBeLessThan(120);
+          else if (
+            ["terminal", "punch-card", "engineering-paper", "minefield", "scantron"].includes(style)
+          )
+            expect(light).toBeGreaterThan(150);
           else for (const channel of [r, g, b]) expect(channel).toBeGreaterThanOrEqual(230);
         }
       });
@@ -92,8 +100,19 @@ describe("QRnegie", () => {
           .raw()
           .toBuffer({ resolveWithObject: true });
         expect(info.width).toBe(size);
-        // Kraus Campo's lines go in its band; the others make the image taller
-        if (style === "kraus-campo") expect(info.height).toBe(size);
+        // Kraus Campo's lines go in its band, and the framed styles' inside
+        // their designs; the others make the image taller
+        if (
+          [
+            "kraus-campo",
+            "terminal",
+            "punch-card",
+            "engineering-paper",
+            "minefield",
+            "scantron",
+          ].includes(style)
+        )
+          expect(info.height).toBe(size);
         else expect(info.height).toBeGreaterThan(size);
         expect(jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data).toBe(text);
       }
@@ -211,5 +230,135 @@ describe("QRnegie", () => {
       await client.close();
       await server.close();
     }
+  });
+});
+
+describe("unlisted collections", () => {
+  const unlisted = Object.values(COLLECTIONS).flatMap(({ styles }) => styles);
+  const decode = async (image: Buffer) => {
+    const { data, info } = await sharp(image)
+      .ensureAlpha()
+      .raw()
+      .toBuffer({ resolveWithObject: true });
+    return jsQR(new Uint8ClampedArray(data), info.width, info.height)?.data;
+  };
+
+  it("keeps every collection's styles out of the listed groups", () => {
+    const grouped = Object.values(STYLE_GROUPS).flat();
+    expect(unlisted.length).toBeGreaterThan(0);
+    for (const style of unlisted) {
+      expect(STYLES).toContain(style);
+      expect(grouped).not.toContain(style);
+      expect(LISTED_STYLES).not.toContain(style);
+    }
+    expect([...LISTED_STYLES].sort()).toEqual([...grouped].sort());
+  });
+
+  for (const style of unlisted)
+    it(`decodes ${style} at its minimum width`, async () => {
+      const text = STYLE_DETAILS[style].example;
+      // The renderer's own error names the smallest width this code allows
+      const tooSmall = await qrImage(text, style, 96, "png").then(
+        () => "",
+        (e: Error) => e.message,
+      );
+      const minimum = Number(/from (\d+) to/.exec(tooSmall)?.[1]);
+      expect(minimum).toBeGreaterThan(96);
+      expect(await decode(await qrImage(text, style, minimum, "png"))).toBe(text);
+      await expect(qrImage(text, style, minimum - 1, "png")).rejects.toThrow(/Choose a width/);
+    });
+
+  for (const style of [
+    "terminal",
+    "punch-card",
+    "engineering-paper",
+    "minefield",
+    "scantron",
+  ] as const)
+    it(`letters ${style}'s lines inside its design and keeps the image square`, async () => {
+      const text = STYLE_DETAILS[style].example;
+      const image = await qrImage(text, style, 1024, "png", {
+        above: "cd www.cs.cmu.edu",
+        below: "Welcome to SCS",
+      });
+      const { width, height } = await sharp(image).metadata();
+      expect([width, height]).toEqual([1024, 1024]);
+      expect(await decode(image)).toBe(text);
+    });
+
+  it("renders unlisted styles by name in image URLs but lists only public ones", async () => {
+    const app = createApp();
+    const image = await request(app)
+      .get("/qr.png")
+      .query({ text: "https://www.cs.cmu.edu/", style: "mosaic-dragon", width: "1024" })
+      .expect(200);
+    expect(await decode(image.body)).toBe("https://www.cs.cmu.edu/");
+    const error = await request(app)
+      .get("/qr.png")
+      .query({ text: "Hi", style: "no-such-style" })
+      .expect(400);
+    for (const style of unlisted) expect(error.text).not.toContain(style);
+  });
+
+  it("accepts unlisted styles in generate_qr without listing them", async () => {
+    const server = createMcp(),
+      client = new Client({ name: "test", version: "1" });
+    const [a, b] = InMemoryTransport.createLinkedPair();
+    await server.connect(a);
+    await client.connect(b);
+    try {
+      const tools = JSON.stringify((await client.listTools()).tools);
+      const guide = JSON.stringify(await client.callTool({ name: "get_guide", arguments: {} }));
+      for (const style of unlisted) {
+        expect(tools).not.toContain(style);
+        expect(guide).not.toContain(style);
+      }
+      const result = await client.callTool({
+        name: "generate_qr",
+        arguments: { text: "https://www.cs.cmu.edu/", style: "dragon", width: 512 },
+      });
+      expect(result.isError).not.toBe(true);
+      const png = (result.content as { type: string; data?: string }[]).find(
+        (item) => item.type === "image",
+      )?.data;
+      expect(await decode(Buffer.from(png!, "base64"))).toBe("https://www.cs.cmu.edu/");
+      const bad = await client.callTool({
+        name: "generate_qr",
+        arguments: { text: "Hi", style: "no-such-style" },
+      });
+      expect(bad.isError).toBe(true);
+    } finally {
+      await client.close();
+      await server.close();
+    }
+  });
+
+  it("puts each collection's styles in templates on the Builder, Styles and Reference", () => {
+    for (const page of ["builder", "styles", "reference"]) {
+      const html = readFileSync(join(__dirname, "..", "docs", `${page}.html`), "utf8");
+      for (const [key, { styles }] of Object.entries(COLLECTIONS)) {
+        const template = new RegExp(
+          `<template data-collection="${key}"[^>]*>([\\s\\S]*?)</template\\s*>`,
+        ).exec(html);
+        expect(template, `${page} has a ${key} template`).not.toBeNull();
+        const outside = html.replace(template![0], "");
+        for (const style of styles) {
+          expect(template![1]).toContain(style);
+          expect(outside).not.toContain(`"${style}"`);
+          expect(outside).not.toContain(`style-${style}"`);
+        }
+      }
+      // The link script runs before the Google tag; the page script before qr.js
+      expect(html.indexOf("js/collection-link.js")).toBeLessThan(html.indexOf("googletagmanager"));
+      expect(html).toContain('<script src="js/collections.js"></script>');
+    }
+    const script = readFileSync(join(__dirname, "..", "docs", "js", "collections.js"), "utf8");
+    // Keys only: a collection has no display name to give it away
+    // As the generator writes it, through Prettier: a space after each comma
+    expect(script).toContain(
+      `const COLLECTIONS = [${Object.keys(COLLECTIONS)
+        .map((key) => JSON.stringify(key))
+        .join(", ")}];`,
+    );
   });
 });
