@@ -31,6 +31,9 @@
   document.querySelectorAll("template[data-collections]").forEach(function (template) {
     template.replaceWith(template.content.cloneNode(true));
   });
+  // A white gap between collections; the first follows the heading's section
+  var gap = document.querySelector("[data-qr-gap]");
+  if (gap) gap.remove();
 
   function close(key) {
     // From the whole cookie, so collections this page doesn't know stay;

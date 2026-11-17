@@ -39,7 +39,7 @@ if (
 }
 const card = ({ group, id }) => `<div id="style-${id}">
 <img src="images/${id}.png" alt="A ${esc(STYLE_NAMES[id])} QR code." width="1024" height="1024" loading="lazy" />
-<p class="cmu-label">${esc(group)}</p><h3>${esc(STYLE_NAMES[id])}</h3>
+${group ? `<p class="cmu-label">${esc(group)}</p>` : ""}<h3>${esc(STYLE_NAMES[id])}</h3>
 <p>${esc(STYLE_DETAILS[id].description)}</p>
 <p><a class="cta" href="builder.html?style=${id}">Build With ${esc(STYLE_NAMES[id])}</a></p></div>`;
 const row = ({ id }) =>
@@ -57,14 +57,17 @@ const templates = (body) =>
 // Styles: the unlisted cards get their own heading, shown with any collection
 const gallery = listed.map(card).join("\n");
 // After the listed styles' grid: a heading, then each collection as the Web
-// Kilt's full-width closable section over a grid of its own cards. Closing the
-// section closes the collection (js/collections.js).
+// Kilt's full-width closable section over a grid of its own cards, the cards
+// with no group label since the heading names it. A white gap separates one
+// collection from the next. Closing the section closes the collection
+// (js/collections.js).
 const unlistedGallery = [
   `<template data-collections><div class="content wide"><div><h2 id="unlisted" class="rule-top">Or Choose an Unlisted Style</h2><p>These styles are made for one group. They're unlisted, not private: anyone with a collection's link can use them.</p></div></div></template>`,
   templates(
     (key, styles) =>
+      `<div class="content wide" data-qr-gap><div></div></div>\n` +
       `<div class="content wide darkgrey invert cmu-closable" data-qr-collection="${esc(key)}"><div><div class="cmu-closable-text"><h3>${esc(key)}</h3><div class="cmu-copy-row"><pre class="cmu-snippet" id="qr-share-${esc(key)}"><code>${SITE}/styles.html?collection=${esc(key)}#unlisted</code></pre><button class="btn ghost" type="button" data-cmu-copy="#qr-share-${esc(key)}">Copy Link</button></div><p class="cmu-hint">Send this link to share these styles.</p></div><button type="button" class="cmu-close" aria-label="Close ${esc(key)}"></button></div></div>\n` +
-      `<div class="grid column3">${styles.map((id) => card({ group: key, id })).join("\n")}</div>`,
+      `<div class="grid column3 darkgrey boxes">${styles.map((id) => card({ id })).join("\n")}</div>`,
   ),
 ].join("\n");
 const reference = `<table class="alternate cmu-full"><thead><tr><th scope="col">Style</th><th scope="col">Value</th><th scope="col">Error Correction</th><th scope="col">Minimum Pixels per Module</th></tr></thead><tbody>
