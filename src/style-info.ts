@@ -146,12 +146,12 @@ export const STYLE_DETAILS: Record<QrStyle, { description: string; example: stri
   },
   terminal: {
     description:
-      "A video terminal from about 1980, with its keyboard: the code glows in green phosphor on the black screen. Text above and below prints as lines of output.",
+      "Check your baud rate, mind your escape sequences and leave the DIP switches alone. Text above and below prints as lines of output.",
     example: "https://www.cs.cmu.edu/~scsfacts/richards.html",
   },
   "punch-card": {
     description:
-      "An 80-column punch card stood on end, in cream card stock with a clipped corner and printed digits: the code's dark squares are punched slots.",
+      "Eighty columns, one URL and a quiet disregard for Hollerith encoding. Do not fold, spindle or mutilate.",
     example: "https://www.cs.cmu.edu/~mjs/",
   },
   "engineering-paper": {
