@@ -67,7 +67,7 @@ const unlistedGallery = [
     (key, styles, description) =>
       `<div class="content wide" data-qr-gap><div></div></div>\n` +
       `<div class="content wide darkgrey invert cmu-closable" data-qr-collection="${esc(key)}"><div><div class="cmu-closable-text"><h3>${esc(key)}</h3><p>${esc(description)}</p></div><button type="button" class="cmu-close" aria-label="Close Collection ${esc(key)}" title="Close Collection ${esc(key)}"></button></div></div>\n` +
-      `<div class="content wide darkgrey invert"><div><p>Send this link to share them:</p><div class="cmu-copy-row"><pre class="cmu-snippet" id="qr-share-${esc(key)}"><code>${SITE}/styles.html?collection=${esc(key)}#unlisted</code></pre><button class="btn ghost" type="button" data-cmu-copy="#qr-share-${esc(key)}">Copy Link</button></div></div></div>\n` +
+      `<div class="content wide darkgrey invert"><div><p>Anyone with this link can use these styles:</p><div class="cmu-copy-row"><pre class="cmu-snippet" id="qr-share-${esc(key)}"><code>${SITE}/styles.html?collection=${esc(key)}#unlisted</code></pre><button class="btn ghost" type="button" data-cmu-copy="#qr-share-${esc(key)}">Copy Link</button></div></div></div>\n` +
       `<div class="grid column3 darkgrey boxes">${styles.map((id) => card({ id })).join("\n")}</div>`,
   ),
 ].join("\n");
