@@ -34,6 +34,12 @@
   // A white gap between collections; the first follows the heading's section
   var gap = document.querySelector("[data-qr-gap]");
   if (gap) gap.remove();
+  // The section after the last collection's dark cards gets no rule over its
+  // heading, as after any colored section
+  var grids = document.querySelectorAll("[data-qr-collection] ~ .grid.darkgrey");
+  var after = grids.length && grids[grids.length - 1].nextElementSibling;
+  var heading = after && after.querySelector(":scope > div > h2.rule-top:first-child");
+  if (heading) heading.classList.remove("rule-top");
 
   function close(key) {
     // From the whole cookie, so collections this page doesn't know stay;
