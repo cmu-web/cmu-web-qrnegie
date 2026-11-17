@@ -50,8 +50,8 @@ const option = (id) =>
 const templates = (body) =>
   Object.entries(COLLECTIONS)
     .map(
-      ([key, { styles }]) =>
-        `<template data-collection="${esc(key)}">${body(key, styles)}</template>`,
+      ([key, { styles, description }]) =>
+        `<template data-collection="${esc(key)}">${body(key, styles, description)}</template>`,
     )
     .join("\n");
 // Styles: the unlisted cards get their own heading, shown with any collection
@@ -64,9 +64,10 @@ const gallery = listed.map(card).join("\n");
 const unlistedGallery = [
   `<template data-collections><div class="content wide"><div><h2 id="unlisted" class="rule-top">Or Choose an Unlisted Style</h2><p>These styles are made for one group. They're unlisted, not private: anyone with a collection's link can use them.</p></div></div></template>`,
   templates(
-    (key, styles) =>
+    (key, styles, description) =>
       `<div class="content wide" data-qr-gap><div></div></div>\n` +
-      `<div class="content wide darkgrey invert cmu-closable" data-qr-collection="${esc(key)}"><div><div class="cmu-closable-text"><h3>${esc(key)}</h3><div class="cmu-copy-row"><pre class="cmu-snippet" id="qr-share-${esc(key)}"><code>${SITE}/styles.html?collection=${esc(key)}#unlisted</code></pre><button class="btn ghost" type="button" data-cmu-copy="#qr-share-${esc(key)}">Copy Link</button></div><p class="cmu-hint">Send this link to share these styles.</p></div><button type="button" class="cmu-close" aria-label="Close ${esc(key)}"></button></div></div>\n` +
+      `<div class="content wide darkgrey invert cmu-closable" data-qr-collection="${esc(key)}"><div><div class="cmu-closable-text"><h3>${esc(key)}</h3><p>${esc(description)}</p></div><button type="button" class="cmu-close" aria-label="Close Collection ${esc(key)}" title="Close Collection ${esc(key)}"></button></div></div>\n` +
+      `<div class="content wide darkgrey invert"><div><p>Send this link to share them:</p><div class="cmu-copy-row"><pre class="cmu-snippet" id="qr-share-${esc(key)}"><code>${SITE}/styles.html?collection=${esc(key)}#unlisted</code></pre><button class="btn ghost" type="button" data-cmu-copy="#qr-share-${esc(key)}">Copy Link</button></div></div></div>\n` +
       `<div class="grid column3 darkgrey boxes">${styles.map((id) => card({ id })).join("\n")}</div>`,
   ),
 ].join("\n");

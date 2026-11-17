@@ -87,9 +87,18 @@ export const STYLE_GROUPS: Record<string, readonly QrStyle[]> = {
 // A collection has no display name, only its key, which the pages show.
 // To add a style to a collection, add it to STYLES and to the collection's
 // styles; npm run docs does the rest.
-export const COLLECTIONS: Record<string, { styles: readonly QrStyle[] }> = {
-  mjs: { styles: ["mosaic-dragon", "dragon", "terminal", "punch-card"] },
-  merichar: { styles: ["engineering-paper", "minefield", "scantron"] },
+// Each collection: a line under its name saying what the designs share, and
+// its styles
+export const COLLECTIONS: Record<string, { description: string; styles: readonly QrStyle[] }> = {
+  mjs: {
+    description: "Each design comes from the School of Computer Science dragon or early computing.",
+    styles: ["mosaic-dragon", "dragon", "terminal", "punch-card"],
+  },
+  merichar: {
+    description:
+      "Each design comes from whatever was on the desk that day. Any theme you find is a coincidence.",
+    styles: ["engineering-paper", "minefield", "scantron"],
+  },
 };
 // The styles listed for everyone, in STYLES order
 export const LISTED_STYLES = STYLES.filter(
