@@ -9,7 +9,7 @@ import { GLYPHS } from "./glyphs";
 import { CAP, emFor, lettering } from "./lettering";
 import { SizeError, terminal } from "./screens";
 import { engineeringPaper, minefield } from "./boards";
-import { goBoard } from "./games";
+import { goBoard, seaBattle } from "./games";
 import { TENT_HEIGHT, TENT_WIDTH, tent } from "./tent";
 import { punchCard, scantron } from "./cards";
 
@@ -66,6 +66,7 @@ const INK: Record<QrStyle, string> = {
   scantron: "#111111",
   "go-board": "#4a2f14",
   "carnival-tent": "black",
+  "sea-battle": "#1d3a5c",
 };
 // The image grows taller, with a band for each line outside the code's own
 // margin
@@ -370,6 +371,7 @@ export async function qrSvg(
     minefield,
     scantron,
     "go-board": goBoard,
+    "sea-battle": seaBattle,
   } as const;
   if (style in framed)
     try {
