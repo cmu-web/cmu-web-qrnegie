@@ -346,7 +346,7 @@ const NOTEBOOK = "#fdfcf6",
   MARKER_O = "#c8423a",
   // An X's strokes: their width, from thinnest to thickest, and how far
   // their ends stop short of the module's corners, in modules
-  X_STROKE = [0.19, 0.27],
+  X_STROKE = [0.13, 0.19],
   X_INSET = 0.14;
 // A hand-drawn stroke from (x1, y1) to (x2, y2), bowed a little to one side
 function handStroke(x1: number, y1: number, x2: number, y2: number, bow: number) {
@@ -464,7 +464,7 @@ export function ticTacToe(
       const r = 0.24 + unit(x, y, 93) * 0.11,
         squash = 0.78 + unit(x, y, 94) * 0.22,
         turn = (unit(x, y, 95) - 0.5) * 1.6,
-        weight = round(0.06 + unit(x, y, 98) * 0.04);
+        weight = round(0.09 + unit(x, y, 98) * 0.05);
       os += `<path d="${handLoop(X + 0.5, Y + 0.5, r, squash, turn, hash(x, y, 99) % 100000)}" stroke-width="${weight}"/>`;
     }
   let text = "";
