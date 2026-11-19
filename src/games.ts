@@ -334,7 +334,8 @@ export function seaBattle(
 // in a dark marker, each stroke its own length, angle, bow and width, as
 // drawn quickly by hand, both crossing the module's middle, where scanners
 // sample; a few light modules hold red O's, uneven loops that overshoot or
-// stop short, with the paper showing through their middles. Under the finder and alignment patterns,
+// stop short, with the paper showing through their middles, mostly among
+// the X's. Under the finder and alignment patterns,
 // marker-filled squares, so scanners find those shapes whole. Text above and
 // below is handwritten in pencil.
 const NOTEBOOK = "#fdfcf6",
@@ -345,7 +346,7 @@ const NOTEBOOK = "#fdfcf6",
   MARKER_O = "#c8423a",
   // An X's strokes: their width, from thinnest to thickest, and how far
   // their ends stop short of the module's corners, in modules
-  X_STROKE = [0.15, 0.22],
+  X_STROKE = [0.19, 0.27],
   X_INSET = 0.14;
 // A hand-drawn stroke from (x1, y1) to (x2, y2), bowed a little to one side
 function handStroke(x1: number, y1: number, x2: number, y2: number, bow: number) {
@@ -388,8 +389,11 @@ export function ticTacToe(
   modules: BitMatrix,
   size: number,
   lines: Lines,
-  // About one light module in eight inside the code holds an O
-  oRate = 0.12,
+  // How often a light module inside the code holds an O: often among the
+  // X's, by how many of its four neighbors are dark, and now and then in
+  // open paper
+  oRate = 0.1,
+  oNearRate = 0.17,
 ) {
   // The sheet: the code's block with its margin, a band of paper around it
   // with the margin line at the left, and a row for each line of text
@@ -450,7 +454,11 @@ export function ticTacToe(
         xs += `<path d="${handStroke(X + b + j(5), Y + a + j(6), X + a + j(7), Y + b + j(8), bow(10))}" stroke-width="${width(12)}"/>`;
         continue;
       }
-      if (modules.isReserved(y, x) || unit(x, y, 92) > oRate) continue;
+      if (modules.isReserved(y, x)) continue;
+      const near = [dark(x - 1, y), dark(x + 1, y), dark(x, y - 1), dark(x, y + 1)].filter(
+        Boolean,
+      ).length;
+      if (unit(x, y, 92) > oRate + near * oNearRate) continue;
       // An O: its size, roundness, tilt and line all its own, open in the
       // middle
       const r = 0.24 + unit(x, y, 93) * 0.11,
