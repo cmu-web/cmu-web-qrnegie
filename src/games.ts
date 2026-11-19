@@ -152,9 +152,8 @@ const SEA = "#c4dbef",
   // Black pegs: in a sunk ship's holes, and misses as rings with the sea
   // showing through, since scanners sample a light module's middle
   PEG = "#141414",
-  // A lone hit: a smaller black peg with a glint
+  // A lone hit: a smaller plain black peg
   HIT = "#141414",
-  HIT_SHINE = "#3d3d3d",
   // A hull's height across, in modules: a little short of the row, so ships
   // in neighboring rows read as separate
   BEAM = 0.82;
@@ -306,10 +305,7 @@ export function seaBattle(
       while (free(x, y + length)) length++;
       for (let i = 0; i < length; i++) taken.add((y + i) * n + x);
       if (length >= 2) ship(x, y, length, false);
-      else
-        hits +=
-          `<circle cx="${ox + x + 0.5}" cy="${oy + y + 0.5}" r=".32" fill="${HIT}"/>` +
-          `<circle cx="${round(ox + x + 0.4)}" cy="${round(oy + y + 0.4)}" r=".08" fill="${HIT_SHINE}"/>`;
+      else hits += `<circle cx="${ox + x + 0.5}" cy="${oy + y + 0.5}" r=".32" fill="${HIT}"/>`;
     }
   for (let y = 0; y < n; y++)
     for (let x = 0; x < n; x++) {
