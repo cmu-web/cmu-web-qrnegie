@@ -331,9 +331,10 @@ export function seaBattle(
 // Tic-Tac-Toe: a game played out on a sheet of notebook paper. Faint blue
 // rules, a red margin line, and the game's big # drawn in pencil across the
 // code, its strokes on the modules' edges. The code's dark modules are X's
-// in a dark marker, their strokes crossing each module's middle, where
-// scanners sample; a few light modules hold red O's, rings with the paper
-// showing through their middles. Under the finder and alignment patterns,
+// in a dark marker, each stroke its own length, angle, bow and width, as
+// drawn quickly by hand, both crossing the module's middle, where scanners
+// sample; a few light modules hold red O's, uneven loops that overshoot or
+// stop short, with the paper showing through their middles. Under the finder and alignment patterns,
 // marker-filled squares, so scanners find those shapes whole. Text above and
 // below is handwritten in pencil.
 const NOTEBOOK = "#fdfcf6",
@@ -342,10 +343,47 @@ const NOTEBOOK = "#fdfcf6",
   PENCIL = "#8d939b",
   MARKER_X = "#1d2433",
   MARKER_O = "#c8423a",
-  // An X's stroke width and how far its ends stop short of the module's
-  // corners, in modules
-  X_STROKE = 0.3,
-  X_INSET = 0.13;
+  // An X's strokes: their width, from thinnest to thickest, and how far
+  // their ends stop short of the module's corners, in modules
+  X_STROKE = [0.15, 0.22],
+  X_INSET = 0.14;
+// A hand-drawn stroke from (x1, y1) to (x2, y2), bowed a little to one side
+function handStroke(x1: number, y1: number, x2: number, y2: number, bow: number) {
+  const mx = (x1 + x2) / 2,
+    my = (y1 + y2) / 2,
+    dx = x2 - x1,
+    dy = y2 - y1,
+    length = Math.hypot(dx, dy);
+  return `M${round(x1)} ${round(y1)}Q${round(mx - (dy / length) * bow)} ${round(my + (dx / length) * bow)} ${round(x2)} ${round(y2)}`;
+}
+// A hand-drawn O around (cx, cy): a loop of uneven radius, started at a
+// random angle and carried a little past where it began, or stopped a
+// little short
+function handLoop(cx: number, cy: number, r: number, squash: number, turn: number, seed: number) {
+  const steps = 10,
+    start = unit(seed, 1, 96) * Math.PI * 2,
+    sweep = Math.PI * 2 * (0.94 + unit(seed, 2, 96) * 0.16),
+    point = (i: number) => {
+      const a = start + (sweep * i) / steps,
+        wobble = 1 + (unit(seed, i + 3, 97) - 0.5) * 0.14,
+        x = Math.cos(a) * r * wobble,
+        y = Math.sin(a) * r * squash * wobble;
+      return [
+        cx + x * Math.cos(turn) - y * Math.sin(turn),
+        cy + x * Math.sin(turn) + y * Math.cos(turn),
+      ];
+    };
+  // Smoothed through the midpoints between the points
+  const pts = Array.from({ length: steps + 1 }, (_, i) => point(i));
+  let d = `M${round(pts[0][0])} ${round(pts[0][1])}`;
+  for (let i = 1; i < pts.length - 1; i++) {
+    const [px, py] = pts[i],
+      [nx, ny] = pts[i + 1];
+    d += `Q${round(px)} ${round(py)} ${round((px + nx) / 2)} ${round((py + ny) / 2)}`;
+  }
+  const [lx, ly] = pts[pts.length - 1];
+  return d + `L${round(lx)} ${round(ly)}`;
+}
 export function ticTacToe(
   modules: BitMatrix,
   size: number,
@@ -400,19 +438,26 @@ export function ticTacToe(
           squares += `M${X} ${Y}h1v1h-1z`;
           continue;
         }
-        const j = (salt: number) => round((unit(x, y, salt) - 0.5) * 0.08),
+        // Two strokes, each its own length, angle, bow and width, as drawn
+        // quickly by hand; both cross the module's middle
+        const j = (salt: number) => (unit(x, y, salt) - 0.5) * 0.16,
           a = X_INSET,
-          b = 1 - X_INSET;
-        xs += `M${round(X + a + j(1))} ${round(Y + a + j(2))}L${round(X + b + j(3))} ${round(Y + b + j(4))}`;
-        xs += `M${round(X + b + j(5))} ${round(Y + a + j(6))}L${round(X + a + j(7))} ${round(Y + b + j(8))}`;
+          b = 1 - X_INSET,
+          width = (salt: number) =>
+            round(X_STROKE[0] + unit(x, y, salt) * (X_STROKE[1] - X_STROKE[0])),
+          bow = (salt: number) => round((unit(x, y, salt) - 0.5) * 0.14);
+        xs += `<path d="${handStroke(X + a + j(1), Y + a + j(2), X + b + j(3), Y + b + j(4), bow(9))}" stroke-width="${width(11)}"/>`;
+        xs += `<path d="${handStroke(X + b + j(5), Y + a + j(6), X + a + j(7), Y + b + j(8), bow(10))}" stroke-width="${width(12)}"/>`;
         continue;
       }
       if (modules.isReserved(y, x) || unit(x, y, 92) > oRate) continue;
-      // An O, a little oval and turned, open in the middle
-      const rx = round(0.3 + (unit(x, y, 93) - 0.5) * 0.04),
-        ry = round(0.27 + (unit(x, y, 94) - 0.5) * 0.04),
-        turn = Math.round((unit(x, y, 95) - 0.5) * 40);
-      os += `<ellipse cx="${X + 0.5}" cy="${Y + 0.5}" rx="${rx}" ry="${ry}" transform="rotate(${turn} ${X + 0.5} ${Y + 0.5})"/>`;
+      // An O: its size, roundness, tilt and line all its own, open in the
+      // middle
+      const r = 0.24 + unit(x, y, 93) * 0.11,
+        squash = 0.78 + unit(x, y, 94) * 0.22,
+        turn = (unit(x, y, 95) - 0.5) * 1.6,
+        weight = round(0.06 + unit(x, y, 98) * 0.04);
+      os += `<path d="${handLoop(X + 0.5, Y + 0.5, r, squash, turn, hash(x, y, 99) % 100000)}" stroke-width="${weight}"/>`;
     }
   let text = "";
   if (lines.above || lines.below) {
@@ -422,5 +467,5 @@ export function ticTacToe(
     if (lines.below)
       text += lettering(lines.below, em, bx + q / 2, by + q + (row + CAP * em) / 2, HANDWRITING);
   }
-  return `${svgOpen(size, "white")}<g transform="translate(${left} ${top}) scale(${k})"><rect width="${width}" height="${height}" rx=".6" fill="${NOTEBOOK}"/><path d="${rules}" stroke="${NOTEBOOK_RULE}" stroke-width=".06"/><path d="M${margin - 1} 0V${height}" stroke="${MARGIN_RULE}" stroke-width=".08"/><path d="${hashMark}" stroke="${PENCIL}" stroke-width=".12" stroke-linecap="round"/><g fill="none" stroke="${MARKER_O}" stroke-width=".09">${os}</g><path d="${squares}" fill="${MARKER_X}" shape-rendering="crispEdges"/><path d="${xs}" stroke="${MARKER_X}" stroke-width="${X_STROKE}" stroke-linecap="round"/>${text ? `<g fill="${PENCIL}">${text}</g>` : ""}</g></svg>`;
+  return `${svgOpen(size, "white")}<g transform="translate(${left} ${top}) scale(${k})"><rect width="${width}" height="${height}" rx=".6" fill="${NOTEBOOK}"/><path d="${rules}" stroke="${NOTEBOOK_RULE}" stroke-width=".06"/><path d="M${margin - 1} 0V${height}" stroke="${MARGIN_RULE}" stroke-width=".08"/><path d="${hashMark}" stroke="${PENCIL}" stroke-width=".12" stroke-linecap="round"/><g fill="none" stroke="${MARKER_O}" stroke-linecap="round" stroke-linejoin="round">${os}</g><path d="${squares}" fill="${MARKER_X}" shape-rendering="crispEdges"/><g fill="none" stroke="${MARKER_X}" stroke-linecap="round">${xs}</g>${text ? `<g fill="${PENCIL}">${text}</g>` : ""}</g></svg>`;
 }
