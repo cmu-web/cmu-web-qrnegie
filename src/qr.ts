@@ -9,6 +9,7 @@ import { GLYPHS } from "./glyphs";
 import { CAP, emFor, lettering } from "./lettering";
 import { SizeError, terminal } from "./screens";
 import { engineeringPaper, minefield } from "./boards";
+import { goBoard } from "./games";
 import { punchCard, scantron } from "./cards";
 
 export class GenerateError extends Error {
@@ -62,6 +63,7 @@ const INK: Record<QrStyle, string> = {
   "engineering-paper": "#141414",
   minefield: "#222222",
   scantron: "#111111",
+  "go-board": "#4a2f14",
 };
 // The image grows taller, with a band for each line outside the code's own
 // margin
@@ -365,6 +367,7 @@ export async function qrSvg(
     "engineering-paper": engineeringPaper,
     minefield,
     scantron,
+    "go-board": goBoard,
   } as const;
   if (style in framed)
     try {
