@@ -1,4 +1,5 @@
-// Go Board and Sea Battle (the scc collection). Like the merichar boards, each
+// Go Board, Sea Battle and Tic-Tac-Toe (the scc collection). Like the
+// merichar boards, each
 // keeps the code
 // dark on light, lays out in module units with whole pixels per module and
 // letters its own lines inside its design, so the image stays square.
@@ -6,6 +7,7 @@ import type { BitMatrix } from "qrcode";
 import { CAP, ems, emFor, lettering, round } from "./lettering";
 import { darkAt, hash, svgOpen, unit } from "./boards";
 import { fit, type Lines } from "./screens";
+import { HANDWRITING } from "./handwriting";
 
 // Whether a module is in a finder or alignment pattern, drawn as solid
 // squares; the timing, format and version modules around them are not.
@@ -324,4 +326,101 @@ export function seaBattle(
       text += lettering(lines.below, em, sx + q / 2, sy + q + (row + CAP * em) / 2 - 0.2);
   }
   return `${svgOpen(size, "white")}<g transform="translate(${left} ${top}) scale(${k})"><rect width="${width}" height="${height}" rx=".8" fill="${CASE}"/><rect x="${sx}" y="${sy}" width="${q}" height="${q}" fill="${SEA}"/><path d="${grid}" stroke="${SEA_LINE}" stroke-width=".05"/><g fill="${CASE_LABEL}">${labels}${text}</g><g fill="none" stroke="${PEG}" stroke-width=".07">${misses}</g><path d="${squares}" fill="${PATTERN}" shape-rendering="crispEdges"/>${hulls}${hits}<g fill="${PEG}">${pegs}</g></g></svg>`;
+}
+
+// Tic-Tac-Toe: a game played out on a sheet of notebook paper. Faint blue
+// rules, a red margin line, and the game's big # drawn in pencil across the
+// code, its strokes on the modules' edges. The code's dark modules are X's
+// in a dark marker, their strokes crossing each module's middle, where
+// scanners sample; a few light modules hold red O's, rings with the paper
+// showing through their middles. Under the finder and alignment patterns,
+// marker-filled squares, so scanners find those shapes whole. Text above and
+// below is handwritten in pencil.
+const NOTEBOOK = "#fdfcf6",
+  NOTEBOOK_RULE = "#d3e1f0",
+  MARGIN_RULE = "#e8a3a0",
+  PENCIL = "#8d939b",
+  MARKER_X = "#1d2433",
+  MARKER_O = "#c8423a",
+  // An X's stroke width and how far its ends stop short of the module's
+  // corners, in modules
+  X_STROKE = 0.3,
+  X_INSET = 0.13;
+export function ticTacToe(
+  modules: BitMatrix,
+  size: number,
+  lines: Lines,
+  // About one light module in eight inside the code holds an O
+  oRate = 0.12,
+) {
+  // The sheet: the code's block with its margin, a band of paper around it
+  // with the margin line at the left, and a row for each line of text
+  const n = modules.size,
+    q = n + 8,
+    pad = 2,
+    margin = 3,
+    row = 4,
+    above = lines.above ? row : 0,
+    width = margin + q + pad,
+    height = pad + above + q + (lines.below ? row : 0) + pad,
+    k = fit("tic-tac-toe", Math.max(width, height), size),
+    left = Math.round((size - width * k) / 2),
+    top = Math.round((size - height * k) / 2),
+    bx = margin,
+    by = pad + above,
+    ox = bx + 4,
+    oy = by + 4,
+    dark = darkAt(modules),
+    joined = solidPattern(modules);
+  // Ruled lines on every other module edge, down the whole sheet, and the
+  // margin line
+  let rules = "";
+  for (let y = by % 2; y <= height; y += 2) rules += `M0 ${y}H${width}`;
+  // The game's #: two strokes each way at the code's thirds, on module edges,
+  // a little uneven, as drawn by hand
+  const third = (i: number) => Math.round((n * i) / 3);
+  let hashMark = "";
+  for (const i of [1, 2]) {
+    const at = third(i),
+      w = (j: number) => round((unit(i, j, 91) - 0.5) * 0.12);
+    hashMark += `M${ox + at + w(1)} ${oy - 1.2}L${ox + at + w(2)} ${oy + n + 1.2}`;
+    hashMark += `M${ox - 1.2} ${oy + at + w(3)}L${ox + n + 1.2} ${oy + at + w(4)}`;
+  }
+  // The marks: an X on each dark module, its strokes a little off true, and
+  // marker-filled squares under the patterns scanners look for first
+  let xs = "",
+    os = "",
+    squares = "";
+  for (let y = 0; y < n; y++)
+    for (let x = 0; x < n; x++) {
+      const X = ox + x,
+        Y = oy + y;
+      if (dark(x, y)) {
+        if (joined(x, y)) {
+          squares += `M${X} ${Y}h1v1h-1z`;
+          continue;
+        }
+        const j = (salt: number) => round((unit(x, y, salt) - 0.5) * 0.08),
+          a = X_INSET,
+          b = 1 - X_INSET;
+        xs += `M${round(X + a + j(1))} ${round(Y + a + j(2))}L${round(X + b + j(3))} ${round(Y + b + j(4))}`;
+        xs += `M${round(X + b + j(5))} ${round(Y + a + j(6))}L${round(X + a + j(7))} ${round(Y + b + j(8))}`;
+        continue;
+      }
+      if (modules.isReserved(y, x) || unit(x, y, 92) > oRate) continue;
+      // An O, a little oval and turned, open in the middle
+      const rx = round(0.3 + (unit(x, y, 93) - 0.5) * 0.04),
+        ry = round(0.27 + (unit(x, y, 94) - 0.5) * 0.04),
+        turn = Math.round((unit(x, y, 95) - 0.5) * 40);
+      os += `<ellipse cx="${X + 0.5}" cy="${Y + 0.5}" rx="${rx}" ry="${ry}" transform="rotate(${turn} ${X + 0.5} ${Y + 0.5})"/>`;
+    }
+  let text = "";
+  if (lines.above || lines.below) {
+    const em = emFor(lines, q, (row * 0.4) / CAP, HANDWRITING);
+    if (lines.above)
+      text += lettering(lines.above, em, bx + q / 2, pad + (row + CAP * em) / 2, HANDWRITING);
+    if (lines.below)
+      text += lettering(lines.below, em, bx + q / 2, by + q + (row + CAP * em) / 2, HANDWRITING);
+  }
+  return `${svgOpen(size, "white")}<g transform="translate(${left} ${top}) scale(${k})"><rect width="${width}" height="${height}" rx=".6" fill="${NOTEBOOK}"/><path d="${rules}" stroke="${NOTEBOOK_RULE}" stroke-width=".06"/><path d="M${margin - 1} 0V${height}" stroke="${MARGIN_RULE}" stroke-width=".08"/><path d="${hashMark}" stroke="${PENCIL}" stroke-width=".12" stroke-linecap="round"/><g fill="none" stroke="${MARKER_O}" stroke-width=".09">${os}</g><path d="${squares}" fill="${MARKER_X}" shape-rendering="crispEdges"/><path d="${xs}" stroke="${MARKER_X}" stroke-width="${X_STROKE}" stroke-linecap="round"/>${text ? `<g fill="${PENCIL}">${text}</g>` : ""}</g></svg>`;
 }
