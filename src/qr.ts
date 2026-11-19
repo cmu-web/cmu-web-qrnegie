@@ -9,6 +9,8 @@ import { GLYPHS } from "./glyphs";
 import { CAP, emFor, lettering } from "./lettering";
 import { SizeError, terminal } from "./screens";
 import { engineeringPaper, minefield } from "./boards";
+import { goBoard, seaBattle, ticTacToe } from "./games";
+import { TENT_HEIGHT, TENT_WIDTH, tent } from "./tent";
 import { punchCard, scantron } from "./cards";
 
 export class GenerateError extends Error {
@@ -62,6 +64,10 @@ const INK: Record<QrStyle, string> = {
   "engineering-paper": "#141414",
   minefield: "#222222",
   scantron: "#111111",
+  "go-board": "#4a2f14",
+  "carnival-tent": "black",
+  "sea-battle": "#1d3a5c",
+  "tic-tac-toe": "#8d939b",
 };
 // The image grows taller, with a band for each line outside the code's own
 // margin
@@ -365,6 +371,9 @@ export async function qrSvg(
     "engineering-paper": engineeringPaper,
     minefield,
     scantron,
+    "go-board": goBoard,
+    "sea-battle": seaBattle,
+    "tic-tac-toe": ticTacToe,
   } as const;
   if (style in framed)
     try {
@@ -422,6 +431,23 @@ export async function qrSvg(
         "This content leaves no room for the dragon. Choose Basic Black or a shorter URL.",
       );
     mark = `<rect x="${spot.x}" y="${spot.y}" width="${width + 2}" height="${height + 2}" fill="white" shape-rendering="crispEdges"/><svg x="${spot.x + 1}" y="${spot.y + 1}" width="${width}" height="${height}" viewBox="0 0 ${DRAGON_WIDTH} ${DRAGON_HEIGHT}">${dragon}</svg>`;
+  }
+  if (style === "carnival-tent") {
+    // Carnival Tent, as Basic Scotty: the tent, about a fifth of the code's
+    // width, on a white patch with a module of space around it; smaller when
+    // a dense code leaves no room
+    let spot: { x: number; y: number } | undefined,
+      width = Math.max(5, Math.floor(n * 0.2)),
+      height = 0;
+    for (; width >= 4; width--) {
+      height = Math.round((width * TENT_HEIGHT) / TENT_WIDTH);
+      if ((spot = clearSpot(modules, width + 2, height + 2))) break;
+    }
+    if (!spot)
+      throw new GenerateError(
+        "This content leaves no room for the tent. Choose Basic Black or a shorter URL.",
+      );
+    mark = `<rect x="${spot.x}" y="${spot.y}" width="${width + 2}" height="${height + 2}" fill="white" shape-rendering="crispEdges"/><svg x="${spot.x + 1}" y="${spot.y + 1}" width="${width}" height="${height}" viewBox="0 0 ${TENT_WIDTH} ${TENT_HEIGHT}">${tent}</svg>`;
   }
   if (style === "icon") {
     // The icon in CMU red, about a fifth of the code's width, in a white

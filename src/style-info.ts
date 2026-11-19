@@ -15,6 +15,10 @@ export const STYLES = [
   "engineering-paper",
   "minefield",
   "scantron",
+  "go-board",
+  "carnival-tent",
+  "sea-battle",
+  "tic-tac-toe",
 ] as const;
 export type QrStyle = (typeof STYLES)[number];
 export const STYLE_NAMES: Record<QrStyle, string> = {
@@ -34,6 +38,10 @@ export const STYLE_NAMES: Record<QrStyle, string> = {
   "engineering-paper": "Engineering Paper",
   minefield: "Minefield",
   scantron: "Scantron",
+  "go-board": "Go Board",
+  "carnival-tent": "Carnival Tent",
+  "sea-battle": "Sea Battle",
+  "tic-tac-toe": "Tic-Tac-Toe",
 };
 export const MIN_MODULE: Record<QrStyle, number> = {
   plain: 3,
@@ -52,6 +60,10 @@ export const MIN_MODULE: Record<QrStyle, number> = {
   "engineering-paper": 4,
   minefield: 5,
   scantron: 5,
+  "go-board": 5,
+  "carnival-tent": 3,
+  "sea-battle": 5,
+  "tic-tac-toe": 5,
 };
 // Shared by the renderer, Builder, reference pages and MCP guidance
 export const ERROR_CORRECTION: Record<QrStyle, "M" | "H"> = {
@@ -71,6 +83,10 @@ export const ERROR_CORRECTION: Record<QrStyle, "M" | "H"> = {
   "engineering-paper": "H",
   minefield: "H",
   scantron: "H",
+  "go-board": "H",
+  "carnival-tent": "H",
+  "sea-battle": "H",
+  "tic-tac-toe": "H",
 };
 // The listed styles, by group, in the Builder, Styles and Reference. Styles in
 // a collection aren't listed here.
@@ -98,6 +114,10 @@ export const COLLECTIONS: Record<string, { description: string; styles: readonly
     description:
       "Each design comes from whatever was on the desk that day. Any theme you find is a coincidence.",
     styles: ["engineering-paper", "minefield", "scantron"],
+  },
+  scc: {
+    description: "Each design comes from game night in the committee room.",
+    styles: ["go-board", "sea-battle", "tic-tac-toe", "carnival-tent"],
   },
 };
 // The styles listed for everyone, in STYLES order
@@ -177,6 +197,26 @@ export const STYLE_DETAILS: Record<QrStyle, { description: string; example: stri
     description:
       "A machine-scored quiz strip with green bracketed bubbles and timing marks down the edge: the code is made of answers, each dark square a bubble filled in.",
     example: "https://merichar.org/",
+  },
+  "go-board": {
+    description:
+      "A wooden game board with a line through every square: the code's dark squares are black stones on the crossings, with a few white stones among them.",
+    example: "https://www.cmu.edu/",
+  },
+  "sea-battle": {
+    description:
+      "A naval guessing game's plotting grid, with numbers and letters along the edges: the code's dark squares are army-green warships, some sunk with black pegs in their holes, and black hit pegs, with a few miss rings.",
+    example: "https://www.cmu.edu/",
+  },
+  "tic-tac-toe": {
+    description:
+      "A game played out on notebook paper, with the big # drawn in pencil: the code's dark squares are X's in marker, with a few red O's among them.",
+    example: "https://www.cmu.edu/",
+  },
+  "carnival-tent": {
+    description:
+      "The Spring Carnival tent in red, in the middle of a QR code made of black squares.",
+    example: "https://www.cmu.edu/",
   },
   icon: {
     description:

@@ -56,13 +56,22 @@ describe("QRnegie", () => {
           // Block Monogram's code is inverted: its margin is the dark red of
           // its block. Terminal's margin is lit green phosphor, Punch Card's
           // cream card, Engineering Paper's pale green paper, Minefield's
-          // revealed tiles and Scantron's sheet: light but not
+          // revealed tiles, Scantron's sheet, Go Board's wood, Sea Battle's sea and Tic-Tac-Toe's paper: light but not
           // pale. Everywhere else it's light, not necessarily white: Kraus
           // Campo's margin has faint tiles.
           const light = 0.299 * r + 0.587 * g + 0.114 * b;
           if (style === "block-monogram") expect(light).toBeLessThan(120);
           else if (
-            ["terminal", "punch-card", "engineering-paper", "minefield", "scantron"].includes(style)
+            [
+              "terminal",
+              "punch-card",
+              "engineering-paper",
+              "minefield",
+              "scantron",
+              "go-board",
+              "sea-battle",
+              "tic-tac-toe",
+            ].includes(style)
           )
             expect(light).toBeGreaterThan(150);
           else for (const channel of [r, g, b]) expect(channel).toBeGreaterThanOrEqual(230);
@@ -110,6 +119,9 @@ describe("QRnegie", () => {
             "engineering-paper",
             "minefield",
             "scantron",
+            "go-board",
+            "sea-battle",
+            "tic-tac-toe",
           ].includes(style)
         )
           expect(info.height).toBe(size);
@@ -274,6 +286,9 @@ describe("unlisted collections", () => {
     "engineering-paper",
     "minefield",
     "scantron",
+    "go-board",
+    "sea-battle",
+    "tic-tac-toe",
   ] as const)
     it(`letters ${style}'s lines inside its design and keeps the image square`, async () => {
       const text = STYLE_DETAILS[style].example;
