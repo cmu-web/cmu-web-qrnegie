@@ -16,6 +16,7 @@ export const STYLES = [
   "minefield",
   "scantron",
   "go-board",
+  "carnival-tent",
 ] as const;
 export type QrStyle = (typeof STYLES)[number];
 export const STYLE_NAMES: Record<QrStyle, string> = {
@@ -36,6 +37,7 @@ export const STYLE_NAMES: Record<QrStyle, string> = {
   minefield: "Minefield",
   scantron: "Scantron",
   "go-board": "Go Board",
+  "carnival-tent": "Carnival Tent",
 };
 export const MIN_MODULE: Record<QrStyle, number> = {
   plain: 3,
@@ -55,6 +57,7 @@ export const MIN_MODULE: Record<QrStyle, number> = {
   minefield: 5,
   scantron: 5,
   "go-board": 5,
+  "carnival-tent": 3,
 };
 // Shared by the renderer, Builder, reference pages and MCP guidance
 export const ERROR_CORRECTION: Record<QrStyle, "M" | "H"> = {
@@ -75,6 +78,7 @@ export const ERROR_CORRECTION: Record<QrStyle, "M" | "H"> = {
   minefield: "H",
   scantron: "H",
   "go-board": "H",
+  "carnival-tent": "H",
 };
 // The listed styles, by group, in the Builder, Styles and Reference. Styles in
 // a collection aren't listed here.
@@ -105,7 +109,7 @@ export const COLLECTIONS: Record<string, { description: string; styles: readonly
   },
   scc: {
     description: "Each design comes from game night in the committee room.",
-    styles: ["go-board"],
+    styles: ["go-board", "carnival-tent"],
   },
 };
 // The styles listed for everyone, in STYLES order
@@ -189,6 +193,11 @@ export const STYLE_DETAILS: Record<QrStyle, { description: string; example: stri
   "go-board": {
     description:
       "A wooden game board with a line through every square: the code's dark squares are black stones on the crossings, with a few white stones among them.",
+    example: "https://www.cmu.edu/",
+  },
+  "carnival-tent": {
+    description:
+      "The Spring Carnival tent in red, in the middle of a QR code made of black squares.",
     example: "https://www.cmu.edu/",
   },
   icon: {
