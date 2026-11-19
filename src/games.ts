@@ -131,7 +131,7 @@ export function goBoard(
 // run of the code's dark modules, across or down, is an army-green warship
 // seen from above, its bow pointed one way or the other, with a deckhouse,
 // gun turrets and fittings by length: afloat in a light green, or sunk in a
-// dark one with a black hit peg in every hole. A lone dark module is a red
+// dark one with a black hit peg in every hole. A lone dark module is a black
 // hit peg, and a few light modules hold black miss rings. Under the finder and alignment patterns, solid squares,
 // so scanners find those shapes whole. Text above and below is lettered in
 // pale blue on the case.
@@ -152,9 +152,9 @@ const SEA = "#c4dbef",
   // Black pegs: in a sunk ship's holes, and misses as rings with the sea
   // showing through, since scanners sample a light module's middle
   PEG = "#141414",
-  // A lone hit: a smaller red peg, dark enough to read as a dark module
-  HIT = "#8c1515",
-  HIT_SHINE = "#b02a2a",
+  // A lone hit: a smaller black peg with a glint
+  HIT = "#141414",
+  HIT_SHINE = "#3d3d3d",
   // A hull's height across, in modules: a little short of the row, so ships
   // in neighboring rows read as separate
   BEAM = 0.82;
