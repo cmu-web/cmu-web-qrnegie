@@ -131,8 +131,8 @@ export function goBoard(
 // run of the code's dark modules, across or down, is an army-green warship
 // seen from above, its bow pointed one way or the other, with a deckhouse,
 // gun turrets and fittings by length: afloat in a light green, or sunk in a
-// dark one with a hit peg in every hole and marks all around. A lone dark
-// module is a black hit peg, and a few light modules hold black miss rings. Under the finder and alignment patterns, solid squares,
+// dark one with a black hit peg in every hole. A lone dark module is a red
+// hit peg, and a few light modules hold black miss rings. Under the finder and alignment patterns, solid squares,
 // so scanners find those shapes whole. Text above and below is lettered in
 // pale blue on the case.
 const SEA = "#dde9f3",
@@ -149,12 +149,12 @@ const SEA = "#dde9f3",
   SUNK_RATE = 0.35,
   // The finder and alignment patterns' squares, the dark green
   PATTERN = "#2a3115",
-  // Pegs, all black as in the game: a hit fills a module; a miss is a ring
-  // with the sea showing through, since scanners sample a light module's
-  // middle; and the marks around a sunk ship sit on the grid's corners,
-  // between modules, for the same reason
+  // Black pegs: in a sunk ship's holes, and misses as rings with the sea
+  // showing through, since scanners sample a light module's middle
   PEG = "#141414",
-  PEG_SHINE = "#3d3d3d",
+  // A lone hit: a smaller red peg, dark enough to read as a dark module
+  HIT = "#8c1515",
+  HIT_SHINE = "#b02a2a",
   // A hull's height across, in modules: a little short of the row, so ships
   // in neighboring rows read as separate
   BEAM = 0.82;
@@ -268,7 +268,6 @@ export function seaBattle(
     squares = "",
     misses = "",
     pegs = "";
-  const corners = new Set<string>();
   const ship = (x: number, y: number, length: number, across: boolean) => {
     // Drawn along +x in a box `length` long and a module high, then turned
     // into place, bow first one way or the other
@@ -285,17 +284,11 @@ export function seaBattle(
     const sunk = unit(x, y, 87) < SUNK_RATE;
     hulls += `<g transform="${place}">${vessel(length, hash(x, y, 86), sunk ? SUNK : AFLOAT)}</g>`;
     if (!sunk) return;
-    // A sunk ship: a hit peg in each of its holes, and marks on the grid's
-    // corners all around it
+    // A sunk ship: a hit peg in each of its holes
     for (let i = 0; i < length; i++) {
       const [hx, hy] = across ? [X + i, Y] : [X, Y + i];
       pegs += `<circle cx="${hx + 0.5}" cy="${hy + 0.5}" r=".15"/>`;
     }
-    for (let i = 0; i <= length; i++)
-      for (const side of [0, 1]) {
-        const [cx, cy] = across ? [X + i, Y + side] : [X + side, Y + i];
-        corners.add(`${cx} ${cy}`);
-      }
   };
   for (let y = 0; y < n; y++)
     for (let x = 0; x < n; x++) {
@@ -315,8 +308,8 @@ export function seaBattle(
       if (length >= 2) ship(x, y, length, false);
       else
         hits +=
-          `<circle cx="${ox + x + 0.5}" cy="${oy + y + 0.5}" r=".41" fill="${PEG}"/>` +
-          `<circle cx="${round(ox + x + 0.37)}" cy="${round(oy + y + 0.37)}" r=".09" fill="${PEG_SHINE}"/>`;
+          `<circle cx="${ox + x + 0.5}" cy="${oy + y + 0.5}" r=".32" fill="${HIT}"/>` +
+          `<circle cx="${round(ox + x + 0.4)}" cy="${round(oy + y + 0.4)}" r=".08" fill="${HIT_SHINE}"/>`;
     }
   for (let y = 0; y < n; y++)
     for (let x = 0; x < n; x++) {
@@ -334,12 +327,5 @@ export function seaBattle(
     if (lines.below)
       text += lettering(lines.below, em, sx + q / 2, sy + q + (row + CAP * em) / 2 - 0.2);
   }
-  return `${svgOpen(size, "white")}<g transform="translate(${left} ${top}) scale(${k})"><rect width="${width}" height="${height}" rx=".8" fill="${CASE}"/><rect x="${sx}" y="${sy}" width="${q}" height="${q}" fill="${SEA}"/><path d="${grid}" stroke="${SEA_LINE}" stroke-width=".05"/><g fill="${CASE_LABEL}">${labels}${text}</g><g fill="none" stroke="${PEG}" stroke-width=".07">${misses}</g><path d="${squares}" fill="${PATTERN}" shape-rendering="crispEdges"/>${hulls}${hits}<g fill="${PEG}">${pegs}${[
-    ...corners,
-  ]
-    .map((p) => {
-      const [cx, cy] = p.split(" ");
-      return `<circle cx="${cx}" cy="${cy}" r=".09"/>`;
-    })
-    .join("")}</g></g></svg>`;
+  return `${svgOpen(size, "white")}<g transform="translate(${left} ${top}) scale(${k})"><rect width="${width}" height="${height}" rx=".8" fill="${CASE}"/><rect x="${sx}" y="${sy}" width="${q}" height="${q}" fill="${SEA}"/><path d="${grid}" stroke="${SEA_LINE}" stroke-width=".05"/><g fill="${CASE_LABEL}">${labels}${text}</g><g fill="none" stroke="${PEG}" stroke-width=".07">${misses}</g><path d="${squares}" fill="${PATTERN}" shape-rendering="crispEdges"/>${hulls}${hits}<g fill="${PEG}">${pegs}</g></g></svg>`;
 }

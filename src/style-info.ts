@@ -201,7 +201,7 @@ export const STYLE_DETAILS: Record<QrStyle, { description: string; example: stri
   },
   "sea-battle": {
     description:
-      "A naval guessing game's plotting grid, with numbers and letters along the edges: the code's dark squares are army-green warships, some sunk with pegs and marks around them, and black hit pegs, with a few miss rings.",
+      "A naval guessing game's plotting grid, with numbers and letters along the edges: the code's dark squares are army-green warships, some sunk with black pegs in their holes, and red hit pegs, with a few miss rings.",
     example: "https://www.cmu.edu/",
   },
   "carnival-tent": {
