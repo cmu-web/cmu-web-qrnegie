@@ -135,8 +135,8 @@ export function goBoard(
 // hit peg, and a few light modules hold black miss rings. Under the finder and alignment patterns, solid squares,
 // so scanners find those shapes whole. Text above and below is lettered in
 // pale blue on the case.
-const SEA = "#dde9f3",
-  SEA_LINE = "#c5d6e5",
+const SEA = "#c4dbef",
+  SEA_LINE = "#abc8e3",
   CASE = "#1d3a5c",
   CASE_LABEL = "#c9dcec",
   // Ships still afloat in a light army green and sunk ones in a dark one,
