@@ -5,7 +5,7 @@ require_relative 'lib/qrnegie/version'
 Gem::Specification.new do |spec|
   spec.name = 'cmu-web-qrnegie'
   spec.version = QRnegie::VERSION
-  spec.authors = ['Carnegie Mellon University']
+  spec.authors = ['CMU Web']
   spec.summary = 'QR code image addresses from QRnegie, for Ruby and Rails'
   spec.description = 'Builds addresses for QRnegie, which draws QR codes in Carnegie Mellon styles as SVG or PNG. Includes a Rails view helper.'
   spec.homepage = 'https://qrnegie.andrew.cmu.edu/'
