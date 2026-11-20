@@ -6,7 +6,7 @@ build and run the image.
 
 ## Images
 
-The [publishing workflow](.github/workflows/publish.yml) runs all checks
+The [Publish Image workflow](.github/workflows/publish-image.yml) runs all checks
 and builds the production image. It publishes to
 `ghcr.io/cmu-web/cmu-web-qrnegie` for version tags, such as `0.2.0`, and
 manual workflow runs. Ordinary branch pushes and pull requests build
@@ -132,16 +132,8 @@ shared base stage.
 
 Each version tag also publishes the Ruby gem in `packages/ruby/`,
 `cmu-web-qrnegie`, at the same version, through the
-[Ruby gem workflow](.github/workflows/rubygems.yml). It uses trusted
-publishing, so there's no API key, but RubyGems.org has to trust it first.
-Do this once, before the first tag that should publish the gem:
-
-1. Sign in to RubyGems.org with an account that has multi-factor
-   authentication on.
-2. Under Trusted Publishers, add a pending trusted publisher for the gem
-   `cmu-web-qrnegie`: GitHub Actions, owner `cmu-web`, repository
-   `cmu-web-qrnegie`, workflow `rubygems.yml` and environment `rubygems`.
-
-The first successful run creates the gem on RubyGems.org, owned by that
-account. Until then, the workflow's publish step fails on each tag; the
-image is published as usual.
+[Publish Gem workflow](.github/workflows/publish-gem.yml). It uses trusted
+publishing, so there's no API key to store. RubyGems.org trusts it as: GitHub
+Actions, owner `cmu-web`, repository `cmu-web-qrnegie`, workflow
+`publish-gem.yml` and environment `rubygems`. Renaming the workflow file
+stops publishing until that trusted publisher is changed to match.
