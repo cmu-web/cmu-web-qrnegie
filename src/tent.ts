@@ -1,4 +1,4 @@
-// Carnival Tent (the scc collection): the Spring Carnival Committee's tent
+// Basic Carnival (the scc collection): the Spring Carnival Committee's tent
 // (assets/carnival-tent.svg, traced from the committee's own artwork) in the
 // middle of a plain black code, as Basic Scotty and Basic Dragon
 import { readFileSync } from "node:fs";

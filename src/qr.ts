@@ -433,7 +433,7 @@ export async function qrSvg(
     mark = `<rect x="${spot.x}" y="${spot.y}" width="${width + 2}" height="${height + 2}" fill="white" shape-rendering="crispEdges"/><svg x="${spot.x + 1}" y="${spot.y + 1}" width="${width}" height="${height}" viewBox="0 0 ${DRAGON_WIDTH} ${DRAGON_HEIGHT}">${dragon}</svg>`;
   }
   if (style === "carnival-tent") {
-    // Carnival Tent, as Basic Scotty: the tent, about a fifth of the code's
+    // Basic Carnival, as Basic Scotty: the tent, about a fifth of the code's
     // width, on a white patch with a module of space around it; smaller when
     // a dense code leaves no room
     let spot: { x: number; y: number } | undefined,

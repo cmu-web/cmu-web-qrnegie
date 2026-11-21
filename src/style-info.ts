@@ -39,7 +39,7 @@ export const STYLE_NAMES: Record<QrStyle, string> = {
   minefield: "Minefield",
   scantron: "Scantron",
   "go-board": "Go Board",
-  "carnival-tent": "Carnival Tent",
+  "carnival-tent": "Basic Carnival",
   "sea-battle": "Sea Battle",
   "tic-tac-toe": "Tic-Tac-Toe",
 };
@@ -91,7 +91,7 @@ export const ERROR_CORRECTION: Record<QrStyle, "M" | "H"> = {
 // The listed styles, by group, in the Builder, Styles and Reference. Styles in
 // a collection aren't listed here.
 export const STYLE_GROUPS: Record<string, readonly QrStyle[]> = {
-  "Scotty Portraits": ["mosaic", "scotty"],
+  "Scotty Portraits": ["scotty", "mosaic"],
   "Campus Landmarks": ["kraus-campo", "wean"],
   "Carnegie Mellon Marks": ["binary-heart", "block-monogram", "tilted-square"],
   "Simple and Classic": ["plain", "icon"],
@@ -108,7 +108,7 @@ export const STYLE_GROUPS: Record<string, readonly QrStyle[]> = {
 export const COLLECTIONS: Record<string, { description: string; styles: readonly QrStyle[] }> = {
   mjs: {
     description: "Each design comes from the School of Computer Science dragon or early computing.",
-    styles: ["mosaic-dragon", "dragon", "terminal", "punch-card"],
+    styles: ["dragon", "mosaic-dragon", "terminal", "punch-card"],
   },
   merichar: {
     description:
@@ -117,7 +117,7 @@ export const COLLECTIONS: Record<string, { description: string; styles: readonly
   },
   scc: {
     description: "Each design comes from game night in the committee room.",
-    styles: ["go-board", "sea-battle", "tic-tac-toe", "carnival-tent"],
+    styles: ["carnival-tent", "go-board", "sea-battle", "tic-tac-toe"],
   },
 };
 // The styles listed for everyone, in STYLES order

@@ -49,8 +49,8 @@
       type="text/css"
     />
     <link
-      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.9/css/cmu-cms.css"
-      integrity="sha384-zV4Oiwe8ikYWEc5ApP5p49KYu9glzcYVwoCr90Jw3csuQOQt9U/RRarEyL/ZvGgd"
+      href="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.22/css/cmu-cms.css"
+      integrity="sha384-yPNlk6H8cTijAun5ZUQZLJw/Y/daUBzF55XmXFTjDWLjnXaWEhkSnLTVNCI1FViX"
       crossorigin="anonymous"
       rel="stylesheet"
       type="text/css"
@@ -95,21 +95,6 @@
             <a href="about.html#styles">what inspired each one</a>.
           </p>
           <!-- styles:start -->
-          <div id="style-mosaic">
-            <img
-              src="images/mosaic.png"
-              alt="A Mosaic Scotty QR code."
-              width="1024"
-              height="1024"
-              loading="lazy"
-            />
-            <p class="cmu-label">Scotty Portraits</p><h3>Mosaic Scotty</h3>
-            <p
-              >Scotty and his red scarf formed from the QR code's dots. Use a larger image to keep
-              the portrait clear.</p
-            >
-            <p><a class="cta" href="builder.html?style=mosaic">Build With Mosaic Scotty</a></p></div
-          >
           <div id="style-scotty">
             <img
               src="images/scotty.png"
@@ -124,6 +109,21 @@
               in the center.</p
             >
             <p><a class="cta" href="builder.html?style=scotty">Build With Basic Scotty</a></p></div
+          >
+          <div id="style-mosaic">
+            <img
+              src="images/mosaic.png"
+              alt="A Mosaic Scotty QR code."
+              width="1024"
+              height="1024"
+              loading="lazy"
+            />
+            <p class="cmu-label">Scotty Portraits</p><h3>Mosaic Scotty</h3>
+            <p
+              >Scotty and his red scarf formed from the QR code's dots. Use a larger image to keep
+              the portrait clear.</p
+            >
+            <p><a class="cta" href="builder.html?style=mosaic">Build With Mosaic Scotty</a></p></div
           >
           <div id="style-kraus-campo">
             <img
@@ -282,7 +282,24 @@
             ></div
           >
           <div class="grid column3 darkgrey boxes"
-            ><div id="style-mosaic-dragon">
+            ><div id="style-dragon">
+              <img
+                src="images/dragon.png"
+                alt="A Basic Dragon QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <h3>Basic Dragon</h3>
+              <p
+                >The School of Computer Science dragon inside a QR code made of black squares, with
+                room for the artwork in the center.</p
+              >
+              <p
+                ><a class="cta" href="builder.html?style=dragon">Build With Basic Dragon</a></p
+              ></div
+            >
+            <div id="style-mosaic-dragon">
               <img
                 src="images/mosaic-dragon.png"
                 alt="A Mosaic Dragon QR code."
@@ -299,23 +316,6 @@
                 ><a class="cta" href="builder.html?style=mosaic-dragon"
                   >Build With Mosaic Dragon</a
                 ></p
-              ></div
-            >
-            <div id="style-dragon">
-              <img
-                src="images/dragon.png"
-                alt="A Basic Dragon QR code."
-                width="1024"
-                height="1024"
-                loading="lazy"
-              />
-              <h3>Basic Dragon</h3>
-              <p
-                >The School of Computer Science dragon inside a QR code made of black squares, with
-                room for the artwork in the center.</p
-              >
-              <p
-                ><a class="cta" href="builder.html?style=dragon">Build With Basic Dragon</a></p
               ></div
             >
             <div id="style-terminal">
@@ -465,7 +465,26 @@
             ></div
           >
           <div class="grid column3 darkgrey boxes"
-            ><div id="style-go-board">
+            ><div id="style-carnival-tent">
+              <img
+                src="images/carnival-tent.png"
+                alt="A Basic Carnival QR code."
+                width="1024"
+                height="1024"
+                loading="lazy"
+              />
+              <h3>Basic Carnival</h3>
+              <p
+                >The Spring Carnival tent in red, in the middle of a QR code made of black
+                squares.</p
+              >
+              <p
+                ><a class="cta" href="builder.html?style=carnival-tent"
+                  >Build With Basic Carnival</a
+                ></p
+              ></div
+            >
+            <div id="style-go-board">
               <img
                 src="images/go-board.png"
                 alt="A Go Board QR code."
@@ -513,25 +532,6 @@
               >
               <p
                 ><a class="cta" href="builder.html?style=tic-tac-toe">Build With Tic-Tac-Toe</a></p
-              ></div
-            >
-            <div id="style-carnival-tent">
-              <img
-                src="images/carnival-tent.png"
-                alt="A Carnival Tent QR code."
-                width="1024"
-                height="1024"
-                loading="lazy"
-              />
-              <h3>Carnival Tent</h3>
-              <p
-                >The Spring Carnival tent in red, in the middle of a QR code made of black
-                squares.</p
-              >
-              <p
-                ><a class="cta" href="builder.html?style=carnival-tent"
-                  >Build With Carnival Tent</a
-                ></p
               ></div
             ></div
           ></template
@@ -706,8 +706,8 @@
     <script src="https://www.cmu.edu/common/standard-v6/js/jquery-1.10.1.min.js"></script>
     <script src="https://www.cmu.edu/common/standard-v6/js/main.6.7.min.js"></script>
     <script
-      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.9/js/cmu-app.js"
-      integrity="sha384-OUj0Xw1O/00sPRbiU9tY0EIto5q/A7Nn7ZxhbEwk2B/5lcnAbLldNxyL52FO+MSK"
+      src="https://cdn.jsdelivr.net/gh/cmu-web/cmu-web-kilt@0.8.22/js/cmu-app.js"
+      integrity="sha384-5/BLAJYN/YFfs8h/WHlrUx1uvu3fuGKtRFXdOWXnn48342xpSdNJnPbDJ7WMz88s"
       crossorigin="anonymous"
     ></script>
   </body>
