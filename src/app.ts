@@ -2,7 +2,11 @@ import express from "express";
 import path from "node:path";
 import { qrImage, GenerateError, LABEL_LIMIT, iconNames } from "./qr";
 import { mountMcp } from "./mcp";
+import { LISTED_STYLES } from "./style-info";
 import { STYLES, type QrStyle } from "./styles";
+
+// The styles everyone sees, for error messages: "a, b or c"
+const STYLE_LIST = `${LISTED_STYLES.slice(0, -1).join(", ")} or ${LISTED_STYLES.at(-1)}`;
 
 export function createApp() {
   const app = express();
@@ -41,7 +45,7 @@ export function createApp() {
         !/^\d{2,4}$/.test(width)
       )
         throw new GenerateError(
-          `Give text once, style=plain, scotty, mosaic, kraus-campo, wean, binary-heart, tilted-square, block-monogram or icon (with icon= a Bootstrap Icons name), a whole-number width and, if you like, above and below, lines of text of up to ${LABEL_LIMIT} characters each.`,
+          `Give text once, style=${STYLE_LIST} (icon takes icon=, a Bootstrap Icons name), a whole-number width and, if you like, above and below, lines of text of up to ${LABEL_LIMIT} characters each.`,
         );
       const format = req.path.endsWith(".png") ? "png" : "svg";
       const image = await qrImage(text, style as QrStyle, Number(width), format, {
