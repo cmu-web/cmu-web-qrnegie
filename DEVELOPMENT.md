@@ -173,6 +173,60 @@ npm run examples
 
 The hero encodes `https://qrnegie.andrew.cmu.edu/`.
 
+## Add an Unlisted Collection
+
+A collection is a set of styles made for one group, such as an office or an
+event's committee. Its styles work for anyone who knows their names, in
+image URLs and `generate_qr`, but the Builder, Styles and Reference show
+them only in a browser that opened a page with `?collection=<key>`, and the
+MCP server's instructions list only the styles everyone sees. It isn't a
+secret: the names are in this public repository. Use one when a group wants
+designs of its own without adding them to everyone's list.
+
+Start a new collection with the simple style: a plain black code with the
+group's logo in the center, on a white patch, as Basic Carnival
+(`carnival-tent`, in the `scc` collection) does. There's no option to pass a
+logo in an image URL; each center logo is a style of its own, with its
+artwork in `assets/`. Name it "Basic" and the group's name, as Basic Scotty,
+Basic Dragon and Basic Carnival are, and list it first in its collection.
+These steps add Basic Sweepstakes, for a made-up Sweepstakes collection:
+
+1. **The artwork:** add the logo to `assets/` as an SVG with a `viewBox`
+   (e.g., `assets/sweepstakes-logo.svg`). Use the group's own artwork, with
+   its permission.
+2. **Its module:** copy `src/tent.ts` to a new file (e.g.,
+   `src/sweepstakes.ts`), point it at the new SVG and rename its exports
+   (`SWEEPSTAKES_WIDTH`, `SWEEPSTAKES_HEIGHT` and `sweepstakes`).
+3. **The style:** in `src/style-info.ts`, add its key to `STYLES` (e.g.,
+   `"sweepstakes-logo"`) and an entry to each table keyed by style:
+   `STYLE_NAMES` (its display name, `"Basic Sweepstakes"`), `MIN_MODULE` (3, as Basic Carnival),
+   `ERROR_CORRECTION` (`"H"`, since the logo covers modules) and
+   `STYLE_DETAILS` (a sentence and an example address). `INK` in
+   `src/qr.ts` is keyed the same way (`"black"`). The build fails until
+   every table has the new key.
+4. **The collection:** add it to `COLLECTIONS` in `src/style-info.ts`, with
+   a short key, which people use in `?collection=` and the pages show, a
+   line saying what its designs share and its styles, the Basic one first. Each style belongs to
+   exactly one group in `STYLE_GROUPS` or one collection. `LISTED_STYLES`
+   leaves collection styles out on its own, and the docs check fails if a
+   style is in neither or both.
+5. **Drawing it:** in `qrSvg` in `src/qr.ts`, import the new module and copy
+   Basic Carnival's block (`if (style === "carnival-tent")`) for the new key,
+   with its own names and a message that names the logo ("This content
+   leaves no room for the logo…").
+6. **Docs and examples:** `npm run docs` regenerates the Builder's menu,
+   the Styles cards and the Reference table, the collection's sections
+   included, and `npm run examples` renders its example image. Credit the
+   artwork's source in About.
+7. **Check it** with `npm run check`. The tests confirm every collection
+   style is unlisted and every listed style is in a group.
+
+To try it, run `npm run dev` and open
+http://localhost:3000/styles.html?collection=sweepstakes. The browser
+remembers the collection in a cookie, so the Builder and Reference show it
+too. Give the group the same link on the live site, with its key in place
+of `sweepstakes`; `?collection=mjs,scc` opens several at once.
+
 ## Maintain the CMU Web Preview
 
 `docs/images/cmu-web-preview.webp` is this site's screenshot for cards and
