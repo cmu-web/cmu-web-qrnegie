@@ -174,7 +174,7 @@ describe("QRnegie", () => {
     await request(app)
       .get("/")
       .expect(200)
-      .expect(/Scotty, Beam Me There/);
+      .expect(/Scotty, beam me there/);
     await request(app)
       .get("/qr.svg")
       .query({ text: "https://www.cmu.edu/" })

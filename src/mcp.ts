@@ -16,7 +16,7 @@ export function createMcp(base = process.env.PUBLIC_URL || "https://qrnegie.andr
   const server = new McpServer(
     { name: "qrnegie", title: "QRnegie", version },
     {
-      instructions: `Scotty, Beam Me There. Create ${LISTED_STYLES.map((style) => STYLE_NAMES[style]).join(", ")} QR codes with generate_qr. Preserve the exported proportions and the space around the code. Download SVG for print or PNG for everyday use. Text is encoded exactly without fetching the destination. Scotty artwork and CMU marks are for authorized CMU use.`,
+      instructions: `Scotty, beam me there. Create ${LISTED_STYLES.map((style) => STYLE_NAMES[style]).join(", ")} QR codes with generate_qr. Preserve the exported proportions and the space around the code. Download SVG for print or PNG for everyday use. Text is encoded exactly without fetching the destination. Scotty artwork and CMU marks are for authorized CMU use.`,
     },
   );
   server.registerTool(

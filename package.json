@@ -2,7 +2,7 @@
   "name": "cmu-web-qrnegie",
   "version": "0.4.8",
   "private": true,
-  "description": "Scotty, Beam Me There. Scotty and plain QR codes for Carnegie Mellon.",
+  "description": "Scotty, beam me there. Scotty and plain QR codes for Carnegie Mellon.",
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
