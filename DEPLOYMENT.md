@@ -1,59 +1,57 @@
 # Deployment
 
-QRnegie runs as a container with no database, persistent application data
-or outbound connections. The commands below use Podman; Docker can also
-build and run the image.
+## Release Files
 
-## Images
+Each version tag (e.g., `0.2.0`) publishes:
 
-The [Publish Image workflow](.github/workflows/publish-image.yml) runs all checks
-and builds the production image. It publishes to
-`ghcr.io/cmu-web/cmu-web-qrnegie` for version tags, such as `0.2.0`, and
-manual workflow runs. Ordinary branch pushes and pull requests build
-without publishing.
+- **A container image,** `ghcr.io/cmu-web/cmu-web-qrnegie`, built for
+  `linux/amd64`, with these tags:
 
-| Image Tag      | Meaning                                   |
-| -------------- | ----------------------------------------- |
-| `latest`       | Most recently published version-tag build |
-| `X.Y.Z`        | Build of release tag `X.Y.Z`              |
-| `sha-<commit>` | Build identified by its short commit hash |
+  | Image Tag      | What                                      |
+  | -------------- | ----------------------------------------- |
+  | `X.Y.Z`        | The build of version tag `X.Y.Z`          |
+  | `latest`       | The most recent version-tag build         |
+  | `sha-<commit>` | A build identified by its short commit ID |
 
-A manual run publishes the commit image without moving `latest`. The
-workflow builds for `linux/amd64`. To create a versioned release, follow
-[Development](DEVELOPMENT.md#releasing).
+- **A Ruby gem,** `cmu-web-qrnegie`, at the same version, for building
+  QRnegie addresses in Ruby and Rails; see
+  [its README](packages/ruby/README.md).
 
-For a deployment, pull the selected release and record its digest:
+## Install
 
-```bash
-podman pull ghcr.io/cmu-web/cmu-web-qrnegie:latest
-podman image inspect --format '{{.Digest}}' ghcr.io/cmu-web/cmu-web-qrnegie:latest
-```
+QRnegie runs as a container with no database, saved data or outbound
+connections.
 
-Use `ghcr.io/cmu-web/cmu-web-qrnegie@sha256:...` to pin that exact image.
-Save the previous digest so you can redeploy it if needed.
+### In a Container
 
-## Run the Container
-
-```bash
-podman run -d --name qrnegie \
+```sh
+docker run -d --name qrnegie \
   -p 127.0.0.1:3000:3000 \
   -e PUBLIC_URL=https://qrnegie.example.edu \
   ghcr.io/cmu-web/cmu-web-qrnegie:latest
 ```
 
-For a deployment, replace `:latest` with the recorded digest. The port
-binding exposes the service on the host's loopback interface; a reverse
-proxy can forward public requests to it. Change the first port number to
-use a different host port.
+Podman takes the same flags. For a deployment, pin the image by its digest,
+so it's explicit, and keep the previous digest for rolling back:
 
-The container serves documentation at `/`, images at `/qr.svg` and
-`/qr.png`, the MCP server at `/mcp` and health at `/healthz`. Restarting
-loses nothing; there is no state to keep.
+```sh
+docker pull ghcr.io/cmu-web/cmu-web-qrnegie:latest
+docker image inspect --format '{{index .RepoDigests 0}}' ghcr.io/cmu-web/cmu-web-qrnegie:latest
+```
 
-## Configuration
+Then run `ghcr.io/cmu-web/cmu-web-qrnegie@sha256:...` in place of `:latest`.
+The port binding exposes the service on the host's loopback interface, for a
+reverse proxy in front of it; change the first port number to use a
+different host port.
+
+The container serves the documentation at `/`, images at `/qr.svg` and
+`/qr.png`, the MCP server at `/mcp` and its health at `/healthz`. Restarting
+loses nothing; there's no state to keep.
+
+### Configuration
 
 Pass settings with `-e NAME=value` or `--env-file PATH`.
-[`.env.example`](.env.example) is a starting point for an env file.
+[`.env.example`](.env.example) is a starting point for an environment file.
 
 | Variable     | Default                          | Purpose                                                     |
 | ------------ | -------------------------------- | ----------------------------------------------------------- |
@@ -62,78 +60,64 @@ Pass settings with `-e NAME=value` or `--env-file PATH`.
 | `PUBLIC_URL` | `https://qrnegie.andrew.cmu.edu` | Origin of the image addresses the MCP server's tools return |
 
 Set `PUBLIC_URL` to your own HTTPS origin when running your own instance;
-otherwise the MCP server's addresses point at CMU's. If changing `PORT`,
-update the container-side port in the mapping too. The image sets
+otherwise the MCP server's addresses point at CMU's. If you change `PORT`,
+change the container's side of the port mapping too. The image sets
 `NODE_ENV=production` for Express.
+
+### Behind a Reverse Proxy
+
+The MCP server answers POST requests at `/mcp` with plain JSON and no
+sessions, so a reverse proxy that forwards the whole site covers it too. GET
+and DELETE on `/mcp` return 405, so opening it in a browser isn't a health
+check.
+
+### Build From Source
+
+From the repository root:
+
+```sh
+docker build --target test .
+docker build -t localhost/qrnegie:latest .
+```
+
+With Podman, add `--format docker` to the second command, so the image keeps
+the Dockerfile's health check. Use `localhost/qrnegie:latest` in the run
+command.
+
+The image holds the compiled TypeScript, production dependencies, vector
+artwork and documentation, and runs as the non-root `node` user. The
+Dockerfile pins the Node base image by digest and pins npm.
+
+### Update
+
+Pull the new release, record its digest and run it in place of the old one,
+then check the service (below). If it fails, go back to the previous digest.
 
 ## Check the Service
 
-```bash
+```sh
 curl --fail --show-error http://127.0.0.1:3000/healthz
 curl --fail --show-error 'http://127.0.0.1:3000/qr.png?text=https%3A%2F%2Fwww.cmu.edu%2F' -o /tmp/qrnegie-check.png
 ```
 
-`/healthz` returns `ok` once the server is listening. It doesn't draw a QR code, so check an image response too.
+`/healthz` returns `ok` once the server is listening. It doesn't draw a QR
+code, so check an image too.
 
-The Dockerfile's health check requests `/healthz` every 30 seconds, with
-a five-second timeout and a 60-second startup grace period. It follows
-`PORT`. Where the runtime supports that health check, run it manually with:
-
-```bash
-podman healthcheck run qrnegie
-```
-
-For OCI images that omit the Dockerfile health check, configure an
-equivalent in the container runtime or service definition.
+The Dockerfile's health check requests `/healthz` every 30 seconds, with a
+five-second timeout and a 60-second grace period at startup, and follows
+`PORT`. Docker runs it on its own;
+`docker inspect --format '{{.State.Health.Status}}' qrnegie` shows the
+result. With Podman, `podman healthcheck run qrnegie` runs it. A runtime that
+ignores the Dockerfile's health check needs the same check set up itself.
 
 ### Investigate Failures
 
-```bash
-podman logs --tail 100 qrnegie
-podman logs --follow qrnegie
+```sh
+docker logs --tail 100 qrnegie
+docker logs --follow qrnegie
 ```
 
 A request with a missing or invalid option, or a size too small for its
-text, returns 400 with a message saying what to change. Other failures
-return 500.
+text, returns 400 with a message saying what to change. Other failures return 500.
 
-To stop the service:
-
-```bash
-podman stop qrnegie
-```
-
-## Put the MCP Server Behind a Reverse Proxy
-
-The MCP server answers POST requests at `/mcp` with plain JSON, with no
-sessions, so any reverse proxy that forwards the whole site also covers
-it. GET and DELETE on `/mcp` return 405; opening it in a browser is not a
-health check.
-
-## Build From Source
-
-From the repository root:
-
-```bash
-podman build --target test .
-podman build --format docker -t localhost/qrnegie:latest .
-```
-
-Use `localhost/qrnegie:latest` in the run command. `--format docker`
-preserves the Dockerfile's `HEALTHCHECK` when building with Podman; omit
-that flag with Docker.
-
-The production image contains compiled TypeScript, production dependencies,
-vector artwork and documentation. It runs as the non-root `node` user.
-The Dockerfile pins the Node base image by digest and pins npm in the
-shared base stage.
-
-## Publish the Ruby Gem
-
-Each version tag also publishes the Ruby gem in `packages/ruby/`,
-`cmu-web-qrnegie`, at the same version, through the
-[Publish Gem workflow](.github/workflows/publish-gem.yml). It uses trusted
-publishing, so there's no API key to store. RubyGems.org trusts it as: GitHub
-Actions, owner `cmu-web`, repository `cmu-web-qrnegie`, workflow
-`publish-gem.yml` and environment `rubygems`. Renaming the workflow file
-stops publishing until that trusted publisher is changed to match.
+To stop the service, run `docker stop qrnegie`.
