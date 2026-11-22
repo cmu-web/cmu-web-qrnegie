@@ -6,7 +6,7 @@
 (function () {
   "use strict";
   /* collections:start */
-  const COLLECTIONS = ["tartan", "mjs", "merichar", "scc"];
+  const COLLECTIONS = ["thetartan", "mjs", "merichar", "scc"];
   /* collections:end */
   var COOKIE = "qrnegie-collections",
     list = [],

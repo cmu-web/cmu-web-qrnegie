@@ -114,7 +114,7 @@ export const STYLE_GROUPS: Record<string, readonly QrStyle[]> = {
 // Each collection: a line under its name saying what the designs share, and
 // its styles
 export const COLLECTIONS: Record<string, { description: string; styles: readonly QrStyle[] }> = {
-  tartan: {
+  thetartan: {
     description:
       "Designs using The Tartan newspaper's emblem, from the center of the university seal.",
     styles: ["tartan-logo", "mosaic-tartan"],
