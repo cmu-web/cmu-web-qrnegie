@@ -17,10 +17,12 @@
     "check:node": "node scripts/check-node-version.mjs",
     "check:opengraph": "node scripts/opengraph.mjs --check",
     "opengraph": "node scripts/opengraph.mjs",
-    "check": "npm run check:node && npm run lint && npm run format:check && npm run check:opengraph && npm run typecheck && npm test && npm run check:docs",
+    "check": "npm run check:node && npm run lint && npm run format:check && npm run check:opengraph && npm run typecheck && npm test && npm run check:docs && npm run check:kilt",
     "examples": "npm run build && node scripts/render-examples.mjs",
     "docs": "npm run build && node scripts/documentation.mjs",
-    "check:docs": "npm run build && node scripts/documentation.mjs --check"
+    "check:docs": "npm run build && node scripts/documentation.mjs --check",
+    "kilt": "cmu-web-kilt-links docs",
+    "check:kilt": "cmu-web-kilt-links --check docs"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.32.2",
@@ -31,6 +33,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@cmu-web/kilt": "0.8.24",
     "@eslint/js": "^10.0.1",
     "@j178/prek": "^0.5.11",
     "@types/express": "^5.0.6",
