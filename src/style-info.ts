@@ -128,8 +128,7 @@ export const COLLECTIONS: Record<string, { description: string; styles: readonly
     styles: ["carnival-tent", "go-board", "sea-battle", "tic-tac-toe"],
   },
   thetartan: {
-    description:
-      "Designs using The Tartan newspaper's emblem, from the center of the university seal.",
+    description: "Designs using The Tartan newspaper's emblem.",
     styles: ["tartan-logo", "mosaic-tartan"],
   },
 };

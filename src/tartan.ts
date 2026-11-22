@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import type { BitMatrix } from "qrcode";
 
-// The Tartan's center emblem, extracted from the university's seal artwork
+// The Tartan's emblem
 const source = readFileSync(join(__dirname, "..", "assets", "tartan-logo.svg"), "utf8").trim();
 const box = /viewBox="\s*[-\d.]+[\s,]+[-\d.]+[\s,]+([\d.]+)[\s,]+([\d.]+)\s*"/.exec(source);
 if (!box) throw new Error("assets/tartan-logo.svg needs a viewBox");
