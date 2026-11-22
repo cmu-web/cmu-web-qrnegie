@@ -11,6 +11,7 @@ import { SizeError, terminal } from "./screens";
 import { engineeringPaper, minefield } from "./boards";
 import { goBoard, seaBattle, ticTacToe } from "./games";
 import { TENT_HEIGHT, TENT_WIDTH, tent } from "./tent";
+import { TARTAN_HEIGHT, TARTAN_WIDTH, tartan, mosaicTartanCells } from "./tartan";
 import { punchCard, scantron } from "./cards";
 
 export class GenerateError extends Error {
@@ -66,6 +67,8 @@ const INK: Record<QrStyle, string> = {
   scantron: "#111111",
   "go-board": "#4a2f14",
   "carnival-tent": "black",
+  "tartan-logo": "black",
+  "mosaic-tartan": "#231f20",
   "sea-battle": "#1d3a5c",
   "tic-tac-toe": "#8d939b",
 };
@@ -359,7 +362,11 @@ export async function qrSvg(
   // mosaic addresses working with the smaller matrix used by earlier exports.
   const mosaicVersion = size >= (17 + 4 * 16 + 8) * MIN_MODULE.mosaic ? 16 : 9;
   const minimumVersion =
-    style === "mosaic" || style === "mosaic-dragon" ? mosaicVersion : plainModules ? 1 : 3;
+    style === "mosaic" || style === "mosaic-dragon" || style === "mosaic-tartan"
+      ? mosaicVersion
+      : plainModules
+        ? 1
+        : 3;
   if (code.version < minimumVersion)
     code = QRCode.create(text, { ...options, version: minimumVersion });
   const { modules } = code;
@@ -395,7 +402,9 @@ export async function qrSvg(
   const cells =
     style === "mosaic-dragon"
       ? await mosaicDragonCells(modules)
-      : await styledCells(modules, style);
+      : style === "mosaic-tartan"
+        ? await mosaicTartanCells(modules)
+        : await styledCells(modules, style);
   let mark = "";
   if (style === "scotty") {
     // The headshot, about a fifth of the code's width, on a white patch with
@@ -448,6 +457,23 @@ export async function qrSvg(
         "This content leaves no room for the tent. Choose Basic Black or a shorter URL.",
       );
     mark = `<rect x="${spot.x}" y="${spot.y}" width="${width + 2}" height="${height + 2}" fill="white" shape-rendering="crispEdges"/><svg x="${spot.x + 1}" y="${spot.y + 1}" width="${width}" height="${height}" viewBox="0 0 ${TENT_WIDTH} ${TENT_HEIGHT}">${tent}</svg>`;
+  }
+  if (style === "tartan-logo") {
+    // Basic Tartan, as Basic Scotty: the emblem, about a fifth of the code's
+    // width, on a white patch with a module of space around it; smaller when
+    // a dense code leaves no room
+    let spot: { x: number; y: number } | undefined,
+      width = Math.max(5, Math.floor(n * 0.2)),
+      height = 0;
+    for (; width >= 4; width--) {
+      height = Math.round((width * TARTAN_HEIGHT) / TARTAN_WIDTH);
+      if ((spot = clearSpot(modules, width + 2, height + 2))) break;
+    }
+    if (!spot)
+      throw new GenerateError(
+        "This content leaves no room for The Tartan logo. Choose Basic Black or a shorter URL.",
+      );
+    mark = `<rect x="${spot.x}" y="${spot.y}" width="${width + 2}" height="${height + 2}" fill="white" shape-rendering="crispEdges"/><svg x="${spot.x + 1}" y="${spot.y + 1}" width="${width}" height="${height}" viewBox="0 0 ${TARTAN_WIDTH} ${TARTAN_HEIGHT}">${tartan}</svg>`;
   }
   if (style === "icon") {
     // The icon in CMU red, about a fifth of the code's width, in a white

@@ -19,10 +19,14 @@ export const STYLES = [
   "carnival-tent",
   "sea-battle",
   "tic-tac-toe",
+  "tartan-logo",
+  "mosaic-tartan",
 ] as const;
 export type QrStyle = (typeof STYLES)[number];
 export const STYLE_NAMES: Record<QrStyle, string> = {
   plain: "Basic Black",
+  "tartan-logo": "Basic Tartan",
+  "mosaic-tartan": "Mosaic Tartan",
   scotty: "Basic Scotty",
   mosaic: "Mosaic Scotty",
   "kraus-campo": "Kraus Campo",
@@ -45,6 +49,8 @@ export const STYLE_NAMES: Record<QrStyle, string> = {
 };
 export const MIN_MODULE: Record<QrStyle, number> = {
   plain: 3,
+  "tartan-logo": 3,
+  "mosaic-tartan": 6,
   scotty: 3,
   mosaic: 6,
   "kraus-campo": 6,
@@ -68,6 +74,8 @@ export const MIN_MODULE: Record<QrStyle, number> = {
 // Shared by the renderer, Builder, reference pages and MCP guidance
 export const ERROR_CORRECTION: Record<QrStyle, "M" | "H"> = {
   plain: "M",
+  "tartan-logo": "H",
+  "mosaic-tartan": "H",
   scotty: "H",
   mosaic: "H",
   "kraus-campo": "H",
@@ -106,6 +114,11 @@ export const STYLE_GROUPS: Record<string, readonly QrStyle[]> = {
 // Each collection: a line under its name saying what the designs share, and
 // its styles
 export const COLLECTIONS: Record<string, { description: string; styles: readonly QrStyle[] }> = {
+  tartan: {
+    description:
+      "Designs using The Tartan newspaper's emblem, from the center of the university seal.",
+    styles: ["tartan-logo", "mosaic-tartan"],
+  },
   mjs: {
     description: "Each design comes from the School of Computer Science dragon or early computing.",
     styles: ["dragon", "mosaic-dragon", "terminal", "punch-card"],
@@ -125,6 +138,15 @@ export const LISTED_STYLES = STYLES.filter(
   (style) => !Object.values(COLLECTIONS).some((c) => c.styles.includes(style)),
 );
 export const STYLE_DETAILS: Record<QrStyle, { description: string; example: string }> = {
+  "tartan-logo": {
+    description: "The Tartan newspaper's emblem in the center of a QR code made of black squares.",
+    example: "https://thetartan.org/",
+  },
+  "mosaic-tartan": {
+    description:
+      "The Tartan newspaper's emblem formed from black squares, with white centers carrying the QR code's light dots. Use a larger image to keep the emblem clear.",
+    example: "https://thetartan.org/",
+  },
   mosaic: {
     description:
       "Scotty and his red scarf formed from the QR code's dots. Use a larger image to keep the portrait clear.",
