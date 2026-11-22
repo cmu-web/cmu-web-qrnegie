@@ -114,23 +114,23 @@ export const STYLE_GROUPS: Record<string, readonly QrStyle[]> = {
 // Each collection: a line under its name saying what the designs share, and
 // its styles
 export const COLLECTIONS: Record<string, { description: string; styles: readonly QrStyle[] }> = {
-  thetartan: {
-    description:
-      "Designs using The Tartan newspaper's emblem, from the center of the university seal.",
-    styles: ["tartan-logo", "mosaic-tartan"],
-  },
-  mjs: {
-    description: "Each design comes from the School of Computer Science dragon or early computing.",
-    styles: ["dragon", "mosaic-dragon", "terminal", "punch-card"],
-  },
   merichar: {
     description:
       "Each design comes from whatever was on the desk that day. Any theme you find is a coincidence.",
     styles: ["engineering-paper", "minefield", "scantron"],
   },
+  mjs: {
+    description: "Each design comes from the School of Computer Science dragon or early computing.",
+    styles: ["dragon", "mosaic-dragon", "terminal", "punch-card"],
+  },
   scc: {
     description: "Each design comes from game night in the committee room.",
     styles: ["carnival-tent", "go-board", "sea-battle", "tic-tac-toe"],
+  },
+  thetartan: {
+    description:
+      "Designs using The Tartan newspaper's emblem, from the center of the university seal.",
+    styles: ["tartan-logo", "mosaic-tartan"],
   },
 };
 // The styles listed for everyone, in STYLES order

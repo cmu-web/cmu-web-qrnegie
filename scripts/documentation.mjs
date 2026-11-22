@@ -26,7 +26,9 @@ const listed = Object.entries(STYLE_GROUPS).flatMap(([group, styles]) =>
 );
 // Unlisted collections: each one's styles, in a template the page shows only
 // in a browser that opened ?collection=<key> (js/collections.js)
-const unlisted = Object.entries(COLLECTIONS).flatMap(([key, { styles }]) =>
+// Collections in alphabetical order
+const collections = Object.entries(COLLECTIONS).sort(([a], [b]) => (a < b ? -1 : 1));
+const unlisted = collections.flatMap(([key, { styles }]) =>
   styles.map((id) => ({ group: key, id, key })),
 );
 const ordered = [...listed, ...unlisted];
@@ -48,7 +50,7 @@ const option = (id) =>
   `<option value="${id}"${id === "mosaic" ? " selected" : ""} data-text="${esc(STYLE_DETAILS[id].example)}">${esc(STYLE_NAMES[id])}</option>`;
 // One template per collection, holding what each page adds for it
 const templates = (body) =>
-  Object.entries(COLLECTIONS)
+  collections
     .map(
       ([key, { styles, description }]) =>
         `<template data-collection="${esc(key)}">${body(key, styles, description)}</template>`,
@@ -86,7 +88,7 @@ const builder = [
   ),
 ].join("\n");
 // The collections' keys, for js/collections.js
-const names = `const COLLECTIONS = ${JSON.stringify(Object.keys(COLLECTIONS))};`;
+const names = `const COLLECTIONS = ${JSON.stringify(collections.map(([key]) => key))};`;
 let stale = false;
 for (const [file, marker, body] of [
   ["docs/styles.html", "styles", gallery],

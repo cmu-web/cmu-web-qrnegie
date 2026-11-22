@@ -6,7 +6,7 @@
 (function () {
   "use strict";
   /* collections:start */
-  const COLLECTIONS = ["thetartan", "mjs", "merichar", "scc"];
+  const COLLECTIONS = ["merichar", "mjs", "scc", "thetartan"];
   /* collections:end */
   var COOKIE = "qrnegie-collections",
     list = [],
@@ -18,8 +18,8 @@
   } catch {
     return;
   }
-  list = list.filter(function (key) {
-    return COLLECTIONS.indexOf(key) >= 0;
+  list = COLLECTIONS.filter(function (key) {
+    return list.indexOf(key) >= 0;
   });
   var templates = Array.from(document.querySelectorAll("template[data-collection]"));
   // Every page gets the section, so the reminder goes wherever people do
