@@ -12,11 +12,12 @@
   "remoteUser": "node",
   "updateRemoteUserUID": true,
   "containerEnv": {
-    "NODE_ENV": "development"
+    "NODE_ENV": "development",
+    "PORT": "3300"
   },
-  "forwardPorts": [3000],
+  "forwardPorts": [3300],
   "portsAttributes": {
-    "3000": {
+    "3300": {
       "label": "QRnegie",
       "onAutoForward": "notify"
     }

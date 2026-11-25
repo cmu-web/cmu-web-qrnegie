@@ -25,36 +25,37 @@ the checkout is mounted at `/app`, and commands run as the `node` user.
 In the container terminal:
 
 ```bash
-npm run dev
+make run
 ```
 
-Open the forwarded address for port 3000 in VS Code's **Ports** panel.
+Open the forwarded address for port 3300 in VS Code's **Ports** panel.
 If that port is already in use on the host, VS Code may forward another
 local port. Opening the container does not start the server automatically.
 
-`npm run dev` watches `src/` and restarts the service when TypeScript
+`make run` watches `src/` and restarts the service when TypeScript
 changes. It also serves `docs/` at `/`; reload the browser after editing
 those HTML, JavaScript or image files.
 
 To see an unreleased Web Kilt change here, run `npm run preview:kilt` in a
-second terminal and open http://127.0.0.1:4100/. It puts the Web Kilt's
+second terminal and open http://127.0.0.1:3301/. It puts the Web Kilt's
 preview proxy in front of the service, with the pages' Kilt links pointed at
 the checkout beside this one (`../cmu-web-kilt`, or set `KILT_DIR`). The
 service itself still shows the pinned release.
 
-Run `npm ci` after pulling dependency changes. After changing the Dockerfile
-or devcontainer configuration, select **Dev Containers: Rebuild Container**.
+Run `make setup` after pulling dependency changes. After changing the
+Dockerfile or devcontainer configuration, select
+**Dev Containers: Rebuild Container**.
 
 ### Compile and Run
 
 ```bash
-npm run build
+make build
 npm start
 ```
 
-The build compiles TypeScript from `src/` to CommonJS JavaScript in `dist/`.
-`npm start` runs `dist/index.js`. Browser scripts in `docs/js/` have no
-build step. Runtime settings are listed in
+`make build` compiles TypeScript from `src/` to CommonJS JavaScript in
+`dist/`. `npm start` runs `dist/index.js` on port 3000, or `PORT`. Browser
+scripts in `docs/js/` have no build step. Runtime settings are listed in
 [Deployment](DEPLOYMENT.md#configuration); the service does not load an
 `.env` file automatically.
 
@@ -115,10 +116,10 @@ is written to disk.
 
 ## Check a Change
 
-The everyday check is `npm run check`: it needs nothing beyond `npm ci` and
-no network access. It checks the Node types version, ESLint, Prettier, link
-preview metadata and TypeScript, then runs the tests and compiles the
-service.
+The everyday check is `make check` (`npm run check`): it needs nothing
+beyond `make setup` and no network access. It checks the Node types version,
+ESLint, Prettier, link preview metadata and TypeScript, then runs the tests
+and compiles the service.
 
 The Publish Image workflow runs the same check in the Dockerfile's `test`
 stage. To run it that way from the host (Podman takes the same command):
@@ -153,11 +154,11 @@ facts, and the documentation generator uses them for the Builder's style
 menu, the Styles gallery and the Reference style table.
 
 ```bash
-npm run docs
+make docs
 ```
 
 Edit descriptions in that source and regenerate the marked sections rather
-than editing the generated HTML. `npm run check` checks that the output
+than editing the generated HTML. `make check` checks that the output
 matches the source. After adding a style or changing its appearance, also
 regenerate the example images below. Keep user guidance in Styles,
 integration details in Reference and sources and credits in About.
@@ -214,15 +215,15 @@ These steps add Basic Sweepstakes, for a made-up Sweepstakes collection:
    Basic Carnival's block (`if (style === "carnival-tent")`) for the new key,
    with its own names and a message that names the logo ("This content
    leaves no room for the logo…").
-6. **Docs and examples:** `npm run docs` regenerates the Builder's menu,
+6. **Docs and examples:** `make docs` regenerates the Builder's menu,
    the Styles cards and the Reference table, the collection's sections
    included, and `npm run examples` renders its example image. Credit the
    artwork's source in About.
-7. **Check it** with `npm run check`. The tests confirm every collection
+7. **Check it** with `make check`. The tests confirm every collection
    style is unlisted and every listed style is in a group.
 
-To try it, run `npm run dev` and open
-http://localhost:3000/styles.html?collection=sweepstakes. The browser
+To try it, run `make run` and open
+http://127.0.0.1:3300/styles.html?collection=sweepstakes. The browser
 remembers the collection in a cookie, so the Builder and Reference show it
 too. Give the group the same link on the live site, with its key in place
 of `sweepstakes`; `?collection=mjs,scc` opens several at once.
